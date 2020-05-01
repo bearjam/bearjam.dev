@@ -15,6 +15,10 @@ const ContactPage = () => {
       .min(2, min => `Minimum ${min} characters`)
       .max(100, max => `Maximum ${max} characters`),
     email: yup.string().required("Required").email("Invalid e-mail address"),
+    need: yup.object().test({
+      test: o => Object.keys(o).reduce((p, n) => o[n] || p, false),
+      message: "Select at least one",
+    }),
     message: yup
       .string()
       .required("Required")
@@ -140,11 +144,27 @@ const ContactPage = () => {
                   animate={watch()[name] ? `active` : `inactive`}
                 >
                   <span>{label}</span>
-                  <input type="checkbox" id={name} name={name} ref={register} />
+                  <input
+                    type="checkbox"
+                    id={name}
+                    name={`need.${name}`}
+                    ref={register}
+                  />
                 </motion.label>
               )
             })}
           </div>
+
+          {errors?.need && (
+            <div className="flex justify-end">
+              <span id="needError" className="text-red-600">
+                {errors.need?.message}
+              </span>
+              <div className="w-6 h-6 p-1 ml-1">
+                <SvgIconWarning />
+              </div>
+            </div>
+          )}
         </fieldset>
 
         <div className="mt-4">
