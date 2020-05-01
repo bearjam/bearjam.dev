@@ -5,6 +5,7 @@ import theme from "tailwindcss/defaultTheme"
 import Presence from "../components/Presence"
 import styles from "../styles/contact-form.module.css"
 import cx from "classnames"
+import { SvgIconWarning } from "../components"
 
 const EMAIL_REGEX = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 
@@ -48,20 +49,29 @@ const ContactPage = () => {
       >
         <div>
           <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            aria-invalid={errors?.name ? "true" : "false"}
-            aria-describedby="nameError"
-            ref={register({ required: true })}
-          />
-          <span
-            id="nameError"
-            className={cx({ hidden: !errors?.name }, "bg-blue-200")}
-          >
-            This field is required
-          </span>
+          <div className="relative">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              aria-invalid={errors?.name ? "true" : "false"}
+              aria-describedby="nameError"
+              ref={register({ required: true })}
+            />
+            {errors?.name && (
+              <>
+                <div className="w-6 h-6 absolute top-0 right-0 p-1 mr-1">
+                  <SvgIconWarning />
+                </div>
+                <span
+                  id="nameError"
+                  className="text-red-600"
+                >
+                  This field is required
+                </span>
+              </>
+            )}
+          </div>
         </div>
         <div>
           <label htmlFor="email">Email</label>
@@ -127,7 +137,7 @@ const ContactPage = () => {
         </div>
 
         <div className="mt-4 flex justify-center">
-          <input type="submit" disabled={!isValid}/>
+          <input type="submit" disabled={!isValid} />
         </div>
       </form>
     </Presence>

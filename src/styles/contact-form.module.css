@@ -40,3 +40,14 @@
 .select-box > input[type="checkbox"] {
   @apply sr-only;
 }
+
+.form input[type="submit"]:disabled {
+  @apply bg-gray-500;
+}
+
+.form input[aria-invalid="true"] {
+  box-shadow: 0 0 0 3px theme('colors.red.500');
+}
+.error-outline {
+  /* box-shadow: 0 0 0 3px theme('colors.red.500'); */
+}

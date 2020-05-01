@@ -9,5 +9,4 @@ export { default as SvgIsometricOne } from "./art/SvgIsometricOne"
 export { default as SvgMagAvatar } from "./art/SvgMagAvatar"
 export { default as SvgMenu } from "./SvgMenu"
 export { default as SvgTomAvatar } from "./art/SvgTomAvatar"
-
-
+export { default as SvgIconWarning } from "./icons/SvgIconWarning"
