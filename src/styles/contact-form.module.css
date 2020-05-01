@@ -1,0 +1,42 @@
+.form {
+  @apply border-2 rounded-lg border-gray-200 shadow-lg p-4 max-w-xs mt-4;
+}
+
+.form > * {
+  @apply mt-4;
+}
+
+.form input[type="text"],
+.form input[type="email"],
+.form textarea {
+  @apply w-full border-2 rounded-md bg-gray-100;
+}
+
+.form textarea {
+  @apply resize-none h-20;
+}
+
+.form input[type="submit"] {
+  @apply border-2 rounded-md py-1 px-2 bg-pink-400 shadow-sm text-white font-bold tracking-wide;
+}
+
+.form input:focus,
+.form textarea:focus {
+  @apply outline-none shadow-outline;
+}
+
+.form fieldset[name="need"] > div:nth-child(2) {
+  @apply flex flex-wrap justify-center;
+}
+
+.select-box {
+  @apply border-2 rounded-md shadow-sm py-1 px-2 m-1 inline-block text-sm select-none;
+}
+
+.select-box:focus-within {
+  @apply outline-none shadow-outline;
+}
+
+.select-box > input[type="checkbox"] {
+  @apply sr-only;
+}

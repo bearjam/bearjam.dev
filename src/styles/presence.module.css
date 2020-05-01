@@ -1,0 +1,9 @@
+.default {
+  @apply max-w-4xl mx-auto mb-12 pt-16;
+}
+
+@screen sm {
+  .default {
+    @apply mb-20
+  }
+}
