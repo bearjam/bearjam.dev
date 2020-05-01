@@ -4,14 +4,27 @@ import { useForm } from "react-hook-form"
 import theme from "tailwindcss/defaultTheme"
 import Presence from "../components/Presence"
 import styles from "../styles/contact-form.module.css"
-import cx from "classnames"
 import { SvgIconWarning } from "../components"
-
-const EMAIL_REGEX = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+import * as yup from "yup"
 
 const ContactPage = () => {
+  const validationSchema = yup.object().shape({
+    name: yup
+      .string()
+      .required("Required")
+      .min(2, min => `Minimum ${min} characters`)
+      .max(100, max => `Maximum ${max} characters`),
+    email: yup.string().required("Required").email("Invalid e-mail address"),
+    message: yup
+      .string()
+      .required("Required")
+      .min(10, ({ min }) => `Minimum ${min} characters`)
+      .max(1000, ({ max }) => `Maximum ${max} characters`),
+  })
+
   const { register, handleSubmit, watch, errors, formState } = useForm({
     mode: "onBlur",
+    validationSchema,
   })
 
   const { isValid } = formState
@@ -56,42 +69,49 @@ const ContactPage = () => {
               name="name"
               aria-invalid={errors?.name ? "true" : "false"}
               aria-describedby="nameError"
-              ref={register({ required: true })}
+              ref={register}
             />
             {errors?.name && (
               <>
                 <div className="w-6 h-6 absolute top-0 right-0 p-1 mr-1">
                   <SvgIconWarning />
                 </div>
-                <span
-                  id="nameError"
-                  className="text-red-600"
-                >
-                  This field is required
-                </span>
+
+                <div className="flex justify-end">
+                  <span id="nameError" className="text-red-600">
+                    {errors.name?.message}
+                  </span>
+                </div>
               </>
             )}
           </div>
         </div>
         <div>
           <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            aria-invalid={errors?.email ? "true" : "false"}
-            aria-describedby="emailError"
-            ref={register({
-              required: "E-mail is required",
-              validate: v => EMAIL_REGEX.test(v) || "Invalid e-mail address",
-            })}
-          />
-          <span
-            id="emailError"
-            className={cx({ hidden: !errors?.email }, "bg-blue-200")}
-          >
-            {errors?.email?.message}
-          </span>
+
+          <div className="relative">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              aria-invalid={errors?.email ? "true" : "false"}
+              aria-describedby="emailError"
+              ref={register}
+            />
+
+            {errors?.email && (
+              <>
+                <div className="w-6 h-6 absolute top-0 right-0 p-1 mr-1">
+                  <SvgIconWarning />
+                </div>
+                <div className="flex justify-end">
+                  <span id="emailError" className="text-red-600">
+                    {errors.email?.message}
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         <fieldset name="need">
@@ -132,12 +152,24 @@ const ContactPage = () => {
           <textarea
             id="message"
             name="message"
-            ref={register({ required: true, minLength: 15 })}
+            ref={register}
+            aria-invalid={errors?.message ? "true" : "false"}
+            aria-describedby="messageError"
           />
+          {errors?.message && (
+            <div className="flex justify-end">
+              <span id="messageError" className="text-red-600">
+                {errors.message?.message}
+              </span>
+              <div className="w-6 h-6 p-1 ml-1">
+                <SvgIconWarning />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="mt-4 flex justify-center">
-          <input type="submit" disabled={!isValid} />
+          <input type="submit" />
         </div>
       </form>
     </Presence>
