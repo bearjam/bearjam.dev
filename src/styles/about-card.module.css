@@ -46,13 +46,13 @@
 }
 
 .card-body > button {
-  @apply absolute bottom-0 left-0 right-0 mx-auto mb-2 w-8 rounded-full bg-gray-100 text-purple-300 stroke-current fill-current shadow-md;
+  @apply absolute bottom-0 left-0 right-0 mx-auto mb-2 w-8 rounded-full bg-gray-100 text-purple-300 stroke-current fill-current shadow-md cursor-pointer;
 }
 
 @screen sm {
 
   .root {
-    @apply max-w-xl
+    @apply max-w-2xl mx-auto mt-16;
   }
 
   .card-avatar {
@@ -68,7 +68,7 @@
   }
 
   .card-name-email {
-    @apply flex flex-col items-start mt-5;
+    @apply flex flex-col items-start mt-5 ml-3;
   }
 
   .card-social {
@@ -80,7 +80,7 @@
   }
 
   .md-body {
-    @apply mt-0;
+    @apply mt-5;
   }
 
 }

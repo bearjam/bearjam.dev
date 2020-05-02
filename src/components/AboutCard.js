@@ -128,7 +128,9 @@ const AboutCard = ({
           >
             <MDX>{body}</MDX>
           </motion.div>
-          <motion.button onTap={toggleOpen}>
+          <motion.button
+            onClick={toggleOpen}
+          >
             <SvgIconExpand
               style={{
                 originX: "50%",
