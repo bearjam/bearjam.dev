@@ -36,7 +36,7 @@
   right: 0;
   top: 0;
   z-index: 30;
-  @apply w-6 mt-1 mr-1 bg-red-500;
+  @apply w-6 mt-3 mr-1;
 }
 
 .nav-xs {

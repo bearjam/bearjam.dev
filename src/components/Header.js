@@ -90,7 +90,12 @@ const Header = () => {
                   {({ href, label, active }) => (
                     <MotionLink
                       to={href}
-                      className={active ? `bg-blue-500` : ``}
+                      className={cx(
+                        {
+                          ["text-pink-400"]: active,
+                        },
+                        `mb-5`
+                      )}
                       variants={{
                         closed: {
                           opacity: 0,
