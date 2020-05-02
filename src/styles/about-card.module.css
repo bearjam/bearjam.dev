@@ -1,5 +1,5 @@
 .root {
-  @apply relative mt-40 p-1;
+  @apply relative mt-10 mx-1 p-1;
 }
 
 .card-avatar {
@@ -7,7 +7,7 @@
 }
 
 .card-main {
-  @apply bg-white rounded-lg shadow-lg pt-64 mt-6;
+  @apply bg-white rounded-lg shadow-lg pt-64 mt-6 border border-gray-400;
 }
 
 .card-identity {
@@ -19,7 +19,7 @@
 }
 
 .card-social {
-  @apply flex justify-center;
+  @apply flex justify-center mt-3;
 }
 
 .card-name-email {
@@ -27,7 +27,7 @@
 }
 
 .card-social > a > div > svg {
-  @apply w-8 text-purple-100 fill-current;
+  @apply w-6 text-purple-100 fill-current;
 }
 
 .card-body {
@@ -38,8 +38,11 @@
   @apply absolute w-full h-full rounded-lg;
 }
 
-.card-body > p {
-  @apply overflow-hidden px-4 pb-12 h-10 rounded-lg;
+.md-body {
+  @apply overflow-hidden px-4 pb-12 h-10 rounded-lg mt-4;
+}
+.md-body>p {
+  @apply mb-2;
 }
 
 .card-body > button {
@@ -74,6 +77,10 @@
 
   .card-body {
     @apply mt-5;
+  }
+
+  .md-body {
+    @apply mt-0;
   }
 
 }

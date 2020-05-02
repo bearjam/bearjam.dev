@@ -4,6 +4,7 @@ import theme from "tailwindcss/defaultTheme"
 import styles from "../styles/about-card.module.css"
 import { SvgIconExpand } from "./svg"
 import SocialLinks from "./SocialLinks"
+import MDX from "@mdx-js/runtime"
 
 const transition = {
   type: "spring",
@@ -57,9 +58,7 @@ const AboutCard = ({
             </SocialLinks>
           </div>
         </div>
-        <motion.div
-          className={styles.cardBody}
-        >
+        <motion.div className={styles.cardBody}>
           <svg>
             <defs>
               <linearGradient id={`${name}Grad`} x1="0" x2="0" y1="0" y2="1">
@@ -69,7 +68,7 @@ const AboutCard = ({
                   stopOpacity="0"
                 />
                 <motion.stop
-                  offset="20%"
+                  offset="40%"
                   stopColor={theme.colors.gray[500]}
                   variants={{
                     open: {
@@ -111,7 +110,7 @@ const AboutCard = ({
 
             <rect fill={`url(#${name}Grad)`} width="100%" height="100%" />
           </svg>
-          <motion.p
+          <motion.div
             style={{
               fontSize,
               lineHeight,
@@ -125,12 +124,11 @@ const AboutCard = ({
               },
             }}
             transition={transition}
+            className={styles.mdBody}
           >
-            {body}
-          </motion.p>
-          <motion.button
-            onTap={toggleOpen}
-          >
+            <MDX>{body}</MDX>
+          </motion.div>
+          <motion.button onTap={toggleOpen}>
             <SvgIconExpand
               style={{
                 originX: "50%",
