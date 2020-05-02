@@ -5,6 +5,8 @@ import { Link } from "../components/Link"
 import Presence from "../components/Presence"
 import SEO from "../components/SEO"
 import { SvgIsometricOne } from "../components/svg"
+import styles from "../styles/home.module.css"
+import cx from "classnames"
 
 const variants = i => ({
   enter: {
@@ -27,7 +29,7 @@ const HomeTemplate = ({ frontmatter, children }) => {
   return (
     <>
       <SEO title="Home" />
-      <Presence key="indexPage">
+      <Presence key="indexPage" className="px-2">
         <section className="mt-5 sm:mt-8 flex items-center flex-col sm:flex-row sm:justify-between">
           <motion.div
             className="w-full mb-4 sm:order-last sm:flex-1 flex justify-end max-w-lg"
@@ -44,7 +46,7 @@ const HomeTemplate = ({ frontmatter, children }) => {
               {frontmatter.headline.paragraph}
             </p>
             <div className="flex justify-center mt-6 sm:justify-start">
-              <Link to="/blog" className="button">
+              <Link to="/blog" className="button bg-pink-400 text-white px-4 py-2">
                 Read blog
               </Link>
             </div>
@@ -71,23 +73,27 @@ const HomeTemplate = ({ frontmatter, children }) => {
           </div>
         </section>
       </Presence>
-      <section className="mt-2 sm:mt-0 flex flex-col border-2 border-red-500 bg-purple-200">
-        <div className="mt-4 mx-2">
-          <h2>
-            We'd love to hear from you.
-            <br />
-            Say hello to magda@bearjam.dev
-          </h2>
-        </div>
-        <div className="mt-6 flex justify-center">
-          <Link to="/about" className="button">
-            About us
-          </Link>
-        </div>
-        <div className="mt-4 mb-6 flex justify-center">
-          <Link to="/contact" className="button">
-            Work with us
-          </Link>
+      <section className={styles.sayHello}>
+        <div className="sm:flex sm:justify-between">
+          <div className="text-center sm:text-left">
+            <h2>
+              We'd love to hear from you.
+              <br />
+              Say hello to magda@bearjam.dev
+            </h2>
+          </div>
+          <div className="mt-4 flex flex-col sm:flex-row sm:justify-between w-1/2 pl-16">
+            <div className="mt-2 flex justify-center items-center sm:mt-0">
+              <Link to="/about" className="button bg-pink-400 text-white py-2 w-1/3 sm:w-auto sm:px-10 text-center">
+                About us
+              </Link>
+            </div>
+            <div className="mt-4 flex justify-center items-center sm:mt-0">
+              <Link to="/contact" className="button bg-white border-2 border-pink-400 text-pink-400 py-2 w-1/3 sm:w-auto sm:px-10 text-center">
+                Work with us
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </>

@@ -35,3 +35,7 @@ h3 {
 a {
   @apply font-semibold;
 }
+
+.button {
+  @apply rounded-md shadow-lg text-xs tracking-wide;
+}

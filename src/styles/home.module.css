@@ -1,0 +1,32 @@
+.say-hello {
+  /* @apply flex flex-col; */
+  /* flex-no-wrap justify-center; */
+  /* @apply border-2 border-red-500; */
+  @apply bg-purple-200 py-8;
+}
+
+.say-hello > div {
+  @apply max-w-4xl mx-auto px-2;
+  /* @apply flex justify-between; */
+}
+
+/* .say-hello>div>div:nth-child(1) {
+  @apply bg-blue-500
+}
+.say-hello>div>div:nth-child(2) {
+  @apply bg-red-500
+} */
+
+.button {
+  @apply px-8
+}
+
+.button:nth-of-type(2) {
+  @apply bg-red-500
+}
+
+@screen sm {
+  .say-hello>div {
+    @apply flex justify-between;
+  }
+}
