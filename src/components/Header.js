@@ -1,4 +1,10 @@
-import { AnimatePresence, motion, useCycle } from "framer-motion"
+import cx from "classnames"
+import {
+  AnimatePresence,
+  AnimateSharedLayout,
+  motion,
+  useCycle,
+} from "framer-motion"
 import React, { Fragment, useContext } from "react"
 import theme from "tailwindcss/defaultTheme"
 import { MediaContext } from "../contexts"
@@ -103,13 +109,27 @@ const Header = () => {
               )}
             </Fragment>
           ) : (
-            <Nav
-              className={styles.navSm}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              initial={{ opacity: 0 }}
-              key="navSm"
-            />
+            <AnimateSharedLayout>
+              <Nav
+                className={styles.navSm}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                initial={{ opacity: 0 }}
+                key="navSm"
+              >
+                {({ href, label, active }) => (
+                  <MotionLink to={href} className={styles.smLink}>
+                    <span>{label}</span>
+                    {active && (
+                      <motion.div
+                        layoutId="underline"
+                        className={styles.smActiveUnderline}
+                      />
+                    )}
+                  </MotionLink>
+                )}
+              </Nav>
+            </AnimateSharedLayout>
           )}
         </AnimatePresence>
       </div>
