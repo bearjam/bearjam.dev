@@ -38,6 +38,12 @@ const ContactPage = () => {
 
     // kick off loading state
 
+    if (!isValid) {
+      return
+    }
+
+
+
     // effect
     try {
       const response = await fetch(`./api/foo`, {
