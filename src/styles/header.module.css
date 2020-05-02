@@ -54,4 +54,21 @@
 
 .nav-sm {
   z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  @apply w-1/3 mr-4;
+}
+/*
+.nav-sm > a {
+  @apply mx-4
+} */
+
+.sm-link {
+  @apply relative;
+}
+
+.sm-active-underline {
+  @apply absolute w-full border-b-2 border-pink-400;
+  bottom: -2;
 }
