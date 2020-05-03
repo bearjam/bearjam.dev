@@ -1,5 +1,34 @@
+.scene {
+  perspective: 1200px;
+}
+
+.card {
+  /* width: 100%;
+  height: 100%; */
+  position: relative;
+  transform-style: preserve-3d;
+  @apply border-2 rounded-lg border-gray-200 shadow-lg p-4 max-w-xs mx-auto mt-4;
+}
+
+.card-face {
+  /* position: absolute; */
+  backface-visibility: hidden;
+  /* width: 100%; */
+  /* height: 100%; */
+  @apply bg-white;
+}
+
+.back {
+  position: absolute;
+  z-index: -1;
+  transform: rotateY(180deg);
+  width: 100%;
+  height: 100%;
+  top: 0;
+}
+
 .form {
-  @apply border-2 rounded-lg border-gray-200 shadow-lg p-4 max-w-xs mt-4;
+  /* @apply border-2 rounded-lg border-gray-200 shadow-lg p-4 max-w-xs mt-4; */
 }
 
 .form > * {
@@ -45,9 +74,9 @@
   @apply bg-gray-500;
 }
 
-.form input[aria-invalid="true"] {
+.form input[aria-invalid="true"], .form textarea[aria-invalid="true"] {
   box-shadow: 0 0 0 3px theme('colors.red.500');
-  @apply border-0
+  @apply border-0;
 }
 .error-outline {
   /* box-shadow: 0 0 0 3px theme('colors.red.500'); */
