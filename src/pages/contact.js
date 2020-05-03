@@ -2,25 +2,23 @@ import { motion } from "framer-motion"
 import React from "react"
 import { useForm } from "react-hook-form"
 import theme from "tailwindcss/defaultTheme"
-import * as yup from "yup"
+import { string, object } from "yup"
 import { SvgIconWarning } from "../components"
 import Presence from "../components/Presence"
 import styles from "../styles/contact-form.module.css"
 
 const ContactPage = () => {
-  const validationSchema = yup.object().shape({
-    name: yup
-      .string()
+  const validationSchema = object().shape({
+    name: string()
       .required("Required")
       .min(2, min => `Minimum ${min} characters`)
       .max(100, max => `Maximum ${max} characters`),
-    email: yup.string().required("Required").email("Invalid e-mail address"),
-    need: yup.object().test({
+    email: string().required("Required").email("Invalid e-mail address"),
+    need: object().test({
       test: o => Object.keys(o).reduce((p, n) => o[n] || p, false),
       message: "Select at least one",
     }),
-    message: yup
-      .string()
+    message: string()
       .required("Required")
       .min(10, ({ min }) => `Minimum ${min} characters`)
       .max(1000, ({ max }) => `Maximum ${max} characters`),

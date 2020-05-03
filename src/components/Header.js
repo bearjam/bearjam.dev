@@ -65,7 +65,7 @@ const Header = () => {
                 animate={{ opacity: 1 }}
                 initial={{ opacity: 0 }}
               >
-                <SvgMenu open={open} className={styles.menu} />
+                <SvgMenu open={open === "open"} className={styles.menu} />
               </motion.button>
               {open === "open" && (
                 <Nav
