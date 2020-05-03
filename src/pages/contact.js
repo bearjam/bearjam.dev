@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import React from "react"
+import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import theme from "tailwindcss/defaultTheme"
 import * as yup from "yup"
@@ -34,6 +34,8 @@ const ContactPage = () => {
 
   const { isSubmitting } = formState
 
+  const [variant, setVariant] = useState("default")
+
   const onSubmit = data =>
     fetch(`./api/foo`, {
       method: "POST",
@@ -45,10 +47,12 @@ const ContactPage = () => {
       .then(res => {
         console.log(`res!`)
         console.log(res)
+        setVariant("success")
       })
       .catch(err => {
         console.log(`err!`)
         console.log(err)
+        setVariant("default")
       })
   // console.log(`response!\n${JSON.stringify(response, null, 2)}`)
   // } catch (error) {
@@ -64,10 +68,21 @@ const ContactPage = () => {
       <div className={styles.scene}>
         <motion.div
           className={styles.card}
-          animate={{
-            rotateY: 360,
+          animate={variant}
+          variants={{
+            default: {
+              rotateY: 0,
+            },
+            success: {
+              rotateY: 180,
+            },
           }}
-          transition={{ type: 'spring', damping: 0, mass: 10, stiffness: 20 }}
+          transition={{
+            type: "spring",
+            damping: 5,
+            mass: 3,
+            stiffness: 80,
+          }}
         >
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -202,8 +217,7 @@ const ContactPage = () => {
               <input type="submit" />
             </div>
           </form>
-          <div className={cx(styles.cardFace, styles.back)}>
-          </div>
+          <div className={cx(styles.cardFace, styles.back)}></div>
         </motion.div>
       </div>
     </Presence>
