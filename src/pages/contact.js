@@ -2,10 +2,10 @@ import { motion } from "framer-motion"
 import React from "react"
 import { useForm } from "react-hook-form"
 import theme from "tailwindcss/defaultTheme"
+import * as yup from "yup"
+import { SvgIconWarning } from "../components"
 import Presence from "../components/Presence"
 import styles from "../styles/contact-form.module.css"
-import { SvgIconWarning } from "../components"
-import * as yup from "yup"
 
 const ContactPage = () => {
   const validationSchema = yup.object().shape({
@@ -31,14 +31,9 @@ const ContactPage = () => {
     validationSchema,
   })
 
-  const { isValid } = formState
+  const { isValid, isSubmitting } = formState
 
   const onSubmit = async (data, e) => {
-    // check client-side validation
-
-    // kick off loading state
-
-    // effect
     try {
       const response = await fetch(`./api/foo`, {
         method: "POST",
@@ -51,7 +46,6 @@ const ContactPage = () => {
     } catch (error) {
       console.log(`error!\n${error}`)
     }
-
     // either:
     // a) success -> thank you for your message, we'll be in touch
     // b) problem -> please try again later? check validation?
@@ -141,7 +135,7 @@ const ContactPage = () => {
                       backgroundColor: `rgba(255, 255, 255, 0)`,
                     },
                   }}
-                  animate={watch()[name] ? `active` : `inactive`}
+                  animate={watch()[`need.${name}`] ? `active` : `inactive`}
                 >
                   <span>{label}</span>
                   <input
