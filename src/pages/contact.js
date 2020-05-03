@@ -2,25 +2,38 @@ import { motion } from "framer-motion"
 import React from "react"
 import { useForm } from "react-hook-form"
 import theme from "tailwindcss/defaultTheme"
+import * as yup from "yup"
+import { SvgIconWarning } from "../components"
 import Presence from "../components/Presence"
 import styles from "../styles/contact-form.module.css"
-import cx from "classnames"
-
-const EMAIL_REGEX = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 
 const ContactPage = () => {
-  const { register, handleSubmit, watch, errors, formState } = useForm({
-    mode: "onBlur",
+  const validationSchema = yup.object().shape({
+    name: yup
+      .string()
+      .required("Required")
+      .min(2, min => `Minimum ${min} characters`)
+      .max(100, max => `Maximum ${max} characters`),
+    email: yup.string().required("Required").email("Invalid e-mail address"),
+    need: yup.object().test({
+      test: o => Object.keys(o).reduce((p, n) => o[n] || p, false),
+      message: "Select at least one",
+    }),
+    message: yup
+      .string()
+      .required("Required")
+      .min(10, ({ min }) => `Minimum ${min} characters`)
+      .max(1000, ({ max }) => `Maximum ${max} characters`),
   })
 
-  const { isValid } = formState
+  const { register, handleSubmit, watch, errors, formState } = useForm({
+    mode: "onBlur",
+    validationSchema,
+  })
+
+  const { isValid, isSubmitting } = formState
 
   const onSubmit = async (data, e) => {
-    // check client-side validation
-
-    // kick off loading state
-
-    // effect
     try {
       const response = await fetch(`./api/foo`, {
         method: "POST",
@@ -33,7 +46,6 @@ const ContactPage = () => {
     } catch (error) {
       console.log(`error!\n${error}`)
     }
-
     // either:
     // a) success -> thank you for your message, we'll be in touch
     // b) problem -> please try again later? check validation?
@@ -48,40 +60,56 @@ const ContactPage = () => {
       >
         <div>
           <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            aria-invalid={errors?.name ? "true" : "false"}
-            aria-describedby="nameError"
-            ref={register({ required: true })}
-          />
-          <span
-            id="nameError"
-            className={cx({ hidden: !errors?.name }, "bg-blue-200")}
-          >
-            This field is required
-          </span>
+          <div className="relative">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              aria-invalid={errors?.name ? "true" : "false"}
+              aria-describedby="nameError"
+              ref={register}
+            />
+            {errors?.name && (
+              <>
+                <div className="w-6 h-6 absolute top-0 right-0 p-1 mr-1">
+                  <SvgIconWarning />
+                </div>
+
+                <div className="flex justify-end">
+                  <span id="nameError" className="text-red-600">
+                    {errors.name?.message}
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
         </div>
         <div>
           <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            aria-invalid={errors?.email ? "true" : "false"}
-            aria-describedby="emailError"
-            ref={register({
-              required: "E-mail is required",
-              validate: v => EMAIL_REGEX.test(v) || "Invalid e-mail address",
-            })}
-          />
-          <span
-            id="emailError"
-            className={cx({ hidden: !errors?.email }, "bg-blue-200")}
-          >
-            {errors?.email?.message}
-          </span>
+
+          <div className="relative">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              aria-invalid={errors?.email ? "true" : "false"}
+              aria-describedby="emailError"
+              ref={register}
+            />
+
+            {errors?.email && (
+              <>
+                <div className="w-6 h-6 absolute top-0 right-0 p-1 mr-1">
+                  <SvgIconWarning />
+                </div>
+                <div className="flex justify-end">
+                  <span id="emailError" className="text-red-600">
+                    {errors.email?.message}
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         <fieldset name="need">
@@ -107,14 +135,30 @@ const ContactPage = () => {
                       backgroundColor: `rgba(255, 255, 255, 0)`,
                     },
                   }}
-                  animate={watch()[name] ? `active` : `inactive`}
+                  animate={watch()[`need.${name}`] ? `active` : `inactive`}
                 >
                   <span>{label}</span>
-                  <input type="checkbox" id={name} name={name} ref={register} />
+                  <input
+                    type="checkbox"
+                    id={name}
+                    name={`need.${name}`}
+                    ref={register}
+                  />
                 </motion.label>
               )
             })}
           </div>
+
+          {errors?.need && (
+            <div className="flex justify-end">
+              <span id="needError" className="text-red-600">
+                {errors.need?.message}
+              </span>
+              <div className="w-6 h-6 p-1 ml-1">
+                <SvgIconWarning />
+              </div>
+            </div>
+          )}
         </fieldset>
 
         <div className="mt-4">
@@ -122,12 +166,24 @@ const ContactPage = () => {
           <textarea
             id="message"
             name="message"
-            ref={register({ required: true, minLength: 15 })}
+            ref={register}
+            aria-invalid={errors?.message ? "true" : "false"}
+            aria-describedby="messageError"
           />
+          {errors?.message && (
+            <div className="flex justify-end">
+              <span id="messageError" className="text-red-600">
+                {errors.message?.message}
+              </span>
+              <div className="w-6 h-6 p-1 ml-1">
+                <SvgIconWarning />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="mt-4 flex justify-center">
-          <input type="submit" disabled={!isValid}/>
+          <input type="submit" />
         </div>
       </form>
     </Presence>

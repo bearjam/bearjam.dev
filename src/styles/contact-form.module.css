@@ -22,7 +22,7 @@
 
 .form input:focus,
 .form textarea:focus {
-  @apply outline-none shadow-outline;
+  @apply outline-none shadow-outline border-0;
 }
 
 .form fieldset[name="need"] > div:nth-child(2) {
@@ -39,4 +39,16 @@
 
 .select-box > input[type="checkbox"] {
   @apply sr-only;
+}
+
+.form input[type="submit"]:disabled {
+  @apply bg-gray-500;
+}
+
+.form input[aria-invalid="true"] {
+  box-shadow: 0 0 0 3px theme('colors.red.500');
+  @apply border-0
+}
+.error-outline {
+  /* box-shadow: 0 0 0 3px theme('colors.red.500'); */
 }
