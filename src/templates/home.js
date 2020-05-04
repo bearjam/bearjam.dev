@@ -27,7 +27,10 @@ const HomeTemplate = ({ frontmatter, children }) => {
               {frontmatter.headline.paragraph}
             </p>
             <div className="flex justify-center mt-6 sm:justify-start">
-              <Link to="/blog" className="button">
+              <Link
+                to="/blog"
+                className="button bg-pink-400 text-white px-4 py-2"
+              >
                 Read blog
               </Link>
             </div>
@@ -54,23 +57,30 @@ const HomeTemplate = ({ frontmatter, children }) => {
           </div>
         </section>
       </Presence>
-      <section className="mt-2 sm:mt-0 flex flex-col border-2 border-red-500 bg-purple-200">
-        <div className="mt-4 mx-2">
-          <h2>
-            We'd love to hear from you.
-            <br />
-            Say hello to magda@bearjam.dev
-          </h2>
-        </div>
-        <div className="mt-6 flex justify-center">
-          <Link to="/about" className="button">
-            About us
-          </Link>
-        </div>
-        <div className="mt-4 mb-6 flex justify-center">
-          <Link to="/contact" className="button">
-            Work with us
-          </Link>
+      <section className="bg-purple-200 border-gray-400 border-t border-b py-4">
+        <div className="max-w-4xl mx-auto mt-2 sm:mt-0 flex flex-col sm:flex-row">
+          <div className="mt-4 mx-2 text-center sm:flex-1 sm:text-left">
+            <h2>We'd love to hear from you.</h2>
+            <h2 className="mt-2">Say hello to magda@bearjam.dev</h2>
+          </div>
+          <div className="sm:flex justify-evenly items-center sm:flex-1">
+            <div className="mt-6 flex justify-center sm:block sm:m-0">
+              <Link
+                to="/about"
+                className="button bg-pink-400 text-white w-1/3 sm:w-auto py-2 sm:px-5"
+              >
+                About us
+              </Link>
+            </div>
+            <div className="mt-4 mb-6 flex justify-center sm:block sm:m-0">
+              <Link
+                to="/contact"
+                className="button text-pink-400 bg-white w-1/3 sm:w-auto py-2 sm:px-5"
+              >
+                Work with us
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </>

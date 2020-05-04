@@ -40,6 +40,6 @@ a {
   @apply font-semibold;
 }
 
-.bv-hidden {
-  backface-visibility: hidden;
+.button {
+  @apply text-xs tracking-wide rounded-md shadow-lg text-center;
 }
