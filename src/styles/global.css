@@ -35,3 +35,7 @@ h3 {
 a {
   @apply font-semibold;
 }
+
+.bv-hidden {
+  backface-visibility: hidden;
+}

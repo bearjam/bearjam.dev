@@ -1,27 +1,10 @@
 import { motion } from "framer-motion"
 import React from "react"
-import { springQuickExit, springTwo } from "../animations"
+import { slalom } from "../animations"
 import { Link } from "../components/Link"
 import Presence from "../components/Presence"
 import SEO from "../components/SEO"
 import { SvgIsometricOne } from "../components/svg"
-
-const variants = i => ({
-  enter: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      ...springTwo,
-    },
-  },
-  exit: {
-    opacity: 0,
-    x: i % 2 === 0 ? -200 : 200,
-    transition: {
-      ...springQuickExit,
-    },
-  },
-})
 
 const HomeTemplate = ({ frontmatter, children }) => {
   return (
@@ -31,13 +14,13 @@ const HomeTemplate = ({ frontmatter, children }) => {
         <section className="mt-5 sm:mt-8 flex items-center flex-col sm:flex-row sm:justify-between">
           <motion.div
             className="w-full mb-4 sm:order-last sm:flex-1 flex justify-end max-w-lg"
-            variants={variants(1)}
+            variants={slalom(1)}
           >
             <SvgIsometricOne className="w-full" />
           </motion.div>
           <motion.div
             className="my-6 text-center sm:flex-1 sm:text-left sm:max-w-xs"
-            variants={variants(0)}
+            variants={slalom(0)}
           >
             <h1 className="leading-10">{frontmatter.headline.heading}</h1>
             <p className="leading-6 tracking-wide my-6">
@@ -53,7 +36,7 @@ const HomeTemplate = ({ frontmatter, children }) => {
         <section className="mt-12 sm:mt-0">
           <motion.h1
             className="leading-10 text-center sm:text-left"
-            variants={variants(0)}
+            variants={slalom(0)}
           >
             {frontmatter.stuffWeDo.heading}
           </motion.h1>
@@ -62,7 +45,7 @@ const HomeTemplate = ({ frontmatter, children }) => {
               <motion.div
                 key={heading}
                 className="w-full sm:w-5/12 sm:flex-grow sm:max-w-xs lg:max-w-sm mt-8"
-                variants={variants(i)}
+                variants={slalom(i)}
               >
                 <h3>{heading}</h3>
                 <p className="my-2 sm:pr-8 md:pr-4 lg:pr-0">{blurb}</p>

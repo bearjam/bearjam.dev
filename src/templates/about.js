@@ -2,6 +2,7 @@ import React from "react"
 import AboutCard from "../components/AboutCard"
 import Presence from "../components/Presence"
 import { SvgMagAvatar, SvgTomAvatar } from "../components/svg"
+import { slalom } from "../animations"
 
 const avatars = {
   Magda: SvgMagAvatar,
@@ -10,9 +11,9 @@ const avatars = {
 
 const AboutTemplate = ({ frontmatter, children }) => {
   return (
-    <Presence>
-      {frontmatter.cards.map(({ name, ...rest }) => (
-        <AboutCard key={name} name={name} avatar={avatars[name]} {...rest} />
+    <Presence key="aboutPage">
+      {frontmatter.cards.map(({ name, ...rest }, i) => (
+        <AboutCard key={name} name={name} avatar={avatars[name]} variants={slalom(i)} {...rest} />
       ))}
     </Presence>
   )

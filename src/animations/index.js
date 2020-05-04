@@ -35,3 +35,21 @@ export const presets = {
   slow: { mass: 1, stiffness: 280, damping: 60 },
   molasses: { mass: 1, stiffness: 280, damping: 120 },
 }
+
+
+export const slalom = i => ({
+  enter: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      ...springTwo,
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: i % 2 === 0 ? -200 : 200,
+    transition: {
+      ...springQuickExit,
+    },
+  },
+})
