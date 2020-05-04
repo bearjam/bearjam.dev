@@ -6,6 +6,10 @@ html, body {
   @apply overflow-x-hidden;
 }
 
+html, body, div#___gatsby, div#gatsby-focus-wrapper {
+  height: 100%;
+}
+
 body {
   font-family: "Inter";
   font-weight: normal;

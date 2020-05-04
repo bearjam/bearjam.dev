@@ -4,7 +4,7 @@ import { MediaContext } from "../contexts"
 import "typeface-corben"
 import "typeface-inter"
 import { AnimatePresence } from "framer-motion"
-import useMedia from '../hooks/useMedia'
+import useMedia from "../hooks/useMedia"
 import Header from "./Header"
 import Footer from "./Footer"
 
@@ -13,8 +13,12 @@ export default ({ children }) => {
   return (
     <MediaContext.Provider value={screen}>
       <Header />
-      <AnimatePresence exitBeforeEnter>{children}</AnimatePresence>
-      <Footer />
+      <div className="flex flex-col h-full">
+        <main className="flex-grow flex-shrink-0">
+          <AnimatePresence exitBeforeEnter>{children}</AnimatePresence>
+        </main>
+        <Footer />
+      </div>
     </MediaContext.Provider>
   )
 }

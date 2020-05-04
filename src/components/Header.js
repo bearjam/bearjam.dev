@@ -49,7 +49,7 @@ const Header = () => {
       />
       <div className={styles.container}>
         <div className={styles.banner}>
-          <Link to="/">
+          <Link to="/" onClick={() => cycleOpen(0)}>
             <SvgBearjamAvatar />
             <SvgBearjamTitle />
           </Link>
