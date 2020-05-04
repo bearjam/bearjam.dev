@@ -6,6 +6,7 @@
 
 // You can delete this file if you're not using it
 
+// const path = require('path')
 const { createFilePath } = require('gatsby-source-filesystem')
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
@@ -23,6 +24,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     })
   }
 }
+
 // exports.createPages = async ({ graphql, actions, reporter }) => {
 //   // Destructure the createPage function from the actions object
 //   const { createPage } = actions
@@ -34,6 +36,9 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 //             id
 //             fields {
 //               slug
+//             }
+//             frontmatter {
+//               templateKey
 //             }
 //           }
 //         }
@@ -47,6 +52,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 //   const posts = result.data.allMdx.edges
 //   // you'll call `createPage` for each result
 //   posts.forEach(({ node }) => {
+//     console.log(node.fields.slug)
 //     createPage({
 //       // This is the slug you created before
 //       // (or `node.frontmatter.slug`)

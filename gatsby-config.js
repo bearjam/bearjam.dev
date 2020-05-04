@@ -23,11 +23,10 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-source-filesystem`,
+      resolve: `gatsby-plugin-page-creator`,
       options: {
-        name: `pages`,
-        path: `${__dirname}/src/pages`,
-      },
+        path: `${__dirname}/src/content`
+      }
     },
     {
       resolve: `gatsby-plugin-mdx`,
@@ -51,7 +50,7 @@ module.exports = {
         icon: `src/assets/favicon.svg`, // This path is relative to the root of the site.
       },
     },
-    `gatsby-plugin-offline`
+    // `gatsby-plugin-offline`
     // `gatsby-plugin-webpack-bundle-analyser-v2`,
   ],
 }
