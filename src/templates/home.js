@@ -57,9 +57,9 @@ const HomeTemplate = ({ frontmatter, children }) => {
           </div>
         </section>
       </Presence>
-      <section className="bg-purple-200 border-gray-400 border-t border-b py-4">
-        <div className="max-w-4xl mx-auto mt-2 sm:mt-0 flex flex-col sm:flex-row">
-          <div className="mt-4 mx-2 text-center sm:flex-1 sm:text-left">
+      <section className="bg-purple-200 border-gray-400 border-t border-b pt-4 sm:py-4">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row">
+          <div className="mx-2 text-center sm:flex-1 sm:text-left">
             <h2>We'd love to hear from you.</h2>
             <h2 className="mt-2">Say hello to magda@bearjam.dev</h2>
           </div>
