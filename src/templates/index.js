@@ -1,4 +1,3 @@
-import _ from "lodash"
 import React from "react"
 import AboutTemplate from "./about"
 import HomeTemplate from "./home"
@@ -10,8 +9,7 @@ const templateComponents = {
 }
 
 const TemplateIndex = ({ pageContext: { frontmatter }, children }) => {
-  const templateKey = _.get(frontmatter, "templateKey", "default")
-  const Template = templateComponents[templateKey]
+  const Template = templateComponents[frontmatter?.templateKey || "default"]
 
   return <Template frontmatter={frontmatter}>{children}</Template>
 }
