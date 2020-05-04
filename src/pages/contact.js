@@ -68,20 +68,33 @@ const ContactPage = () => {
       <div className={styles.scene}>
         <motion.div
           className={styles.card}
+          initial="exit"
+          exit="exit"
           animate={variant}
           variants={{
+            exit: {
+              rotateY: 90,
+            },
             default: {
               rotateY: 0,
             },
             success: {
               rotateY: 180,
+              transition: {
+                type: "spring",
+                damping: 5,
+                mass: 3,
+                stiffness: 80,
+              },
             },
           }}
           transition={{
-            type: "spring",
-            damping: 5,
-            mass: 3,
-            stiffness: 80,
+            type: 'spring',
+            mass: 2,
+            stiffness: 200,
+            damping: 100,
+            restDelta: 3,
+            restSpeed: 3
           }}
         >
           <form
@@ -218,7 +231,6 @@ const ContactPage = () => {
                 <input type="submit" />
               </div>
               {isSubmitted && (
-
                 <div className="flex justify-end">
                   <span id="submissionError" className="text-red-600">
                     Submission error, please try again

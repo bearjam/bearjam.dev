@@ -28,7 +28,7 @@ const AboutCard = ({
   const toggleOpen = () => setOpen(!open)
 
   return (
-    <div className={`${styles.root} ${className}`} {...restProps}>
+    <motion.div className={`${styles.root} ${className}`} {...restProps}>
       <div className={styles.cardAvatar}>
         <Avatar />
       </div>
@@ -149,7 +149,7 @@ const AboutCard = ({
           </motion.button>
         </motion.div>
       </motion.div>
-    </div>
+    </motion.div>
   )
 }
 
