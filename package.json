@@ -31,6 +31,7 @@
     "yup": "^0.28.5"
   },
   "devDependencies": {
+    "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.9",
     "prettier": "2.0.4"
   },
   "keywords": [

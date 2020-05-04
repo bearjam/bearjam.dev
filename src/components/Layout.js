@@ -13,7 +13,9 @@ export default ({ children }) => {
   return (
     <MediaContext.Provider value={screen}>
       <Header />
-      <AnimatePresence exitBeforeEnter>{children}</AnimatePresence>
+      <AnimatePresence exitBeforeEnter>
+        {children}
+        </AnimatePresence>
       <Footer />
     </MediaContext.Provider>
   )

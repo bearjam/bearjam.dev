@@ -12,28 +12,27 @@ module.exports = {
     {
       resolve: `gatsby-plugin-layout`,
       options: {
-        component: require.resolve(`./src/components/Layout.js`)
-      }
+        component: require.resolve(`./src/components/Layout.js`),
+      },
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `blog`,
-        path: `${__dirname}/src/content/blog`
-      }
+        path: `${__dirname}/src/content/blog`,
+      },
     },
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
         defaultLayouts: {
           default: `${__dirname}/src/templates/index.js`,
-        }
-      }
+        },
+      },
     },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-
         name: `Bearjam`,
         short_name: `Bearjam`,
         start_url: `/`,
@@ -43,8 +42,9 @@ module.exports = {
         // see https://developers.google.com/web/fundamentals/web-app-manifest/#display
         display: `standalone`,
         icon: `src/assets/favicon.svg`, // This path is relative to the root of the site.
-
-      }
-    }
+      },
+    },
+    `gatsby-plugin-offline`
+    // `gatsby-plugin-webpack-bundle-analyser-v2`,
   ],
 }

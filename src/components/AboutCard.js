@@ -4,7 +4,7 @@ import theme from "tailwindcss/defaultTheme"
 import styles from "../styles/about-card.module.css"
 import { SvgIconExpand } from "./svg"
 import SocialLinks from "./SocialLinks"
-import MDX from "@mdx-js/runtime"
+// import MDX from "@mdx-js/runtime"
 
 const transition = {
   type: "spring",
@@ -126,11 +126,11 @@ const AboutCard = ({
             transition={transition}
             className={styles.mdBody}
           >
-            <MDX>{body}</MDX>
+            {/* <MDX> */}
+            {body}
+            {/* </MDX> */}
           </motion.div>
-          <motion.button
-            onClick={toggleOpen}
-          >
+          <motion.button onClick={toggleOpen}>
             <SvgIconExpand
               style={{
                 originX: "50%",
