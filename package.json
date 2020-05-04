@@ -12,6 +12,7 @@
     "framer-motion": "^2.0.0-beta.59",
     "gatsby": "^2.20.25",
     "gatsby-image": "^2.3.4",
+    "gatsby-plugin-catch-links": "^2.3.0",
     "gatsby-plugin-layout": "^1.2.3",
     "gatsby-plugin-manifest": "^2.3.5",
     "gatsby-plugin-mdx": "^1.1.9",

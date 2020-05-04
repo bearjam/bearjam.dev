@@ -10,3 +10,11 @@
 .root article {
   @apply mt-6
 }
+
+.root article a {
+  @apply text-pink-500;
+}
+
+.root article a:hover {
+  @apply transform scale-150;
+}
