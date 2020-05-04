@@ -23,6 +23,13 @@ module.exports = {
       },
     },
     {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `pages`,
+        path: `${__dirname}/src/pages`,
+      },
+    },
+    {
       resolve: `gatsby-plugin-mdx`,
       options: {
         defaultLayouts: {
@@ -44,7 +51,7 @@ module.exports = {
         icon: `src/assets/favicon.svg`, // This path is relative to the root of the site.
       },
     },
-    `gatsby-plugin-offline`
+    // `gatsby-plugin-offline`
     // `gatsby-plugin-webpack-bundle-analyser-v2`,
   ],
 }

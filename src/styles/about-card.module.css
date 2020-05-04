@@ -39,7 +39,7 @@
 }
 
 .md-body {
-  @apply overflow-hidden px-4 pb-12 h-10 rounded-lg mt-4;
+  @apply overflow-hidden px-4 pb-12 h-10 rounded-lg mt-4 whitespace-pre-wrap;
 }
 .md-body>p {
   @apply mb-2;
