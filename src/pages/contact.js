@@ -7,6 +7,7 @@ import { SvgIconWarning, SvgThankBear } from "../components"
 import Presence from "../components/Presence"
 import styles from "../styles/contact-form.module.css"
 import cx from "classnames"
+import { slalom } from "../animations"
 
 const ContactPage = () => {
   const validationSchema = yup.object().shape({
@@ -64,9 +65,48 @@ const ContactPage = () => {
   // }
 
   return (
-    <Presence>
+    <Presence key="contactPage">
+      <motion.div
+        key="contactHeadings"
+        className="text-center my-4"
+        animate={variant === "default" ? "enter" : variant}
+        initial="exit"
+        exit="exit"
+        variants={{
+          enter: {
+            transition: {
+              staggerChildren: 0.2,
+            },
+          },
+          exit: {
+            transition: {
+              staggerChildren: 0.2,
+              staggerDirection: -1,
+            },
+          },
+          success: {
+            opacity: 0,
+            height: 0,
+            transition: {
+              height: {
+                delay: 0.3
+              },
+              opacity: {
+                delay: 0,
+              },
+              type: 'spring'
+            }
+          }
+        }}
+      >
+        <motion.h1 variants={slalom(0)}>Say hello!</motion.h1>
+        <motion.h2 variants={slalom(1)}>
+          Get a free 1-to-1 consultation
+        </motion.h2>
+      </motion.div>
       <div className={styles.scene}>
         <motion.div
+          key="contactCard"
           className={styles.card}
           initial="exit"
           exit="exit"
@@ -85,16 +125,17 @@ const ContactPage = () => {
                 damping: 5,
                 mass: 3,
                 stiffness: 80,
+                delay: 0.3
               },
             },
           }}
           transition={{
-            type: 'spring',
+            type: "spring",
             mass: 2,
             stiffness: 200,
             damping: 100,
             restDelta: 3,
-            restSpeed: 3
+            restSpeed: 3,
           }}
         >
           <form
@@ -230,7 +271,7 @@ const ContactPage = () => {
               <div className="mt-4 flex justify-center">
                 <input type="submit" />
               </div>
-              {isSubmitted && (
+              {isSubmitted && variant === "default" && (
                 <div className="flex justify-end">
                   <span id="submissionError" className="text-red-600">
                     Submission error, please try again
