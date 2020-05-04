@@ -12,9 +12,9 @@
 }
 
 .root article a {
-  @apply text-pink-500;
+  @apply text-pink-500 transition transition-transform duration-100;
 }
 
 .root article a:hover {
-  @apply transform scale-150;
+  @apply inline-block transform scale-105;
 }
