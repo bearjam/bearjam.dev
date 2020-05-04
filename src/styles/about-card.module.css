@@ -1,5 +1,9 @@
 .root {
-  @apply relative mt-10 mx-1 p-1;
+  @apply relative mt-8 mx-1 p-1;
+}
+
+.root:nth-of-type(2) {
+  @apply mt-12
 }
 
 .card-avatar {
@@ -52,7 +56,11 @@
 @screen sm {
 
   .root {
-    @apply max-w-2xl mx-auto mt-16;
+    @apply max-w-2xl mx-auto;
+  }
+
+  .root:nth-of-type(2) {
+    @apply mt-16
   }
 
   .card-avatar {
