@@ -92,7 +92,7 @@ const Header = () => {
                       to={href}
                       className={cx(
                         {
-                          ["text-pink-400"]: active,
+                          "text-pink-400": active,
                         },
                         `mb-5`
                       )}

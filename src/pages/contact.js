@@ -3,7 +3,7 @@ import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import theme from "tailwindcss/defaultTheme"
 import * as yup from "yup"
-import { SvgIconWarning } from "../components"
+import { SvgIconWarning, SvgThankBear } from "../components"
 import Presence from "../components/Presence"
 import styles from "../styles/contact-form.module.css"
 import cx from "classnames"
@@ -32,7 +32,7 @@ const ContactPage = () => {
     validationSchema,
   })
 
-  const { isSubmitting } = formState
+  const { isSubmitted } = formState
 
   const [variant, setVariant] = useState("default")
 
@@ -213,11 +213,28 @@ const ContactPage = () => {
               )}
             </div>
 
-            <div className="mt-4 flex justify-center">
-              <input type="submit" />
+            <div>
+              <div className="mt-4 flex justify-center">
+                <input type="submit" />
+              </div>
+              {isSubmitted && (
+
+                <div className="flex justify-end">
+                  <span id="submissionError" className="text-red-600">
+                    Submission error, please try again
+                  </span>
+                  <div className="w-6 h-6 p-1 ml-1">
+                    <SvgIconWarning />
+                  </div>
+                </div>
+              )}
             </div>
           </form>
-          <div className={cx(styles.cardFace, styles.back)}></div>
+          <div className={cx(styles.cardFace, styles.back)}>
+            <h2>Thank You!</h2>
+            <SvgThankBear className="w-10 my-2" />
+            <h4>We'll be in touch soon</h4>
+          </div>
         </motion.div>
       </div>
     </Presence>
