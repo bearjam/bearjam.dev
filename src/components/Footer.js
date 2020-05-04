@@ -8,9 +8,9 @@ import Nav from "./Nav"
 import SocialLinks from "./SocialLinks"
 
 const socialLinks = [
-  { site: "github", href: "https://github.com/bearjamdev" },
+  { site: "github", href: "https://github.com/bearjam" },
   { site: "twitter", href: "https://twitter.com/bearjamdev" },
-  { site: "linkedin", href: "https://linkedin.com/in/bearjamdev" },
+  { site: "linkedin", href: "https://linkedin.com/company/bearjam" },
 ]
 const defaultClassName =
   "py-10 flex flex-col items-center sm:relative sm:pt-12 sm:pb-4"
