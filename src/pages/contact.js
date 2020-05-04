@@ -63,7 +63,7 @@ const ContactPage = () => {
   // }
 
   return (
-    <Presence key="contactPage">
+    <Presence key="contactPage" className="px-2">
       <motion.div
         key="contactHeadings"
         className="text-center my-4"

@@ -11,7 +11,7 @@ const avatars = {
 
 const AboutTemplate = ({ frontmatter, children }) => {
   return (
-    <Presence key="aboutPage">
+    <Presence key="aboutPage" className="px-2">
       {frontmatter.cards.map(({ name, ...rest }, i) => (
         <AboutCard key={name} name={name} avatar={avatars[name]} variants={slalom(i)} {...rest} />
       ))}

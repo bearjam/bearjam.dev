@@ -22,7 +22,7 @@ const BlogIndex = ({ data }) => {
   const { edges: posts } = data.allMdx
 
   return (
-    <Presence key="blogPage">
+    <Presence key="blogPage" className="px-2 mt-3">
       <SEO title="Blog" />
       <motion.h1 {...aniProps}>Awesome MDX Blog</motion.h1>
 

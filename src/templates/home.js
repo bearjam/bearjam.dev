@@ -10,8 +10,8 @@ const HomeTemplate = ({ frontmatter, children }) => {
   return (
     <>
       <SEO title="Home" />
-      <Presence key="indexPage">
-        <section className="mt-5 sm:mt-8 flex items-center flex-col sm:flex-row sm:justify-between">
+      <Presence key="indexPage" className="px-2">
+        <section className="mt-5 sm:mt-6 flex items-center flex-col sm:flex-row sm:justify-between">
           <motion.div
             className="w-full mb-4 sm:order-last sm:flex-1 flex justify-end max-w-lg"
             variants={slalom(1)}
