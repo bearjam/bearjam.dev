@@ -1,11 +1,11 @@
-import React from "react"
-import Presence from "../components/presence"
-import styles from "./post.module.css"
 import cx from "classnames"
-import { defaultPresenceProps } from "../animations"
 import { motion } from "framer-motion"
 import { graphql } from "gatsby"
-import { MDXRenderer } from "gatsby-plugin-mdx"
+import React from "react"
+import { defaultPresenceProps } from "../animations"
+import MDX from "../components/mdx"
+import Presence from "../components/presence"
+import styles from "./post.module.css"
 
 export default function PostTemplate({ data }) {
   const {
@@ -19,7 +19,7 @@ export default function PostTemplate({ data }) {
         <h1>{title}</h1>
         <time className="date">{date}</time>
         <article>
-          <MDXRenderer>{body}</MDXRenderer>
+          <MDX>{body}</MDX>
         </article>
       </motion.div>
     </Presence>

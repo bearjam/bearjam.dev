@@ -4,9 +4,9 @@ import React from "react"
 import { slalom } from "../animations"
 import { SvgIsometricOne } from "../components/art"
 import { Link } from "../components/link"
+import MDX from "../components/mdx"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
-import { MDXRenderer } from "gatsby-plugin-mdx"
 
 const HomeTemplate = ({ data }) => {
   const { frontmatter } = data.mdx
@@ -55,7 +55,7 @@ const HomeTemplate = ({ data }) => {
               >
                 <h3>{heading}</h3>
                 <div className="my-2 sm:pr-8 md:pr-4 lg:pr-0">
-                  <MDXRenderer>{blurb}</MDXRenderer>
+                  <MDX>{blurb}</MDX>
                 </div>
               </motion.div>
             ))}
