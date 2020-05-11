@@ -1,12 +1,15 @@
 import { motion } from "framer-motion"
+import { graphql } from "gatsby"
 import React from "react"
 import { slalom } from "../animations"
-import { Link } from "../components/Link"
-import Presence from "../components/Presence"
-import SEO from "../components/SEO"
-import { SvgIsometricOne } from "../components/svg"
+import { SvgIsometricOne } from "../components/art"
+import { Link } from "../components/link"
+import MDX from "../components/mdx"
+import Presence from "../components/presence"
+import SEO from "../components/seo"
 
-const HomeTemplate = ({ frontmatter, children }) => {
+const HomeTemplate = ({ data }) => {
+  const { frontmatter } = data.mdx
   return (
     <>
       <SEO title="Home" />
@@ -26,12 +29,18 @@ const HomeTemplate = ({ frontmatter, children }) => {
             <p className="leading-6 tracking-wide my-6">
               {frontmatter.headline.paragraph}
             </p>
-            <div className="flex justify-center mt-6 sm:justify-start">
+            <div className="flex justify-center items-center flex-col mt-6 sm:flex-row sm:justify-start">
               <Link
                 to="/blog"
-                className="button bg-pink-400 text-white px-4 py-2"
+                className="button m-1 bg-pink-400 text-white px-4 w-1/3 sm:w-auto py-2 sm:px-5"
               >
                 Read blog
+              </Link>
+              <Link
+                to="/contact"
+                className="button m-1 bg-white text-pink-400 border-2 border-gray-300 px-4 w-1/3 sm:w-auto py-2 sm:px-5"
+              >
+                Work with us
               </Link>
             </div>
           </motion.div>
@@ -51,7 +60,9 @@ const HomeTemplate = ({ frontmatter, children }) => {
                 variants={slalom(i)}
               >
                 <h3>{heading}</h3>
-                <p className="my-2 sm:pr-8 md:pr-4 lg:pr-0">{blurb}</p>
+                <div className="my-2 sm:pr-8 md:pr-4 lg:pr-0">
+                  <MDX>{blurb}</MDX>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -88,3 +99,25 @@ const HomeTemplate = ({ frontmatter, children }) => {
 }
 
 export default HomeTemplate
+
+export const query = graphql`
+  query HomeQuery($id: String) {
+    mdx(id: { eq: $id }) {
+      frontmatter {
+        templateKey
+        headline {
+          heading
+          paragraph
+        }
+        title
+        stuffWeDo {
+          blurbs {
+            heading
+            blurb
+          }
+          heading
+        }
+      }
+    }
+  }
+`

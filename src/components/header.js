@@ -7,11 +7,12 @@ import {
 } from "framer-motion"
 import React, { Fragment, useContext } from "react"
 import theme from "tailwindcss/defaultTheme"
-import { MediaContext } from "../contexts"
-import styles from "../styles/header.module.css"
-import { Link, MotionLink } from "./Link"
-import Nav from "./Nav"
-import { SvgBearjamAvatar, SvgBearjamTitle, SvgMenu } from "./svg"
+import { MediaContext } from "../hooks"
+import styles from "./header.module.css"
+import { Link, MotionLink } from "./link"
+import Nav from "./nav"
+import { SvgBearjamAvatar, SvgBearjamTitle } from "./art"
+import Menu from "./menu"
 
 const Header = () => {
   const screen = useContext(MediaContext)
@@ -65,7 +66,7 @@ const Header = () => {
                 animate={{ opacity: 1 }}
                 initial={{ opacity: 0 }}
               >
-                <SvgMenu open={open === "open"} className={styles.menu} />
+                <Menu open={open === "open"} className={styles.menu} />
               </motion.button>
               {open === "open" && (
                 <Nav

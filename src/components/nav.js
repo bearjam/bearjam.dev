@@ -1,7 +1,7 @@
 import { useLocation } from "@reach/router"
 import { motion } from "framer-motion"
 import React from "react"
-import { Link } from "./Link"
+import { Link } from "./link"
 
 const links = [
   { href: "/", label: "Home" },

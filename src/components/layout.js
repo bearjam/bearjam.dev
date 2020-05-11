@@ -1,12 +1,11 @@
 import React from "react"
-import "../styles/global.css"
-import { MediaContext } from "../contexts"
+import "./layout.css"
 import "typeface-corben"
 import "typeface-inter"
 import { AnimatePresence } from "framer-motion"
-import useMedia from "../hooks/useMedia"
-import Header from "./Header"
-import Footer from "./Footer"
+import { useMedia, MediaContext } from "../hooks"
+import Header from "./header"
+import Footer from "./footer"
 
 export default ({ children }) => {
   const screen = useMedia()

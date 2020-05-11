@@ -1,0 +1,6 @@
+export { default as SvgBearjamAvatar } from "./SvgBearjamAvatar"
+export { default as SvgBearjamTitle } from "./SvgBearjamTitle"
+export { default as SvgIsometricOne } from "./SvgIsometricOne"
+export { default as SvgMagAvatar } from "./SvgMagAvatar"
+export { default as SvgThankBear } from "./SvgThankBear"
+export { default as SvgTomAvatar } from "./SvgTomAvatar"

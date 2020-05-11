@@ -12,30 +12,24 @@ module.exports = {
     {
       resolve: `gatsby-plugin-layout`,
       options: {
-        component: require.resolve(`./src/components/Layout.js`),
+        component: require.resolve(`./src/components/layout.js`),
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `pages`,
+        path: `${__dirname}/src/data/pages`,
       },
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `blog`,
-        path: `${__dirname}/src/content/blog`,
+        path: `${__dirname}/src/data/blog`,
       },
     },
-    {
-      resolve: `gatsby-plugin-page-creator`,
-      options: {
-        path: `${__dirname}/src/content`
-      }
-    },
-    {
-      resolve: `gatsby-plugin-mdx`,
-      options: {
-        defaultLayouts: {
-          default: `${__dirname}/src/templates/index.js`,
-        },
-      },
-    },
+    `gatsby-plugin-mdx`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
@@ -50,7 +44,7 @@ module.exports = {
         icon: `src/assets/favicon.svg`, // This path is relative to the root of the site.
       },
     },
-    `gatsby-plugin-catch-links`
+    `gatsby-plugin-catch-links`,
     // `gatsby-plugin-offline`
     // `gatsby-plugin-webpack-bundle-analyser-v2`,
   ],

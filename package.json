@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "author": "Thomas O'Neill <tom@bearjam.dev>",
   "dependencies": {
+    "@mdx-js/react": "^1.6.1",
     "@now/node": "^1.5.1",
     "@sendgrid/mail": "^7.1.0",
     "classnames": "^2.2.6",

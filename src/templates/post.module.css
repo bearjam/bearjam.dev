@@ -1,14 +1,17 @@
 .root {
   @apply mt-4 max-w-xl mx-auto;
 }
+
 .root h1 {
   @apply mt-4;
 }
+
 .root p {
   @apply mb-5;
 }
+
 .root article {
-  @apply mt-6
+  @apply mt-6;
 }
 
 .root article a {

@@ -2,11 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
+html,
+body {
   @apply overflow-x-hidden;
 }
 
-html, body, div#___gatsby, div#gatsby-focus-wrapper {
+html,
+body,
+div#___gatsby,
+div#gatsby-focus-wrapper {
   height: 100%;
 }
 
@@ -16,7 +20,10 @@ body {
   @apply text-blue-900;
 }
 
-h1, h2, h3, a {
+h1,
+h2,
+h3,
+a {
   @apply text-blue-800;
 }
 
