@@ -2,10 +2,11 @@ import { motion } from "framer-motion"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import theme from "tailwindcss/defaultTheme"
-import { SvgIconWarning, SvgThankBear } from "../components"
+import { SvgThankBear } from "../components/art"
+import { SvgIconWarning } from "../components/icons"
 import { string, object } from "yup"
-import Presence from "../components/Presence"
-import styles from "../styles/contact-form.module.css"
+import Presence from "../components/presence"
+import styles from "./contact.module.css"
 import cx from "classnames"
 import { slalom } from "../animations"
 
@@ -87,14 +88,14 @@ const ContactPage = () => {
             height: 0,
             transition: {
               height: {
-                delay: 0.3
+                delay: 0.3,
               },
               opacity: {
                 delay: 0,
               },
-              type: 'spring'
-            }
-          }
+              type: "spring",
+            },
+          },
         }}
       >
         <motion.h1 variants={slalom(0)}>Say hello!</motion.h1>
@@ -123,7 +124,7 @@ const ContactPage = () => {
                 damping: 5,
                 mass: 3,
                 stiffness: 80,
-                delay: 0.3
+                delay: 0.3,
               },
             },
           }}

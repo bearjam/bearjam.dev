@@ -1,12 +1,14 @@
 import { motion } from "framer-motion"
+import { graphql, useStaticQuery } from "gatsby"
 import React from "react"
 import { slalom } from "../animations"
-import { Link } from "../components/Link"
-import Presence from "../components/Presence"
-import SEO from "../components/SEO"
-import { SvgIsometricOne } from "../components/svg"
+import { Link } from "../components/link"
+import Presence from "../components/presence"
+import SEO from "../components/seo"
+import { SvgIsometricOne } from "../components/art"
 
-const HomeTemplate = ({ frontmatter, children }) => {
+const HomeTemplate = ({ data }) => {
+  const { frontmatter } = data.mdx
   return (
     <>
       <SEO title="Home" />
@@ -88,3 +90,25 @@ const HomeTemplate = ({ frontmatter, children }) => {
 }
 
 export default HomeTemplate
+
+export const query = graphql`
+  query HomeQuery($id: String) {
+    mdx(id: { eq: $id }) {
+      frontmatter {
+        templateKey
+        headline {
+          heading
+          paragraph
+        }
+        title
+        stuffWeDo {
+          blurbs {
+            heading
+            blurb
+          }
+          heading
+        }
+      }
+    }
+  }
+`

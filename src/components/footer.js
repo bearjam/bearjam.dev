@@ -1,11 +1,11 @@
 import cx from "classnames"
 import { motion } from "framer-motion"
 import React from "react"
-import styles from "../styles/footer.module.css"
-import { SvgBearjamAvatar, SvgBearjamTitle } from "./"
-import { Link } from "./Link"
-import Nav from "./Nav"
-import SocialLinks from "./SocialLinks"
+import styles from "./footer.module.css"
+import { SvgBearjamAvatar, SvgBearjamTitle } from "./art"
+import { Link } from "./link"
+import Nav from "./nav"
+import SocialLinks from "./social-links"
 
 const socialLinks = [
   { site: "github", href: "https://github.com/bearjam" },

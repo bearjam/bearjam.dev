@@ -1,20 +1,45 @@
 import React from "react"
-import Presence from "../components/Presence"
-import styles from "../styles/post.module.css"
+import Presence from "../components/presence"
+import styles from "./post.module.css"
 import cx from "classnames"
 import { defaultPresenceProps } from "../animations"
 import { motion } from "framer-motion"
+import { graphql } from "gatsby"
+import { MDXRenderer } from "gatsby-plugin-mdx"
 
-export default function PostTemplate({ frontmatter, children }) {
-  const date = new Date(frontmatter.date).toUTCString().split(' ').slice(1,4).join(' ')
+export default function PostTemplate({ data }) {
+  const {
+    frontmatter: { title, date },
+    body,
+  } = data.mdx
+  // const date = new Date(frontmatter.date)
+  //   .toUTCString()
+  //   .split(" ")
+  //   .slice(1, 4)
+  //   .join(" ")
 
   return (
     <Presence key="postTemplate" className={cx("px-2", styles.root)}>
       <motion.div {...defaultPresenceProps}>
-        <h1>{frontmatter.title}</h1>
+        <h1>{title}</h1>
         <time className="date">{date}</time>
-        <article>{children}</article>
+        <article>
+          <MDXRenderer>{body}</MDXRenderer>
+        </article>
       </motion.div>
     </Presence>
   )
 }
+
+export const query = graphql`
+  query PostQuery($id: String) {
+    mdx(id: { eq: $id }) {
+      id
+      body
+      frontmatter {
+        title
+        date(formatString: "MMMM Do, YYYY")
+      }
+    }
+  }
+`

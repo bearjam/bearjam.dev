@@ -1,9 +1,9 @@
 import { motion } from "framer-motion"
 import React, { useState } from "react"
 import theme from "tailwindcss/defaultTheme"
-import styles from "../styles/about-card.module.css"
-import { SvgIconExpand } from "./svg"
-import SocialLinks from "./SocialLinks"
+import styles from "./about-card.module.css"
+import { SvgIconExpand } from "./icons"
+import SocialLinks from "./social-links"
 
 const transition = {
   type: "spring",

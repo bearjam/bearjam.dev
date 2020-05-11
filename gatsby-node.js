@@ -1,67 +1,110 @@
-/**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/node-apis/
- */
+const path = require("path")
+const { createFilePath } = require("gatsby-source-filesystem")
 
-// You can delete this file if you're not using it
+exports.createPages = async ({ graphql, actions, reporter }) => {
+  const { createPage } = actions
+  const result = await graphql(`
+    query {
+      allMdx {
+        edges {
+          node {
+            id
+            fields {
+              slug
+            }
+            frontmatter {
+              templateKey
+            }
+          }
+        }
+      }
+    }
+  `)
+  if (result.errors) {
+    reporter.panicOnBuild('🚨  ERROR: Loading "createPages" query')
+  }
+  const posts = result.data.allMdx.edges
 
-// const path = require('path')
-const { createFilePath } = require('gatsby-source-filesystem')
+  posts.forEach(({ node }, index) => {
+    const templateKey = node.frontmatter.templateKey || `post`
+    createPage({
+      path: node.fields.slug,
+      component: path.resolve(`./src/templates/${templateKey}.js`),
+      context: { id: node.id },
+    })
+  })
+}
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
-
   const { createNodeField } = actions
 
-  if (node.internal.type === 'Mdx') {
-    const sourceDir = getNode(node.parent).sourceInstanceName
-    const filePath = createFilePath({ node, getNode })
-    const slug = '/' + sourceDir + filePath
+  if (node.internal.type === "Mdx") {
+    const collection = getNode(node.parent).sourceInstanceName
+
     createNodeField({
-      name: 'slug',
+      name: "collection",
       node,
-      value: slug
+      value: collection,
+    })
+
+    let slug = createFilePath({ node, getNode })
+
+    switch (collection) {
+      case "pages":
+        break
+      default:
+        slug = `/${collection}${slug}`
+        break
+    }
+
+    createNodeField({
+      name: "slug",
+      node,
+      value: slug,
     })
   }
 }
 
-// exports.createPages = async ({ graphql, actions, reporter }) => {
-//   // Destructure the createPage function from the actions object
-//   const { createPage } = actions
-//   const result = await graphql(`
-//     query {
-//       allMdx {
-//         edges {
-//           node {
-//             id
-//             fields {
-//               slug
-//             }
-//             frontmatter {
-//               templateKey
-//             }
-//           }
-//         }
-//       }
-//     }
-//   `)
-//   if (result.errors) {
-//     reporter.panicOnBuild('🚨  ERROR: Loading "createPages" query')
-//   }
-//   // Create blog post pages.
-//   const posts = result.data.allMdx.edges
-//   // you'll call `createPage` for each result
-//   posts.forEach(({ node }) => {
-//     console.log(node.fields.slug)
-//     createPage({
-//       // This is the slug you created before
-//       // (or `node.frontmatter.slug`)
-//       path: node.fields.slug,
-//       // This component will wrap our MDX content
-//       component: path.resolve(`./src/templates/index.js`),
-//       // You can use the values in this context in
-//       // our page layout component
-//       context: { id: node.id },
-//     })
-//   })
-// }
+/**
+ * Update GraphQL schema to support MDX fields in frontmatter
+ * @link https://zslabs.com/articles/mdx-frontmatter-in-gatsby
+ */
+exports.createSchemaCustomization = ({
+  actions: { createTypes, createFieldExtension },
+  createContentDigest,
+}) => {
+  createFieldExtension({
+    name: "mdx",
+    extend() {
+      return {
+        type: "String",
+        resolve(source, args, context, info) {
+          // Grab field
+          const value = source[info.fieldName]
+          // Isolate MDX
+          const mdxType = info.schema.getType("Mdx")
+          // Grab just the body contents of what MDX generates
+          const { resolve } = mdxType.getFields().body
+          return resolve({
+            rawBody: value,
+            internal: {
+              contentDigest: createContentDigest(value), // Used for caching
+            },
+          })
+        },
+      }
+    },
+  })
+  createTypes(`
+    type Mdx implements Node {
+      frontmatter: MdxFrontmatter
+    }
+    type MdxFrontmatter {
+      items: [Item]
+      templateKey: String
+    }
+    type Item {
+      mdx: String @mdx
+    }
+  `)
+}

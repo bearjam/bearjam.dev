@@ -1,8 +1,8 @@
 import { motion } from "framer-motion"
 import React from "react"
-import Presence from "../components/Presence"
+import Presence from "../components/presence"
 import { graphql, Link } from "gatsby"
-import SEO from "../components/SEO"
+import SEO from "../components/seo"
 
 const aniProps = {
   variants: {
@@ -24,7 +24,9 @@ const BlogIndex = ({ data }) => {
     <Presence key="blogPage" className="px-2 mt-3">
       <SEO title="Blog" />
       <div className="max-w-2xl mx-auto">
-        <motion.h1 {...aniProps} className="mt-4">Bearjam Blog</motion.h1>
+        <motion.h1 {...aniProps} className="mt-4">
+          Bearjam Blog
+        </motion.h1>
 
         <div className="">
           {posts
@@ -45,9 +47,14 @@ const BlogIndex = ({ data }) => {
   )
 }
 
+export default BlogIndex
+
 export const pageQuery = graphql`
   query blogIndex {
-    allMdx(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMdx(
+      filter: { fields: { collection: { eq: "blog" } } }
+      sort: { fields: [frontmatter___date], order: DESC }
+    ) {
       edges {
         node {
           id
@@ -55,6 +62,7 @@ export const pageQuery = graphql`
           frontmatter {
             title
             date(formatString: "DD MMMM YYYY")
+            author
           }
           fields {
             slug
@@ -64,5 +72,3 @@ export const pageQuery = graphql`
     }
   }
 `
-
-export default BlogIndex

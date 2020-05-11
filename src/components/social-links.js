@@ -4,7 +4,7 @@ import {
   SvgIconInstagram,
   SvgIconLinkedIn,
   SvgIconTwitter,
-} from "./svg"
+} from "./icons"
 
 const icons = {
   twitter: SvgIconTwitter,

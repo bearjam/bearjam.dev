@@ -11,7 +11,7 @@ const Path = props => (
   />
 )
 
-const SvgMenu = ({ open }) => (
+const Menu = ({ open }) => (
   <motion.svg
     width="23"
     height="23"
@@ -40,4 +40,4 @@ const SvgMenu = ({ open }) => (
     />
   </motion.svg>
 )
-export default SvgMenu
+export default Menu
