@@ -1,11 +1,12 @@
 import { motion } from "framer-motion"
-import { graphql, useStaticQuery } from "gatsby"
+import { graphql } from "gatsby"
 import React from "react"
 import { slalom } from "../animations"
+import { SvgIsometricOne } from "../components/art"
 import { Link } from "../components/link"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
-import { SvgIsometricOne } from "../components/art"
+import { MDXRenderer } from "gatsby-plugin-mdx"
 
 const HomeTemplate = ({ data }) => {
   const { frontmatter } = data.mdx
@@ -53,7 +54,9 @@ const HomeTemplate = ({ data }) => {
                 variants={slalom(i)}
               >
                 <h3>{heading}</h3>
-                <p className="my-2 sm:pr-8 md:pr-4 lg:pr-0">{blurb}</p>
+                <div className="my-2 sm:pr-8 md:pr-4 lg:pr-0">
+                  <MDXRenderer>{blurb}</MDXRenderer>
+                </div>
               </motion.div>
             ))}
           </div>

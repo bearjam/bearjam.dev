@@ -1,14 +1,15 @@
+import cx from "classnames"
 import { motion } from "framer-motion"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import theme from "tailwindcss/defaultTheme"
+import { object, string } from "yup"
+import { slalom } from "../animations"
 import { SvgThankBear } from "../components/art"
 import { SvgIconWarning } from "../components/icons"
-import { string, object } from "yup"
 import Presence from "../components/presence"
+import SEO from "../components/seo"
 import styles from "./contact.module.css"
-import cx from "classnames"
-import { slalom } from "../animations"
 
 const ContactPage = () => {
   const validationSchema = object().shape({
@@ -65,6 +66,7 @@ const ContactPage = () => {
 
   return (
     <Presence key="contactPage" className="px-2">
+      <SEO title="Contact" />
       <motion.div
         key="contactHeadings"
         className="text-center my-4"

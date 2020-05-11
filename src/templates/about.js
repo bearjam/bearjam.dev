@@ -1,9 +1,10 @@
-import { graphql, useStaticQuery } from "gatsby"
+import { graphql } from "gatsby"
 import React from "react"
 import { slalom } from "../animations"
 import AboutCard from "../components/about-card"
-import Presence from "../components/presence"
 import { SvgMagAvatar, SvgTomAvatar } from "../components/art"
+import Presence from "../components/presence"
+import SEO from "../components/seo"
 
 const avatars = {
   Magda: SvgMagAvatar,
@@ -15,6 +16,7 @@ const AboutTemplate = ({ data }) => {
 
   return (
     <Presence key="aboutPage" className="px-2">
+      <SEO title="About" />
       {frontmatter.cards.map(({ name, ...rest }, i) => (
         <AboutCard
           key={name}

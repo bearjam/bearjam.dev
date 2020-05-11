@@ -12,11 +12,6 @@ export default function PostTemplate({ data }) {
     frontmatter: { title, date },
     body,
   } = data.mdx
-  // const date = new Date(frontmatter.date)
-  //   .toUTCString()
-  //   .split(" ")
-  //   .slice(1, 4)
-  //   .join(" ")
 
   return (
     <Presence key="postTemplate" className={cx("px-2", styles.root)}>
