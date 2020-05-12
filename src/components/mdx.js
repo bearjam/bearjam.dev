@@ -4,7 +4,7 @@ import { MotionLink } from "./link"
 import { MDXRenderer } from "gatsby-plugin-mdx"
 import styles from "./mdx.module.css"
 
-const components = {
+export const components = {
   a: props => (
     <MotionLink
       whileHover={{ scale: 1.02 }}
@@ -12,11 +12,12 @@ const components = {
       {...props}
     />
   ),
+  ul: props => <ul className={styles.list} {...props} />,
 }
 
-const shortcodes = {}
+export const shortcodes = {}
 
-const MDX = ({ children, ...props }) => {
+export const MDX = ({ children, ...props }) => {
   return (
     <MDXProvider components={components} shortcodes={shortcodes} {...props}>
       <MDXRenderer>{children}</MDXRenderer>

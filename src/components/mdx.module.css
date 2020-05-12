@@ -1,3 +1,7 @@
 .link {
   @apply inline-block text-pink-500;
 }
+
+.list {
+  @apply list-disc list-inside;
+}
