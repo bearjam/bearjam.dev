@@ -31,10 +31,6 @@
   align-items: center;
 }
 
-.form {
-  /* @apply border-2 rounded-lg border-gray-200 shadow-lg p-4 max-w-xs mt-4; */
-}
-
 .form > * {
   @apply mt-4;
 }
@@ -42,11 +38,11 @@
 .form input[type="text"],
 .form input[type="email"],
 .form textarea {
-  @apply w-full border-2 rounded-md bg-gray-100;
+  @apply w-full border-2 rounded-md bg-gray-100 px-2 py-1 box-border;
 }
 
 .form textarea {
-  @apply resize-none h-20;
+  @apply resize-none h-20 px-2 py-1;
 }
 
 .form input[type="submit"] {
@@ -63,7 +59,7 @@
 }
 
 .select-box {
-  @apply border-2 rounded-md shadow-sm py-1 px-2 m-1 inline-block text-sm select-none;
+  @apply border-2 rounded-md shadow-sm py-1 px-2 m-1 inline-block text-sm select-none font-semibold;
 }
 
 .select-box:focus-within {
@@ -78,10 +74,21 @@
   @apply bg-gray-500;
 }
 
-.form input[aria-invalid="true"], .form textarea[aria-invalid="true"] {
-  box-shadow: 0 0 0 3px theme('colors.red.500');
+.form input[aria-invalid="true"],
+.form textarea[aria-invalid="true"] {
+  box-shadow: 0 0 0 3px theme("colors.red.500");
   @apply border-0;
 }
 .error-outline {
   /* box-shadow: 0 0 0 3px theme('colors.red.500'); */
+}
+
+.error-message {
+  @apply absolute right-0 flex text-sm;
+}
+.error-icon {
+  @apply w-6 p-1 ml-1;
+}
+.error-message-final {
+  @apply flex justify-end mt-2;
 }

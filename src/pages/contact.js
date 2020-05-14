@@ -55,14 +55,6 @@ const ContactPage = () => {
         console.log(err)
         setVariant("default")
       })
-  // console.log(`response!\n${JSON.stringify(response, null, 2)}`)
-  // } catch (error) {
-  //   console.log(`error!\n${error}`)
-  // }
-  // either:
-  // a) success -> thank you for your message, we'll be in touch
-  // b) problem -> please try again later? check validation?
-  // }
 
   return (
     <Presence key="contactPage" className="px-2">
@@ -161,7 +153,7 @@ const ContactPage = () => {
                       <SvgIconWarning />
                     </div>
 
-                    <div className="flex justify-end">
+                    <div className={styles.errorMessage}>
                       <span id="nameError" className="text-red-600">
                         {errors.name?.message}
                       </span>
@@ -188,7 +180,7 @@ const ContactPage = () => {
                     <div className="w-6 h-6 absolute top-0 right-0 p-1 mr-1">
                       <SvgIconWarning />
                     </div>
-                    <div className="flex justify-end">
+                    <div className={styles.errorMessage}>
                       <span id="emailError" className="text-red-600">
                         {errors.email?.message}
                       </span>
@@ -216,9 +208,11 @@ const ContactPage = () => {
                       variants={{
                         active: {
                           backgroundColor: theme.colors.pink[400],
+                          color: theme.colors.white,
                         },
                         inactive: {
                           backgroundColor: `rgba(255, 255, 255, 0)`,
+                          color: "inherit",
                         },
                       }}
                       animate={watch()[`need.${name}`] ? `active` : `inactive`}
@@ -236,18 +230,18 @@ const ContactPage = () => {
               </div>
 
               {errors?.need && (
-                <div className="flex justify-end">
+                <div className={styles.errorMessage}>
                   <span id="needError" className="text-red-600">
                     {errors.need?.message}
                   </span>
-                  <div className="w-6 h-6 p-1 ml-1">
+                  <div className={styles.errorIcon}>
                     <SvgIconWarning />
                   </div>
                 </div>
               )}
             </fieldset>
 
-            <div className="mt-4">
+            <div className="mt-4 relative">
               <label htmlFor="message">Tell us more</label>
               <textarea
                 id="message"
@@ -257,11 +251,11 @@ const ContactPage = () => {
                 aria-describedby="messageError"
               />
               {errors?.message && (
-                <div className="flex justify-end">
+                <div className={styles.errorMessage}>
                   <span id="messageError" className="text-red-600">
                     {errors.message?.message}
                   </span>
-                  <div className="w-6 h-6 p-1 ml-1">
+                  <div className={styles.errorIcon}>
                     <SvgIconWarning />
                   </div>
                 </div>
@@ -273,11 +267,11 @@ const ContactPage = () => {
                 <input type="submit" />
               </div>
               {isSubmitted && variant === "default" && (
-                <div className="flex justify-end">
+                <div className={styles.errorMessageFinal}>
                   <span id="submissionError" className="text-red-600">
                     Submission error, please try again
                   </span>
-                  <div className="w-6 h-6 p-1 ml-1">
+                  <div className={styles.errorIcon}>
                     <SvgIconWarning />
                   </div>
                 </div>
