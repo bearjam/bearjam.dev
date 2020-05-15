@@ -64,7 +64,7 @@ const HomeTemplate = ({ data }) => {
               <Input type="email" placeholder="E-mail address" />
             </div>
             <div className={styles.submit}>
-              <Input type="submit" />
+              <Input type="submit" value="Subscribe" />
             </div>
           </div>
           {/* <div className="mx-2 text-center sm:flex-1 sm:text-left">
