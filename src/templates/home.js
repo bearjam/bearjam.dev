@@ -7,6 +7,8 @@ import { ButtonLink } from "../components/links"
 import MDX from "../components/mdx"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
+import styles from "./home.module.css"
+import { Input } from "../components/inputs"
 
 const HomeTemplate = ({ data }) => {
   const { frontmatter } = data.mdx
@@ -14,63 +16,36 @@ const HomeTemplate = ({ data }) => {
     <>
       <SEO title="Home" />
       <Presence key="indexPage" className="px-2">
-        <section className="mt-5 sm:mt-6 flex items-center flex-col sm:flex-row sm:justify-between">
-          <motion.div
-            className="w-full mb-4 sm:order-last sm:flex-1 flex justify-end max-w-lg"
-            variants={slalom(1)}
-          >
-            <SvgIsometricOne className="w-full" />
+        <section className={styles.splash}>
+          <motion.div className={styles.isometricOne} variants={slalom(1)}>
+            <SvgIsometricOne />
           </motion.div>
-          <motion.div
-            className="my-6 text-center sm:flex-1 sm:text-left sm:max-w-xs"
-            variants={slalom(0)}
-          >
-            <h1 className="leading-10">{frontmatter.headline.heading}</h1>
-            <p className="leading-6 tracking-wide my-6">
-              {frontmatter.headline.paragraph}
-            </p>
-            <div className="flex justify-center items-center flex-col mt-6 sm:flex-row sm:justify-start">
-              {/* <Link
-                to="/blog"
-                className="button m-1 bg-pink-400 text-white px-4 w-1/3 sm:w-auto py-2 sm:px-5"
-              >
-                Read blog
-              </Link> */}
-              {/* <Link
-                to="/contact"
-                className="button m-1 bg-white text-pink-400 border-2 border-gray-300 px-4 w-1/3 sm:w-auto py-2 sm:px-5"
-              >
-                Work with us
-              </Link> */}
-              <ButtonLink to="/about" variant="primary" className="px-5 py-2">
+          <motion.div className={styles.headline} variants={slalom(0)}>
+            <h1>{frontmatter.headline.heading}</h1>
+            <p>{frontmatter.headline.paragraph}</p>
+            <div>
+              <ButtonLink to="/about" variant="primary">
                 {`About us`}
               </ButtonLink>
-              <ButtonLink
-                to="/bar"
-                variant="secondary"
-                className="px-5 py-2 ml-2"
-              >
+              <ButtonLink to="/contact" variant="secondary">
                 {`Work with us`}
               </ButtonLink>
             </div>
           </motion.div>
         </section>
-        <section className="mt-12 sm:mt-0">
-          <motion.h1
-            className="leading-10 text-center sm:text-left"
-            variants={slalom(0)}
-          >
-            {frontmatter.stuffWeDo.heading}
+        <section className={styles.whatWeDo}>
+          <motion.h1 variants={slalom(0)}>
+            {frontmatter.whatWeDo.heading}
           </motion.h1>
-          <div className="flex flex-wrap justify-between">
-            {frontmatter.stuffWeDo.blurbs.map(({ heading, blurb }, i) => (
+          <div>
+            {frontmatter.whatWeDo.blurbs.map(({ heading, blurb }, i) => (
               <motion.div
                 key={heading}
-                className="w-full sm:w-5/12 sm:flex-grow sm:max-w-xs lg:max-w-sm mt-8"
                 variants={slalom(i)}
+                className={styles.blurb}
               >
                 <h3>{heading}</h3>
-                <div className="my-2 sm:pr-8 md:pr-4 lg:pr-0">
+                <div>
                   <MDX>{blurb}</MDX>
                 </div>
               </motion.div>
@@ -78,9 +53,21 @@ const HomeTemplate = ({ data }) => {
           </div>
         </section>
       </Presence>
-      <section className="bg-purple-300 border-gray-400 border-t border-b pt-4 sm:py-8">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row">
-          <div className="mx-2 text-center sm:flex-1 sm:text-left">
+      <section className={styles.mailSub}>
+        <div className={styles.mailSub}>
+          <div>
+            <h1>{frontmatter.mailSub.heading}</h1>
+            <p>{frontmatter.mailSub.blurb}</p>
+          </div>
+          <div className={styles.inputs}>
+            <div>
+              <Input type="email" placeholder="E-mail address" />
+            </div>
+            <div className={styles.submit}>
+              <Input type="submit" />
+            </div>
+          </div>
+          {/* <div className="mx-2 text-center sm:flex-1 sm:text-left">
             <h2>We'd love to hear from you.</h2>
             <h2 className="mt-2">Say hello to magda@bearjam.dev</h2>
           </div>
@@ -101,7 +88,7 @@ const HomeTemplate = ({ data }) => {
                 Work with us
               </ButtonLink>
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
     </>
@@ -120,12 +107,16 @@ export const query = graphql`
           paragraph
         }
         title
-        stuffWeDo {
+        whatWeDo {
           blurbs {
             heading
             blurb
           }
           heading
+        }
+        mailSub {
+          heading
+          blurb
         }
       }
     }

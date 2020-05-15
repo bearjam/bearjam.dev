@@ -101,9 +101,9 @@ exports.createSchemaCustomization = ({
     }
     type MdxFrontmatter {
       templateKey: String
-      stuffWeDo: StuffWeDo
+      whatWeDo: WhatWeDo
     }
-    type StuffWeDo {
+    type WhatWeDo {
       heading: String!
       blurbs: [Blurb]
     }
