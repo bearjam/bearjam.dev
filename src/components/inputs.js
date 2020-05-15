@@ -1,16 +1,6 @@
-import React from "react"
-import styles from "./buttons.module.css"
-import { Link } from "gatsby"
 import cx from "classnames"
-
-export const ButtonLink = ({ className, variant = "primary", ...props }) => {
-  return (
-    <Link
-      className={cx(styles.buttonLink, styles[variant], className)}
-      {...props}
-    />
-  )
-}
+import React from "react"
+import styles from "./inputs.module.css"
 
 export const Submit = ({
   children,

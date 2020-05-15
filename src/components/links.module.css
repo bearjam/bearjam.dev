@@ -11,3 +11,7 @@
 .secondary {
   @apply bg-white text-secondary border-2 border-gray-300;
 }
+
+.anchor {
+  @apply text-pink-500;
+}

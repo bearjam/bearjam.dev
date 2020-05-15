@@ -3,11 +3,10 @@ import { graphql } from "gatsby"
 import React from "react"
 import { slalom } from "../animations"
 import { SvgIsometricOne } from "../components/art"
-import { Link } from "../components/link"
+import { ButtonLink } from "../components/links"
 import MDX from "../components/mdx"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
-import { ButtonLink } from "../components/buttons"
 
 const HomeTemplate = ({ data }) => {
   const { frontmatter } = data.mdx
@@ -87,20 +86,20 @@ const HomeTemplate = ({ data }) => {
           </div>
           <div className="sm:flex justify-evenly items-center sm:flex-1">
             <div className="mt-6 flex justify-center sm:block sm:m-0">
-              <Link
+              <ButtonLink
                 to="/about"
                 className="button bg-pink-400 text-white w-1/3 sm:w-auto py-2 sm:px-5"
               >
                 About us
-              </Link>
+              </ButtonLink>
             </div>
             <div className="mt-4 mb-6 flex justify-center sm:block sm:m-0">
-              <Link
+              <ButtonLink
                 to="/contact"
                 className="button text-pink-400 bg-white w-1/3 sm:w-auto py-2 sm:px-5"
               >
                 Work with us
-              </Link>
+              </ButtonLink>
             </div>
           </div>
         </div>

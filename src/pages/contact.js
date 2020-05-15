@@ -10,7 +10,7 @@ import { SvgIconWarning } from "../components/icons"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
 import styles from "./contact.module.css"
-import { Submit } from "../components/buttons"
+import { Submit } from "../components/inputs"
 
 const ContactPage = () => {
   const validationSchema = object().shape({
