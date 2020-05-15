@@ -7,6 +7,7 @@ import { Link } from "../components/link"
 import MDX from "../components/mdx"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
+import { ButtonLink } from "../components/buttons"
 
 const HomeTemplate = ({ data }) => {
   const { frontmatter } = data.mdx
@@ -30,18 +31,28 @@ const HomeTemplate = ({ data }) => {
               {frontmatter.headline.paragraph}
             </p>
             <div className="flex justify-center items-center flex-col mt-6 sm:flex-row sm:justify-start">
-              <Link
+              {/* <Link
                 to="/blog"
                 className="button m-1 bg-pink-400 text-white px-4 w-1/3 sm:w-auto py-2 sm:px-5"
               >
                 Read blog
-              </Link>
-              <Link
+              </Link> */}
+              {/* <Link
                 to="/contact"
                 className="button m-1 bg-white text-pink-400 border-2 border-gray-300 px-4 w-1/3 sm:w-auto py-2 sm:px-5"
               >
                 Work with us
-              </Link>
+              </Link> */}
+              <ButtonLink to="/about" variant="primary" className="px-5 py-2">
+                {`About us`}
+              </ButtonLink>
+              <ButtonLink
+                to="/bar"
+                variant="secondary"
+                className="px-5 py-2 ml-2"
+              >
+                {`Work with us`}
+              </ButtonLink>
             </div>
           </motion.div>
         </section>

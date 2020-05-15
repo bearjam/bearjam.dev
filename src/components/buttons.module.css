@@ -1,5 +1,13 @@
 .button-link {
   @apply font-semibold tracking-wide;
-  @apply text-center text-xs;
+  @apply text-center text-sm;
   @apply rounded-md shadow-lg;
+}
+
+.primary {
+  @apply bg-secondary text-white;
+}
+
+.secondary {
+  @apply bg-white text-secondary border-2 border-gray-300;
 }

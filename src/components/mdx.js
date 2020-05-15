@@ -5,10 +5,11 @@ import { MDXRenderer } from "gatsby-plugin-mdx"
 import styles from "./mdx.module.css"
 
 const components = {
-  a: props => (
+  a: ({ href, ...props }) => (
     <MotionLink
       whileHover={{ scale: 1.02 }}
       className={styles.link}
+      to={href}
       {...props}
     />
   ),

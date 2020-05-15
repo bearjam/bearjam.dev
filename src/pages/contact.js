@@ -10,6 +10,7 @@ import { SvgIconWarning } from "../components/icons"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
 import styles from "./contact.module.css"
+import { Submit } from "../components/buttons"
 
 const ContactPage = () => {
   const validationSchema = object().shape({
@@ -258,7 +259,7 @@ const ContactPage = () => {
 
             <div>
               <div className="mt-4 flex justify-center">
-                <input type="submit" />
+                <Submit className="py-1 px-2">Submit</Submit>
               </div>
               {isSubmitted && variant === "default" && (
                 <div className={styles.errorMessage2}>
