@@ -1,3 +1,7 @@
+.headings {
+  @apply text-center my-4;
+}
+
 .scene {
   perspective: 1200px;
 }
@@ -31,8 +35,16 @@
   align-items: center;
 }
 
+.form {
+  composes: card-face;
+}
+
 .form > * {
   @apply mt-4;
+}
+
+.field {
+  @apply relative;
 }
 
 .form input[type="text"],
@@ -79,16 +91,22 @@
   box-shadow: 0 0 0 3px theme("colors.red.500");
   @apply border-0;
 }
-.error-outline {
-  /* box-shadow: 0 0 0 3px theme('colors.red.500'); */
-}
 
 .error-message {
-  @apply absolute right-0 flex text-sm;
+  @apply absolute right-0 flex;
+  @apply text-sm mt-1;
+  @apply text-red-600;
 }
 .error-icon {
-  @apply w-6 p-1 ml-1;
+  @apply w-6 p-1 mr-1;
+  @apply absolute top-0 bottom-0 right-0;
+  @apply flex flex-col justify-center;
 }
-.error-message-final {
-  @apply flex justify-end mt-2;
+
+.error-message-2 {
+  @apply flex justify-end text-sm mt-1;
+  @apply text-red-600;
+}
+.error-icon-2 {
+  @apply w-6 p-1;
 }

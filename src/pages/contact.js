@@ -15,8 +15,8 @@ const ContactPage = () => {
   const validationSchema = object().shape({
     name: string()
       .required("Required")
-      .min(2, min => `Minimum ${min} characters`)
-      .max(100, max => `Maximum ${max} characters`),
+      .min(2, ({ min }) => `Minimum ${min} characters`)
+      .max(100, ({ max }) => `Maximum ${max} characters`),
     email: string().required("Required").email("Invalid e-mail address"),
     need: object().test({
       test: o => Object.keys(o).reduce((p, n) => o[n] || p, false),
@@ -24,7 +24,9 @@ const ContactPage = () => {
     }),
     message: string()
       .required("Required")
-      .min(10, ({ min }) => `Minimum ${min} characters`)
+      .min(10, ({ min }) => {
+        return `Minimum ${min} characters`
+      })
       .max(1000, ({ max }) => `Maximum ${max} characters`),
   })
 
@@ -61,7 +63,7 @@ const ContactPage = () => {
       <SEO title="Contact" />
       <motion.div
         key="contactHeadings"
-        className="text-center my-4"
+        className={styles.headings}
         animate={variant === "default" ? "enter" : variant}
         initial="exit"
         exit="exit"
@@ -133,12 +135,12 @@ const ContactPage = () => {
         >
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className={cx(styles.form, styles.cardFace)}
+            className={styles.form}
             noValidate
           >
             <div>
               <label htmlFor="name">Name</label>
-              <div className="relative">
+              <div className={styles.field}>
                 <input
                   type="text"
                   id="name"
@@ -149,14 +151,12 @@ const ContactPage = () => {
                 />
                 {errors?.name && (
                   <>
-                    <div className="w-6 h-6 absolute top-0 right-0 p-1 mr-1">
+                    <div className={styles.errorIcon}>
                       <SvgIconWarning />
                     </div>
 
                     <div className={styles.errorMessage}>
-                      <span id="nameError" className="text-red-600">
-                        {errors.name?.message}
-                      </span>
+                      <span id="nameError">{errors.name?.message}</span>
                     </div>
                   </>
                 )}
@@ -165,7 +165,7 @@ const ContactPage = () => {
             <div>
               <label htmlFor="email">Email</label>
 
-              <div className="relative">
+              <div className={styles.field}>
                 <input
                   type="email"
                   id="email"
@@ -177,20 +177,18 @@ const ContactPage = () => {
 
                 {errors?.email && (
                   <>
-                    <div className="w-6 h-6 absolute top-0 right-0 p-1 mr-1">
+                    <div className={styles.errorIcon}>
                       <SvgIconWarning />
                     </div>
                     <div className={styles.errorMessage}>
-                      <span id="emailError" className="text-red-600">
-                        {errors.email?.message}
-                      </span>
+                      <span id="emailError">{errors.email?.message}</span>
                     </div>
                   </>
                 )}
               </div>
             </div>
 
-            <fieldset name="need">
+            <fieldset name="need" className={styles.field}>
               <legend>What do you need?</legend>
               <div>
                 {[
@@ -230,18 +228,16 @@ const ContactPage = () => {
               </div>
 
               {errors?.need && (
-                <div className={styles.errorMessage}>
-                  <span id="needError" className="text-red-600">
-                    {errors.need?.message}
-                  </span>
-                  <div className={styles.errorIcon}>
+                <div className={styles.errorMessage2}>
+                  <span id="needError">{errors.need?.message}</span>
+                  <div className={styles.errorIcon2}>
                     <SvgIconWarning />
                   </div>
                 </div>
               )}
             </fieldset>
 
-            <div className="mt-4 relative">
+            <div className={styles.field}>
               <label htmlFor="message">Tell us more</label>
               <textarea
                 id="message"
@@ -251,11 +247,9 @@ const ContactPage = () => {
                 aria-describedby="messageError"
               />
               {errors?.message && (
-                <div className={styles.errorMessage}>
-                  <span id="messageError" className="text-red-600">
-                    {errors.message?.message}
-                  </span>
-                  <div className={styles.errorIcon}>
+                <div className={styles.errorMessage2}>
+                  <span id="messageError">{errors.message?.message}</span>
+                  <div className={styles.errorIcon2}>
                     <SvgIconWarning />
                   </div>
                 </div>
@@ -267,11 +261,11 @@ const ContactPage = () => {
                 <input type="submit" />
               </div>
               {isSubmitted && variant === "default" && (
-                <div className={styles.errorMessageFinal}>
+                <div className={styles.errorMessage2}>
                   <span id="submissionError" className="text-red-600">
                     Submission error, please try again
                   </span>
-                  <div className={styles.errorIcon}>
+                  <div className={styles.errorIcon2}>
                     <SvgIconWarning />
                   </div>
                 </div>
