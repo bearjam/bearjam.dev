@@ -1,24 +1,29 @@
 import cx from "classnames"
 import React from "react"
 import styles from "./inputs.module.css"
+import { forwardRef } from "react"
 
-const upperCaseFirst = s => [[...s][0].toUpperCase(), ...s.slice(1)].join("")
-
-export const Input = ({ className, type, variant = "primary", ...props }) => {
+export const Input = forwardRef(({ className, type, ...props }, ref) => {
   return (
     <input
       type={type}
-      className={cx(styles[type + upperCaseFirst(variant)], className)}
+      className={cx(
+        { [styles.input]: type !== "submit" },
+        styles[type],
+        className
+      )}
+      ref={ref}
       {...props}
     />
   )
-}
+})
 
-export const TextArea = ({ className, variant = "primary", ...props }) => {
+export const TextArea = forwardRef(({ className, ...props }, ref) => {
   return (
     <textarea
-      className={cx(styles[`textarea${upperCaseFirst(variant)}`], className)}
+      className={cx(styles.input, styles.textarea, className)}
+      ref={ref}
       {...props}
     />
   )
-}
+})

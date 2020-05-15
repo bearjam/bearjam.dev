@@ -14,6 +14,12 @@
   @apply border-2 rounded-lg border-gray-200 shadow-lg p-4 max-w-xs mx-auto mt-4;
 }
 
+.form input[type="text"],
+.form input[type="email"],
+.form textarea {
+  @apply w-full;
+}
+
 .card-face {
   /* position: absolute; */
   backface-visibility: hidden;
@@ -47,21 +53,6 @@
   @apply relative;
 }
 
-.form input[type="text"],
-.form input[type="email"],
-.form textarea {
-  @apply w-full border-2 rounded-md bg-gray-100 px-2 py-1 box-border;
-}
-
-.form textarea {
-  @apply resize-none h-20 px-2 py-1;
-}
-
-.form input:focus,
-.form textarea:focus {
-  @apply outline-none shadow-outline border-0;
-}
-
 .form fieldset[name="need"] > div:nth-child(2) {
   @apply flex flex-wrap justify-center;
 }
@@ -76,12 +67,6 @@
 
 .select-box > input[type="checkbox"] {
   @apply sr-only;
-}
-
-.form input[aria-invalid="true"],
-.form textarea[aria-invalid="true"] {
-  box-shadow: 0 0 0 3px theme("colors.red.500");
-  @apply border-0;
 }
 
 .error-message {

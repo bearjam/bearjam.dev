@@ -7,7 +7,7 @@ import { object, string } from "yup"
 import { slalom } from "../animations"
 import { SvgThankBear } from "../components/art"
 import { SvgIconWarning } from "../components/icons"
-import { Input } from "../components/inputs"
+import { Input, TextArea } from "../components/inputs"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
 import styles from "./contact.module.css"
@@ -142,7 +142,7 @@ const ContactPage = () => {
             <div>
               <label htmlFor="name">Name</label>
               <div className={styles.field}>
-                <input
+                <Input
                   type="text"
                   id="name"
                   name="name"
@@ -167,7 +167,7 @@ const ContactPage = () => {
               <label htmlFor="email">Email</label>
 
               <div className={styles.field}>
-                <input
+                <Input
                   type="email"
                   id="email"
                   name="email"
@@ -240,7 +240,7 @@ const ContactPage = () => {
 
             <div className={styles.field}>
               <label htmlFor="message">Tell us more</label>
-              <textarea
+              <TextArea
                 id="message"
                 name="message"
                 ref={register}
