@@ -1,0 +1,19 @@
+.submit-primary {
+  composes: primary from "./links.module.css";
+  composes: buttonLink from "./links.module.css";
+}
+
+.text-primary {
+  /* @apply w-full; */
+  @apply bg-gray-100 rounded-md;
+  @apply px-2 py-1;
+  @apply border-2 box-border;
+}
+
+.email-primary {
+  composes: text-primary;
+}
+
+.textarea-primary {
+  composes: text-primary;
+}
