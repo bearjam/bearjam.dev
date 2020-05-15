@@ -1,0 +1,5 @@
+.button-link {
+  @apply font-semibold tracking-wide;
+  @apply text-center text-xs;
+  @apply rounded-md shadow-lg;
+}
