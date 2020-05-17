@@ -1,17 +1,52 @@
 import { motion } from "framer-motion"
 import { graphql } from "gatsby"
-import React from "react"
+import React, { useState } from "react"
+import { useForm } from "react-hook-form"
 import { slalom } from "../animations"
 import { SvgIsometricOne } from "../components/art"
+import { SvgIconWarning } from "../components/icons"
+import { Input } from "../components/inputs"
 import { ButtonLink } from "../components/links"
 import MDX from "../components/mdx"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
 import styles from "./home.module.css"
-import { Input } from "../components/inputs"
 
 const HomeTemplate = ({ data }) => {
   const { frontmatter } = data.mdx
+  const { register, handleSubmit, errors, formState } = useForm({
+    mode: "onSubmit",
+  })
+  const { isSubmitted } = formState
+  const [variant, setVariant] = useState("default")
+
+  const onSubmit = async data => {
+    try {
+      console.log("pending")
+      setVariant("pending")
+      await new Promise((res, rej) => {
+        let roll = Math.random() > 0.5
+        if (roll) {
+          setTimeout(res, 2000)
+        } else {
+          setTimeout(rej, 3000)
+        }
+      })
+      console.log("success")
+      setVariant("success")
+    } catch {
+      console.log("failure")
+      setVariant("default")
+    }
+  }
+
+  const transition = {
+    // type: "spring",
+    // damping: 10,
+    // mass: 1,
+    // stiffness: 100,
+  }
+
   return (
     <>
       <SEO title="Home" />
@@ -59,36 +94,72 @@ const HomeTemplate = ({ data }) => {
             <h1>{frontmatter.mailSub.heading}</h1>
             <p>{frontmatter.mailSub.blurb}</p>
           </div>
-          <div className={styles.inputs}>
-            <div>
-              <Input type="email" placeholder="E-mail address" />
-            </div>
-            <div className={styles.submit}>
-              <Input type="submit" value="Subscribe" />
-            </div>
-          </div>
-          {/* <div className="mx-2 text-center sm:flex-1 sm:text-left">
-            <h2>We'd love to hear from you.</h2>
-            <h2 className="mt-2">Say hello to magda@bearjam.dev</h2>
-          </div>
-          <div className="sm:flex justify-evenly items-center sm:flex-1">
-            <div className="mt-6 flex justify-center sm:block sm:m-0">
-              <ButtonLink
-                to="/about"
-                className="button bg-pink-400 text-white w-1/3 sm:w-auto py-2 sm:px-5"
+          {variant === "success" ? (
+            <motion.p enter={{ opacity: 1 }} initial={{ opacity: 0 }}>
+              Cheers
+            </motion.p>
+          ) : (
+            <motion.form
+              className={styles.form}
+              onSubmit={handleSubmit(onSubmit)}
+              initial="default"
+              animate={variant}
+              exit={{ opacity: 0 }}
+              variants={{
+                default: {},
+                pending: {},
+              }}
+              transition={{
+                staggerChildren: 0.2,
+              }}
+            >
+              <motion.div
+                className={styles.field}
+                variants={{
+                  pending: {
+                    scaleX: 0,
+                  },
+                  default: {
+                    scaleX: 1,
+                  },
+                }}
+                transition={transition}
               >
-                About us
-              </ButtonLink>
-            </div>
-            <div className="mt-4 mb-6 flex justify-center sm:block sm:m-0">
-              <ButtonLink
-                to="/contact"
-                className="button text-pink-400 bg-white w-1/3 sm:w-auto py-2 sm:px-5"
+                <Input
+                  type="email"
+                  placeholder="E-mail address"
+                  id="email"
+                  name="email"
+                  aria-invalid={errors?.email ? "true" : "false"}
+                  aria-describedby="emailError"
+                  ref={register({
+                    required: true,
+                  })}
+                />
+                {errors?.email && (
+                  <div>
+                    <div className={styles.errorIcon}>
+                      <SvgIconWarning />
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+              <motion.div
+                className={styles.submit}
+                variants={{
+                  default: {
+                    scaleX: 1,
+                  },
+                  pending: {
+                    scaleX: 0,
+                  },
+                }}
+                transition={transition}
               >
-                Work with us
-              </ButtonLink>
-            </div>
-          </div> */}
+                <Input type="submit" value="Subscribe" />
+              </motion.div>
+            </motion.form>
+          )}
         </div>
       </section>
     </>

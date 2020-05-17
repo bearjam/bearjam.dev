@@ -79,7 +79,7 @@ div.mail-sub > div:nth-child(1) {
   @apply text-center;
 }
 
-section.mail-sub div.inputs {
+div.mail-sub > form.form {
   @apply mt-2;
 }
 
@@ -123,7 +123,7 @@ section.mail-sub div.inputs {
   div.mail-sub > div:nth-child(1) {
     @apply text-left w-1/2 pr-10;
   }
-  div.mail-sub > div:nth-child(2) {
+  div.mail-sub > form.form {
     @apply flex flex-col items-start;
   }
 }
@@ -135,7 +135,7 @@ section.mail-sub div.inputs {
   section.mail-sub > div.mail-sub {
     @apply items-center;
   }
-  div.mail-sub > div.inputs:nth-child(2) {
+  div.mail-sub > form.form {
     @apply flex-row mt-0;
   }
   .mail-sub input[type="submit"] {
@@ -150,4 +150,14 @@ section.mail-sub div.inputs {
   div.blurb > div {
     @apply pr-0;
   }
+}
+
+.field {
+  @apply relative;
+}
+
+.error-icon {
+  @apply w-6 p-1 mr-2;
+  @apply absolute top-0 bottom-0 right-0;
+  @apply flex flex-col justify-center;
 }

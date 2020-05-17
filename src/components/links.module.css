@@ -15,3 +15,8 @@
 .anchor {
   @apply text-pink-500;
 }
+
+.button-link:focus,
+.anchor:focus {
+  @apply outline-none shadow-outline;
+}
