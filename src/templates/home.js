@@ -42,8 +42,6 @@ const HomeTemplate = ({ data }) => {
     }
   }
 
-  const [v, cycleV] = useCycle("foo", "bar")
-
   return (
     <>
       <SEO title="Home" />
@@ -85,55 +83,40 @@ const HomeTemplate = ({ data }) => {
           </div>
         </section>
       </Presence>
-      <section>
-        <DoubleSided
-          className="w-64 h-64"
-          onClick={cycleV}
-          animate={v}
-          variants={{
-            foo: {
-              rotateY: 0,
-            },
-            bar: {
-              rotateY: 180,
-            },
-          }}
-        >
-          <div className="bg-red-500"></div>
-          <div className="bg-blue-500"></div>
-        </DoubleSided>
-      </section>
       <section className={styles.mailSub}>
         <div className={styles.mailSub}>
           <div>
             <h1>{frontmatter.mailSub.heading}</h1>
             <p>{frontmatter.mailSub.blurb}</p>
           </div>
-          <DoubleSided
-            className="w-64 h-32"
+          <motion.form
+            className={styles.form}
+            onSubmit={handleSubmit(onSubmit)}
             animate={variant}
-            variants={{
-              default: {
-                rotateX: 0,
-              },
-              pending: {
-                rotateX: 360,
-                transition: {
-                  type: "spring",
-                  damping: 0,
-                  mass: 5,
-                },
-              },
-              success: {
-                rotateX: 180,
-              },
+            transition={{
+              staggerChildren: 0.3,
             }}
           >
-            <motion.form
-              className={styles.form}
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <motion.div className={styles.field}>
+            <motion.div className={styles.field}>
+              <DoubleSided
+                className="w-64 h-10"
+                variants={{
+                  default: {
+                    rotateX: 0,
+                  },
+                  pending: {
+                    rotateX: 360,
+                    transition: {
+                      type: "spring",
+                      damping: 0,
+                      mass: 5,
+                    },
+                  },
+                  success: {
+                    rotateX: 180,
+                  },
+                }}
+              >
                 <Input
                   type="email"
                   placeholder="E-mail address"
@@ -145,20 +128,54 @@ const HomeTemplate = ({ data }) => {
                     required: true,
                   })}
                 />
-                {errors?.email && (
-                  <div>
-                    <div className={styles.errorIcon}>
-                      <SvgIconWarning />
-                    </div>
+                <div className={styles.inputBack}>
+                  <p
+                    variants={{
+                      default: {
+                        opacity: 0,
+                      },
+                      pending: {
+                        opacity: 1,
+                      },
+                      success: {
+                        opacity: 1,
+                      },
+                    }}
+                  >
+                    {`Check your email!`}
+                  </p>
+                </div>
+              </DoubleSided>
+              {errors?.email && (
+                <div>
+                  <div className={styles.errorIcon}>
+                    <SvgIconWarning />
                   </div>
-                )}
-              </motion.div>
-              <motion.div className={styles.submit}>
-                <Input type="submit" value="Subscribe" />
-              </motion.div>
-            </motion.form>
-            <p>Hi</p>
-          </DoubleSided>
+                </div>
+              )}
+            </motion.div>
+            <motion.div
+              className={styles.submit}
+              variants={{
+                default: {
+                  scale: 1,
+                },
+                pending: {
+                  scale: 0.5,
+                  transition: {
+                    type: "spring",
+                    damping: 0,
+                    mass: 5,
+                  },
+                },
+                success: {
+                  scale: 0,
+                },
+              }}
+            >
+              <Input type="submit" value="Subscribe" />
+            </motion.div>
+          </motion.form>
         </div>
       </section>
     </>

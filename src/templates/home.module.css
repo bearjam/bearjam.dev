@@ -117,9 +117,6 @@ div.mail-sub > form.form {
   section.mail-sub > div {
     @apply flex-row justify-between;
   }
-  .mail-sub input[type="email"] {
-    @apply mr-2;
-  }
   div.mail-sub > div:nth-child(1) {
     @apply text-left w-1/2 pr-10;
   }
@@ -160,4 +157,8 @@ div.mail-sub > form.form {
   @apply w-6 p-1 mr-2;
   @apply absolute top-0 bottom-0 right-0;
   @apply flex flex-col justify-center;
+}
+
+.input-back {
+  composes: input from "../components/inputs.module.css";
 }
