@@ -11,6 +11,8 @@ import MDX from "../components/mdx"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
 import styles from "./home.module.css"
+import DoubleSided from "../components/double-sided"
+import { useCycle } from "framer-motion"
 
 const HomeTemplate = ({ data }) => {
   const { frontmatter } = data.mdx
@@ -27,9 +29,9 @@ const HomeTemplate = ({ data }) => {
       await new Promise((res, rej) => {
         let roll = Math.random() > 0.5
         if (roll) {
-          setTimeout(res, 2000)
+          setTimeout(res, 1000)
         } else {
-          setTimeout(rej, 3000)
+          setTimeout(rej, 1500)
         }
       })
       console.log("success")
@@ -40,12 +42,7 @@ const HomeTemplate = ({ data }) => {
     }
   }
 
-  const transition = {
-    // type: "spring",
-    // damping: 10,
-    // mass: 1,
-    // stiffness: 100,
-  }
+  const [v, cycleV] = useCycle("foo", "bar")
 
   return (
     <>
@@ -88,43 +85,55 @@ const HomeTemplate = ({ data }) => {
           </div>
         </section>
       </Presence>
+      <section>
+        <DoubleSided
+          className="w-64 h-64"
+          onClick={cycleV}
+          animate={v}
+          variants={{
+            foo: {
+              rotateY: 0,
+            },
+            bar: {
+              rotateY: 180,
+            },
+          }}
+        >
+          <div className="bg-red-500"></div>
+          <div className="bg-blue-500"></div>
+        </DoubleSided>
+      </section>
       <section className={styles.mailSub}>
         <div className={styles.mailSub}>
           <div>
             <h1>{frontmatter.mailSub.heading}</h1>
             <p>{frontmatter.mailSub.blurb}</p>
           </div>
-          {variant === "success" ? (
-            <motion.p enter={{ opacity: 1 }} initial={{ opacity: 0 }}>
-              Cheers
-            </motion.p>
-          ) : (
+          <DoubleSided
+            className="w-64 h-32"
+            animate={variant}
+            variants={{
+              default: {
+                rotateX: 0,
+              },
+              pending: {
+                rotateX: 360,
+                transition: {
+                  type: "spring",
+                  damping: 0,
+                  mass: 5,
+                },
+              },
+              success: {
+                rotateX: 180,
+              },
+            }}
+          >
             <motion.form
               className={styles.form}
               onSubmit={handleSubmit(onSubmit)}
-              initial="default"
-              animate={variant}
-              exit={{ opacity: 0 }}
-              variants={{
-                default: {},
-                pending: {},
-              }}
-              transition={{
-                staggerChildren: 0.2,
-              }}
             >
-              <motion.div
-                className={styles.field}
-                variants={{
-                  pending: {
-                    scaleX: 0,
-                  },
-                  default: {
-                    scaleX: 1,
-                  },
-                }}
-                transition={transition}
-              >
+              <motion.div className={styles.field}>
                 <Input
                   type="email"
                   placeholder="E-mail address"
@@ -144,22 +153,12 @@ const HomeTemplate = ({ data }) => {
                   </div>
                 )}
               </motion.div>
-              <motion.div
-                className={styles.submit}
-                variants={{
-                  default: {
-                    scaleX: 1,
-                  },
-                  pending: {
-                    scaleX: 0,
-                  },
-                }}
-                transition={transition}
-              >
+              <motion.div className={styles.submit}>
                 <Input type="submit" value="Subscribe" />
               </motion.div>
             </motion.form>
-          )}
+            <p>Hi</p>
+          </DoubleSided>
         </div>
       </section>
     </>
