@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import React from "react"
+import React, { useEffect } from "react"
 import useSWR from "swr"
 
 const Wrapper = props => (
@@ -15,12 +15,19 @@ const Wrapper = props => (
         opacity: 0,
       },
     }}
+    {...props}
   />
 )
 
+const wait = ms => new Promise(res => setTimeout(res, ms))
+
 const APITestPage = () => {
-  const fetcher = url => fetch(url).then(r => r.json())
+  const fetcher = url => wait(1000).then(() => fetch(url).then(r => r.json()))
   const { data, error } = useSWR("/api/bar", fetcher)
+  useEffect(() => {
+    console.log("data", data)
+    console.log("error", error)
+  }, [data, error])
 
   if (error)
     return (
