@@ -1,5 +1,6 @@
 {
   "env": {
-    "SENDGRID_API_KEY": "@sendgrid-api-key"
+    "SENDGRID_API_KEY": "@sendgrid-api-key",
+    "SUB_CONFIRM_SIGN_KEY": "@sub-confirm-sign-key"
   }
 }
