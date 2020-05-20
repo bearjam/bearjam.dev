@@ -4,42 +4,43 @@ import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { slalom } from "../animations"
 import { SvgIsometricOne } from "../components/art"
+import DoubleSided from "../components/double-sided"
 import { SvgIconWarning } from "../components/icons"
 import { Input } from "../components/inputs"
 import { ButtonLink } from "../components/links"
+import MailSub from "../components/mail-sub"
 import MDX from "../components/mdx"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
 import styles from "./home.module.css"
-import DoubleSided from "../components/double-sided"
-import { useCycle } from "framer-motion"
 
 const HomeTemplate = ({ data }) => {
   const { frontmatter } = data.mdx
-  const { register, handleSubmit, errors, formState } = useForm({
+  const { register, handleSubmit, errors } = useForm({
     mode: "onSubmit",
   })
-  const { isSubmitted } = formState
-  const [variant, setVariant] = useState("default")
+  const [state, setState] = useState("initial")
 
   const onSubmit = async data => {
-    try {
-      console.log("pending")
-      setVariant("pending")
-      await new Promise((res, rej) => {
-        let roll = Math.random() > 0.5
-        if (roll) {
-          setTimeout(res, 1000)
+    setState("pending")
+    return await fetch("/api/bar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then(res => {
+        if (res.ok) {
+          setState("success")
         } else {
-          setTimeout(rej, 1500)
+          setState("initial")
         }
       })
-      console.log("success")
-      setVariant("success")
-    } catch {
-      console.log("failure")
-      setVariant("default")
-    }
+      .catch(err => {
+        console.log(err)
+        setState("initial")
+      })
   }
 
   return (
@@ -92,7 +93,7 @@ const HomeTemplate = ({ data }) => {
           <motion.form
             className={styles.form}
             onSubmit={handleSubmit(onSubmit)}
-            animate={variant}
+            animate={state}
             transition={{
               staggerChildren: 0.3,
             }}
@@ -101,7 +102,7 @@ const HomeTemplate = ({ data }) => {
               <DoubleSided
                 className="w-64 h-10"
                 variants={{
-                  default: {
+                  initial: {
                     rotateX: 0,
                   },
                   pending: {
@@ -131,7 +132,7 @@ const HomeTemplate = ({ data }) => {
                 <div className={styles.inputBack}>
                   <p
                     variants={{
-                      default: {
+                      initial: {
                         opacity: 0,
                       },
                       pending: {
@@ -157,7 +158,7 @@ const HomeTemplate = ({ data }) => {
             <motion.div
               className={styles.submit}
               variants={{
-                default: {
+                initial: {
                   scale: 1,
                 },
                 pending: {
@@ -178,6 +179,9 @@ const HomeTemplate = ({ data }) => {
           </motion.form>
         </div>
       </section>
+      {/* <section className={styles.mailSub}>
+        <MailSub frontmatter={frontmatter} />
+      </section> */}
     </>
   )
 }
