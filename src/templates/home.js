@@ -23,24 +23,24 @@ const HomeTemplate = ({ data }) => {
 
   const onSubmit = async data => {
     setState("pending")
-    return await fetch("/api/bar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then(res => {
-        if (res.ok) {
-          setState("success")
-        } else {
-          setState("initial")
-        }
+    try {
+      let response = await fetch("/api/mailing-list/subscribe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       })
-      .catch(err => {
-        console.log(err)
+
+      if (response.ok) {
+        setState("success")
+      } else {
         setState("initial")
-      })
+      }
+    } catch (err) {
+      console.log("err!", err)
+      setState("initial")
+    }
   }
 
   return (
