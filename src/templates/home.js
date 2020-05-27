@@ -1,12 +1,8 @@
 import { motion } from "framer-motion"
 import { graphql } from "gatsby"
-import React, { useState } from "react"
-import { useForm } from "react-hook-form"
+import React from "react"
 import { slalom } from "../animations"
 import { SvgIsometricOne } from "../components/art"
-import DoubleSided from "../components/double-sided"
-import { SvgIconWarning } from "../components/icons"
-import { Input } from "../components/inputs"
 import { ButtonLink } from "../components/links"
 import MailSub from "../components/mail-sub"
 import MDX from "../components/mdx"
@@ -16,33 +12,6 @@ import styles from "./home.module.css"
 
 const HomeTemplate = ({ data }) => {
   const { frontmatter } = data.mdx
-  const { register, handleSubmit, errors } = useForm({
-    mode: "onSubmit",
-  })
-  const [state, setState] = useState("initial")
-
-  const onSubmit = async data => {
-    setState("pending")
-    try {
-      let response = await fetch("/api/mailing-list/subscribe", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-
-      if (response.ok) {
-        setState("success")
-      } else {
-        setState("initial")
-      }
-    } catch (err) {
-      console.log("err!", err)
-      setState("initial")
-    }
-  }
-
   return (
     <>
       <SEO title="Home" />
@@ -84,104 +53,7 @@ const HomeTemplate = ({ data }) => {
           </div>
         </section>
       </Presence>
-      <section className={styles.mailSub}>
-        <div className={styles.mailSub}>
-          <div>
-            <h1>{frontmatter.mailSub.heading}</h1>
-            <p>{frontmatter.mailSub.blurb}</p>
-          </div>
-          <motion.form
-            className={styles.form}
-            onSubmit={handleSubmit(onSubmit)}
-            animate={state}
-            transition={{
-              staggerChildren: 0.3,
-            }}
-          >
-            <motion.div className={styles.field}>
-              <DoubleSided
-                className="w-64 h-10"
-                variants={{
-                  initial: {
-                    rotateX: 0,
-                  },
-                  pending: {
-                    rotateX: 360,
-                    transition: {
-                      type: "spring",
-                      damping: 0,
-                      mass: 5,
-                    },
-                  },
-                  success: {
-                    rotateX: 180,
-                  },
-                }}
-              >
-                <Input
-                  type="email"
-                  placeholder="E-mail address"
-                  id="email"
-                  name="email"
-                  aria-invalid={errors?.email ? "true" : "false"}
-                  aria-describedby="emailError"
-                  ref={register({
-                    required: true,
-                  })}
-                />
-                <div className={styles.inputBack}>
-                  <p
-                    variants={{
-                      initial: {
-                        opacity: 0,
-                      },
-                      pending: {
-                        opacity: 1,
-                      },
-                      success: {
-                        opacity: 1,
-                      },
-                    }}
-                  >
-                    {`Check your email!`}
-                  </p>
-                </div>
-              </DoubleSided>
-              {errors?.email && (
-                <div>
-                  <div className={styles.errorIcon}>
-                    <SvgIconWarning />
-                  </div>
-                </div>
-              )}
-            </motion.div>
-            <motion.div
-              className={styles.submit}
-              variants={{
-                initial: {
-                  scale: 1,
-                },
-                pending: {
-                  scale: 0.5,
-                  transition: {
-                    type: "spring",
-                    damping: 0,
-                    mass: 5,
-                  },
-                },
-                success: {
-                  scale: 0,
-                },
-              }}
-            >
-              <Input type="submit" value="Subscribe" />
-            </motion.div>
-          </motion.form>
-        </div>
-      </section>
-      {/* <section className={styles.mailSub}>
-        <MailSub frontmatter={frontmatter} />
-      </section> */}
+      <MailSub frontmatter={frontmatter} />
     </>
   )
 }

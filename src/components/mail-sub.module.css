@@ -1,0 +1,23 @@
+.root {
+  @apply bg-purple-300 border-gray-400 border-t border-b;
+  @apply px-4 py-8;
+}
+
+.root > div {
+  @apply max-w-4xl mx-auto;
+  @apply flex flex-col items-center;
+}
+
+.root > div > div {
+  @apply text-center;
+}
+
+.root form {
+  @apply flex flex-col;
+  @apply justify-center items-center;
+  @apply mt-4;
+}
+
+.root input[type="submit"] {
+  @apply px-5 py-2 mt-2;
+}
