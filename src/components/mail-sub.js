@@ -5,6 +5,7 @@ import { defaultPresenceProps } from "../animations"
 import { SvgIconWarning } from "./icons"
 import { Input } from "./inputs"
 import styles from "./mail-sub.module.css"
+import Logo3D from "./Logo3D"
 
 const MailSub = ({ frontmatter }) => {
   const { register, handleSubmit, errors, setError } = useForm({
@@ -72,6 +73,9 @@ const MailSub = ({ frontmatter }) => {
             </motion.div>
           )}
         </AnimatePresence>
+        <div className="absolute bottom-0 mb-5 border-2 border-red-500 w-32 h-32">
+          <Logo3D className="border-2 border-black" />
+        </div>
       </div>
     </section>
   )
