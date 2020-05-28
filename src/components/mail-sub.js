@@ -67,8 +67,11 @@ const MailSub = ({ frontmatter }) => {
               />
               {errors?.email && (
                 <div>
-                  <div>
+                  <div className={styles.errorIcon}>
                     <SvgIconWarning />
+                  </div>
+                  <div className={styles.errorMessage}>
+                    <span id="nameError">{errors.name?.message}</span>
                   </div>
                 </div>
               )}

@@ -5,9 +5,7 @@ import { JWT } from "jose"
 import _ from "lodash"
 import { string } from "yup"
 
-const key = JSON.parse(
-  Buffer.from(process.env.MAILMAN_ED_JWK, "base64").toString()
-)
+const key = JSON.parse(Buffer.from(process.env.MAILER_JWK, "base64").toString())
 
 const db = new Firestore({
   projectId: process.env.GCP_FS_PROJECT_ID,
