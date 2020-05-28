@@ -5,7 +5,7 @@ import { defaultPresenceProps } from "../animations"
 import { SvgIconWarning } from "./icons"
 import { Input } from "./inputs"
 import styles from "./mail-sub.module.css"
-import Logo3D from "./Logo3D"
+import Logo3D from "./logo-3d"
 
 const MailSub = ({ frontmatter }) => {
   const { register, handleSubmit, errors, setError } = useForm({
@@ -14,15 +14,22 @@ const MailSub = ({ frontmatter }) => {
   const [state, setState] = useState("initial")
 
   const onSubmit = async data => {
-    setState("submitted")
+    setState("loading")
     try {
-      await fetch("/api/mailing-list/subscribe", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
+      let fetcher = fetch("/api/mailing-list/subscribe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }),
+        timer = new Promise(res => setTimeout(res, 1500)),
+        [res] = await Promise.all([fetcher, timer])
+      if (res.ok) {
+        setState("success")
+      } else {
+        setState("initial")
+      }
     } catch (err) {
       setState("initial")
       setError("email", null, "Error, please try again")
@@ -32,8 +39,8 @@ const MailSub = ({ frontmatter }) => {
   return (
     <section className={styles.root}>
       <div>
-        <AnimatePresence exitBeforeEnter>
-          <div>
+        <AnimatePresence>
+          <div className={styles.headingBlurb}>
             <h1>{frontmatter.mailSub.heading}</h1>
             {state === "initial" && (
               <motion.p key="blurb" {...defaultPresenceProps}>
@@ -42,7 +49,7 @@ const MailSub = ({ frontmatter }) => {
             )}
           </div>
           {state === "initial" ? (
-            <form
+            <motion.form
               key="form"
               onSubmit={handleSubmit(onSubmit)}
               {...defaultPresenceProps}
@@ -66,16 +73,27 @@ const MailSub = ({ frontmatter }) => {
                 </div>
               )}
               <Input type="submit" value="Subscribe" />
-            </form>
-          ) : (
-            <motion.div key="submitted" {...defaultPresenceProps}>
-              <p>Please check your mail</p>
+            </motion.form>
+          ) : state === "loading" ? (
+            <motion.div
+              key="loading"
+              className={styles.loadingLogo}
+              {...defaultPresenceProps}
+            >
+              <Logo3D />
             </motion.div>
+          ) : state === "success" ? (
+            <motion.p
+              key="success"
+              {...defaultPresenceProps}
+              className={styles.success}
+            >
+              Please check your mail
+            </motion.p>
+          ) : (
+            <p>unreachable</p>
           )}
         </AnimatePresence>
-        <div className="absolute bottom-0 mb-5 border-2 border-red-500 w-32 h-32">
-          <Logo3D className="border-2 border-black" />
-        </div>
       </div>
     </section>
   )

@@ -1,24 +1,44 @@
 .root {
   @apply bg-purple-300 border-gray-400 border-t border-b;
-  @apply px-4 py-8;
+  @apply px-4 py-5;
 }
 
 .root > div {
   @apply max-w-4xl mx-auto;
-  @apply flex flex-col items-center;
+  @apply flex flex-col items-center justify-center;
   @apply relative;
+  /* @apply bg-red-500; */
+  @apply h-40;
 }
 
-.root > div > div {
+.heading-blurb {
+  position: absolute;
+  top: 0;
   @apply text-center;
 }
 
 .root form {
+  position: absolute;
+  bottom: 0;
   @apply flex flex-col;
   @apply justify-center items-center;
   @apply mt-4;
 }
 
 .root input[type="submit"] {
-  @apply px-5 py-2 mt-2;
+  @apply px-5 py-2;
+  @apply mt-3;
+}
+
+.loading-logo {
+  position: absolute;
+  bottom: 0;
+  @apply w-20 h-20;
+  @apply mb-4;
+}
+
+.success {
+  position: absolute;
+  bottom: 0;
+  @apply mb-12;
 }

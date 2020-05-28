@@ -1,5 +1,5 @@
 import React from "react"
-import { Canvas, useFrame } from "react-three-fiber"
+import { Canvas, useFrame, useThree } from "react-three-fiber"
 import { OrbitControls } from "drei"
 import * as THREE from "three"
 import { useSpring } from "framer-motion"
@@ -10,7 +10,7 @@ const Box = () => {
   return (
     <mesh>
       <boxGeometry attach="geometry" />
-      {["rgb(240,182,211)", "rgb(102,16,242)", "rgb(172,131,248)"]
+      {["rgb(172,131,248)", "rgb(102,16,242)", "rgb(240,182,211)"]
         .flatMap(x => [x, x])
         .map((color, i) => (
           <meshBasicMaterial key={i} color={color} attachArray="material" />
@@ -44,12 +44,12 @@ const B = props => {
 
 const Logo = () => {
   const groupRef = useRef()
-  const x = useSpring(0, { damping: 0, mass: 5, stiffness: 100 })
+  const x = useSpring(0, { damping: 0, mass: 10, stiffness: 70 })
   useFrame(() => {
     groupRef.current.rotation.y = x.get()
   })
   useEffect(() => {
-    x.set(3)
+    x.set(Math.PI * 2)
   }, [])
   return (
     <group ref={groupRef}>
@@ -60,23 +60,54 @@ const Logo = () => {
   )
 }
 
+function Camera(props) {
+  const ref = useRef()
+  const groupRef = useRef()
+  const { setDefaultCamera } = useThree()
+  // const { setDefaultCamera } = useThree()
+  // Make the camera known to the system
+  useEffect(() => {
+    let helper = new THREE.CameraHelper(ref.current)
+    groupRef.current.add(helper)
+    setDefaultCamera(ref.current)
+  }, [])
+
+  useFrame(() => ref.current.updateMatrixWorld())
+
+  // Update it every frame
+  // useFrame(() => ref.current.updateMatrixWorld())
+  return (
+    <group ref={groupRef}>
+      <orthographicCamera ref={ref} position={[0, 0, 1]} {...props} />
+    </group>
+  )
+}
+
 const Logo3D = props => {
   return (
     <Canvas
       colorManagement
       // style={{ width: "100vw", height: "100vh" }}
-      camera={{ position: [0, 0.9, 1.3] }}
+      // camera={{ position: [0, 0.8, 1.3] }}
+      camera={{
+        position: [0, 0.5, 1],
+        zoom: 50,
+      }}
+      orthographic
+      // camera={false}
       {...props}
     >
       <Logo />
-      {/* <OrbitControls
+      <OrbitControls
       // autoRotate
       // autoRotateSpeed={50}
       // minPolarAngle={Math.PI / 3}
       // maxPolarAngle={Math.PI}
       // minAzimuthAngle={Math.PI / 2}
-      /> */}
+      />
       {/* <axesHelper /> */}
+      {/* <cameraHelper /> */}
+      {/* <Camera /> */}
     </Canvas>
   )
 }
