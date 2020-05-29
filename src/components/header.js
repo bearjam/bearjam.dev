@@ -5,14 +5,15 @@ import {
   motion,
   useCycle,
 } from "framer-motion"
+import { Link } from "gatsby"
 import React, { Fragment, useContext } from "react"
 import theme from "tailwindcss/defaultTheme"
 import { MediaContext } from "../hooks"
-import styles from "./header.module.css"
-import { Link, MotionLink } from "./link"
-import Nav from "./nav"
 import { SvgBearjamAvatar, SvgBearjamTitle } from "./art"
+import styles from "./header.module.css"
+import { TextLink } from "./links"
 import Menu from "./menu"
+import Nav from "./nav"
 
 const Header = () => {
   const screen = useContext(MediaContext)
@@ -89,8 +90,7 @@ const Header = () => {
                   exit={{ opacity: 0 }}
                 >
                   {({ href, label, active }) => (
-                    <MotionLink
-                      to={href}
+                    <motion.div
                       className={cx(
                         {
                           "text-pink-400": active,
@@ -105,11 +105,15 @@ const Header = () => {
                           opacity: 1,
                         },
                       }}
-                      tabIndex={open === "open" ? 0 : -1}
-                      onClick={() => cycleOpen(0)}
                     >
-                      {label}
-                    </MotionLink>
+                      <TextLink
+                        to={href}
+                        tabIndex={open === "open" ? 0 : -1}
+                        onClick={() => cycleOpen(0)}
+                      >
+                        {label}
+                      </TextLink>
+                    </motion.div>
                   )}
                 </Nav>
               )}
@@ -124,7 +128,7 @@ const Header = () => {
                 key="navSm"
               >
                 {({ href, label, active }) => (
-                  <MotionLink to={href} className={styles.smLink}>
+                  <TextLink to={href} className={styles.smLink}>
                     <span>{label}</span>
                     {active && (
                       <motion.div
@@ -132,7 +136,7 @@ const Header = () => {
                         className={styles.smActiveUnderline}
                       />
                     )}
-                  </MotionLink>
+                  </TextLink>
                 )}
               </Nav>
             </AnimateSharedLayout>

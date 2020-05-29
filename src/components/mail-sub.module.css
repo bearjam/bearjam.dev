@@ -1,0 +1,72 @@
+.root {
+  @apply bg-purple-300 border-gray-400 border-t border-b;
+  @apply px-4 py-5;
+}
+
+.root > div {
+  @apply max-w-4xl mx-auto;
+  @apply relative;
+  @apply h-40;
+  @apply flex justify-center;
+}
+
+.heading-blurb {
+  position: absolute;
+  top: 0;
+  @apply text-center;
+}
+
+.root form {
+  position: absolute;
+  bottom: 0;
+  @apply flex flex-col;
+  @apply justify-center items-center;
+  @apply mt-4;
+}
+
+.root input[type="submit"] {
+  @apply px-4 py-2;
+  @apply mt-3;
+}
+
+.loading-logo {
+  position: absolute;
+  bottom: 0;
+  @apply w-20 h-20;
+  @apply mb-4;
+}
+
+.success {
+  position: absolute;
+  bottom: 0;
+  @apply mb-12;
+}
+
+.field {
+  position: relative;
+}
+
+.error-icon {
+  @apply w-6 p-1 mr-1;
+  @apply absolute top-0 bottom-0 right-0;
+  @apply flex flex-col justify-center;
+}
+/* @screen sm {
+  .root > div {
+    @apply flex-row justify-between items-center;
+  }
+  .root .heading-blurb {
+    position: static;
+    @apply text-left;
+  }
+  .root form {
+    position: static;
+    @apply flex-row;
+  }
+  .root input[type="email"] {
+    @apply mr-1;
+  }
+  .root input[type="submit"] {
+    @apply mt-0 py-2;
+  }
+} */

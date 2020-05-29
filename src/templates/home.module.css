@@ -1,0 +1,164 @@
+section.splash {
+  @apply mt-5 flex items-center flex-col;
+}
+
+div.isometric-one {
+  @apply w-full max-w-lg mb-4;
+  @apply flex justify-end;
+}
+
+div.isometric-one > svg {
+  @apply w-full;
+}
+
+div.headline {
+  @apply my-6 text-center;
+}
+
+div.headline > h1 {
+  @apply leading-10;
+}
+
+div.headline > p {
+  @apply leading-6 tracking-wide my-6;
+}
+
+div.headline > div {
+  @apply flex flex-col;
+  @apply justify-center items-center;
+  @apply mt-6;
+}
+
+div.headline a {
+  @apply px-5 py-2;
+}
+
+div.headline a:nth-child(2) {
+  @apply mt-2;
+}
+
+section.what-we-do {
+  @apply mt-12;
+}
+
+section.what-we-do > h1 {
+  @apply text-center;
+}
+
+section.what-we-do > div {
+  @apply flex flex-wrap justify-between;
+}
+
+div.blurb {
+  @apply w-full mt-8;
+}
+
+div.blurb > div {
+  @apply my-2;
+}
+
+section.mail-sub {
+  @apply bg-purple-300 border-gray-400 border-t border-b;
+  @apply px-4 py-8;
+}
+
+div.mail-sub {
+  @apply max-w-4xl mx-auto;
+  @apply flex flex-col items-center;
+}
+
+section.mail-sub div.submit {
+  @apply flex justify-center;
+}
+
+.mail-sub input[type="submit"] {
+  @apply py-2 px-5 mt-3;
+}
+
+div.mail-sub > div:nth-child(1) {
+  @apply text-center;
+}
+
+div.mail-sub > form.form {
+  @apply mt-2;
+}
+
+@screen sm {
+  section.splash {
+    @apply flex-row justify-between mt-6;
+  }
+  div.isometric-one {
+    @apply flex-1 order-last;
+  }
+  div.headline {
+    @apply flex-1 text-left max-w-xs;
+  }
+  div.headline > div {
+    @apply flex-row justify-start;
+  }
+  div.headline a:nth-child(2) {
+    @apply mt-0 ml-2;
+  }
+  section.what-we-do {
+    @apply mt-0;
+  }
+  section.what-we-do > h1 {
+    @apply text-left;
+  }
+  div.blurb {
+    @apply w-5/12 flex-grow max-w-xs;
+  }
+  div.blurb > div {
+    @apply pr-8;
+  }
+  section.mail-sub {
+    @apply py-4;
+  }
+  section.mail-sub > div {
+    @apply flex-row justify-between;
+  }
+  div.mail-sub > div:nth-child(1) {
+    @apply text-left w-1/2 pr-10;
+  }
+  div.mail-sub > form.form {
+    @apply flex flex-col items-start;
+  }
+}
+
+@screen md {
+  div.blurb > div {
+    @apply pr-4;
+  }
+  section.mail-sub > div.mail-sub {
+    @apply items-center;
+  }
+  div.mail-sub > form.form {
+    @apply flex-row mt-0;
+  }
+  .mail-sub input[type="submit"] {
+    @apply mt-0;
+  }
+}
+
+@screen lg {
+  div.blurb {
+    @apply max-w-sm;
+  }
+  div.blurb > div {
+    @apply pr-0;
+  }
+}
+
+.field {
+  @apply relative;
+}
+
+.error-icon {
+  @apply w-6 p-1 mr-2;
+  @apply absolute top-0 bottom-0 right-0;
+  @apply flex flex-col justify-center;
+}
+
+.input-back {
+  composes: input from "../components/inputs.module.css";
+}

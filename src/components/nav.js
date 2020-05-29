@@ -1,7 +1,7 @@
 import { useLocation } from "@reach/router"
 import { motion } from "framer-motion"
 import React from "react"
-import { Link } from "./link"
+import { TextLink } from "./links"
 
 const links = [
   { href: "/", label: "Home" },
@@ -17,9 +17,9 @@ const NavLink = ({ children, href, label, ...props }) => {
   return children ? (
     children({ href, label, active, ...props })
   ) : (
-    <Link to={href} {...props}>
+    <TextLink to={href} {...props}>
       {label}
-    </Link>
+    </TextLink>
   )
 }
 

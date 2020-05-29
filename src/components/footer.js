@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import React from "react"
 import styles from "./footer.module.css"
 import { SvgBearjamAvatar, SvgBearjamTitle } from "./art"
-import { Link } from "./link"
+import { TextLink } from "./links"
 import Nav from "./nav"
 import SocialLinks from "./social-links"
 
@@ -24,13 +24,13 @@ const Footer = ({ className, ...restProps }) => {
       >
         <Nav className="flex flex-col text-center sm:flex-row">
           {({ href, label }) => (
-            <Link
+            <TextLink
               className="mb-4 text-gray-100 sm:mb-0 sm:mx-8 lg:mx-12 sm:mt-8 sm:mb-3"
               key={href}
               to={href}
             >
               {label}
-            </Link>
+            </TextLink>
           )}
         </Nav>
         <hr className="border-gray-500 w-40 sm:w-full sm:max-w-2xl lg:max-w-4xl sm:my-3" />

@@ -1,5 +1,9 @@
 {
   "env": {
-    "SENDGRID_API_KEY": "@sendgrid-api-key"
+    "SENDGRID_API_KEY": "@sendgrid-api-key",
+    "GCP_FS_CLIENT_EMAIL": "@gcp-fs-client-email",
+    "GCP_FS_PROJECT_ID": "@gcp-fs-project-id",
+    "GCP_FS_PRIVATE_KEY": "@gcp-fs-private-key",
+    "MAILER_JWK": "@mailer-jwk"
   }
 }

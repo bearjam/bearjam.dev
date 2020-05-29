@@ -1,17 +1,26 @@
-import React from "react"
 import { MDXProvider } from "@mdx-js/react"
-import { MotionLink } from "./link"
 import { MDXRenderer } from "gatsby-plugin-mdx"
-import styles from "./mdx.module.css"
+import React from "react"
+import { TextLink, Anchor } from "./links"
 
 const components = {
-  a: props => (
-    <MotionLink
-      whileHover={{ scale: 1.02 }}
-      className={styles.link}
-      {...props}
-    />
-  ),
+  a: ({ href, ...props }) => {
+    const internal = /^\.?\/(?!\/)/.test(href)
+
+    return internal ? (
+      <TextLink to={href} {...props} />
+    ) : (
+      <Anchor href={href} {...props} />
+    )
+  },
+  // a: ({ href, ...props }) => (
+  //   <MotionLink
+  //     whileHover={{ scale: 1.02 }}
+  //     className={styles.link}
+  //     to={href}
+  //     {...props}
+  //   />
+  // ),
 }
 
 const shortcodes = {}

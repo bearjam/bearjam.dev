@@ -7,6 +7,7 @@ import { object, string } from "yup"
 import { slalom } from "../animations"
 import { SvgThankBear } from "../components/art"
 import { SvgIconWarning } from "../components/icons"
+import { Input, TextArea } from "../components/inputs"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
 import styles from "./contact.module.css"
@@ -40,7 +41,7 @@ const ContactPage = () => {
   const [variant, setVariant] = useState("default")
 
   const onSubmit = data =>
-    fetch(`./api/foo`, {
+    fetch(`./api/contact/submit`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -141,7 +142,7 @@ const ContactPage = () => {
             <div>
               <label htmlFor="name">Name</label>
               <div className={styles.field}>
-                <input
+                <Input
                   type="text"
                   id="name"
                   name="name"
@@ -154,7 +155,6 @@ const ContactPage = () => {
                     <div className={styles.errorIcon}>
                       <SvgIconWarning />
                     </div>
-
                     <div className={styles.errorMessage}>
                       <span id="nameError">{errors.name?.message}</span>
                     </div>
@@ -166,7 +166,7 @@ const ContactPage = () => {
               <label htmlFor="email">Email</label>
 
               <div className={styles.field}>
-                <input
+                <Input
                   type="email"
                   id="email"
                   name="email"
@@ -239,7 +239,7 @@ const ContactPage = () => {
 
             <div className={styles.field}>
               <label htmlFor="message">Tell us more</label>
-              <textarea
+              <TextArea
                 id="message"
                 name="message"
                 ref={register}
@@ -258,7 +258,7 @@ const ContactPage = () => {
 
             <div>
               <div className="mt-4 flex justify-center">
-                <input type="submit" />
+                <Input type="submit" className="py-1 px-2" />
               </div>
               {isSubmitted && variant === "default" && (
                 <div className={styles.errorMessage2}>

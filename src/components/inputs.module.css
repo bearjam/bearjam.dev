@@ -1,0 +1,24 @@
+.submit {
+  composes: primary from "./links.module.css";
+  composes: buttonLink from "./links.module.css";
+}
+
+.input {
+  /* @apply w-full; */
+  @apply bg-gray-100 rounded-md;
+  @apply px-2 py-1;
+  @apply border-2 box-border;
+}
+
+.input:focus {
+  @apply outline-none shadow-outline border-0;
+}
+
+.textarea {
+  @apply resize-none h-20;
+}
+
+.input[aria-invalid="true"] {
+  box-shadow: 0 0 0 2px theme("colors.red.500");
+  @apply border-0;
+}
