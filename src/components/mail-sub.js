@@ -6,11 +6,18 @@ import { SvgIconWarning } from "./icons"
 import { Input } from "./inputs"
 import styles from "./mail-sub.module.css"
 import Logo3D from "./logo-3d"
+import { string, object } from "yup"
 
 const MailSub = ({ frontmatter }) => {
+  const validationSchema = object().shape({
+    email: string().required("Required").email("Invalid e-mail address"),
+  })
+
   const { register, handleSubmit, errors, setError } = useForm({
     mode: "onSubmit",
+    validationSchema,
   })
+
   const [state, setState] = useState("initial")
 
   const onSubmit = async data => {
@@ -52,29 +59,27 @@ const MailSub = ({ frontmatter }) => {
             <motion.form
               key="form"
               onSubmit={handleSubmit(onSubmit)}
+              noValidate
               {...defaultPresenceProps}
             >
-              <Input
-                type="email"
-                placeholder="E-mail address"
-                id="email"
-                name="email"
-                aria-invalid={errors?.email ? "true" : "false"}
-                aria-describedby="emailError"
-                ref={register({
-                  required: true,
-                })}
-              />
-              {errors?.email && (
-                <div>
-                  <div className={styles.errorIcon}>
-                    <SvgIconWarning />
-                  </div>
-                  <div className={styles.errorMessage}>
-                    <span id="nameError">{errors.name?.message}</span>
-                  </div>
-                </div>
-              )}
+              <div className={styles.field}>
+                <Input
+                  type="email"
+                  placeholder="E-mail address"
+                  id="email"
+                  name="email"
+                  aria-invalid={errors?.email ? "true" : "false"}
+                  aria-describedby="emailError"
+                  ref={register}
+                />
+                {errors?.email && (
+                  <>
+                    <div className={styles.errorIcon}>
+                      <SvgIconWarning />
+                    </div>
+                  </>
+                )}
+              </div>
               <Input type="submit" value="Subscribe" />
             </motion.form>
           ) : state === "loading" ? (

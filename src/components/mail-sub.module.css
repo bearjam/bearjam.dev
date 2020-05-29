@@ -5,10 +5,9 @@
 
 .root > div {
   @apply max-w-4xl mx-auto;
-  @apply flex flex-col items-center justify-center;
   @apply relative;
-  /* @apply bg-red-500; */
   @apply h-40;
+  @apply flex justify-center;
 }
 
 .heading-blurb {
@@ -26,7 +25,7 @@
 }
 
 .root input[type="submit"] {
-  @apply px-5 py-2;
+  @apply px-4 py-2;
   @apply mt-3;
 }
 
@@ -42,3 +41,32 @@
   bottom: 0;
   @apply mb-12;
 }
+
+.field {
+  position: relative;
+}
+
+.error-icon {
+  @apply w-6 p-1 mr-1;
+  @apply absolute top-0 bottom-0 right-0;
+  @apply flex flex-col justify-center;
+}
+/* @screen sm {
+  .root > div {
+    @apply flex-row justify-between items-center;
+  }
+  .root .heading-blurb {
+    position: static;
+    @apply text-left;
+  }
+  .root form {
+    position: static;
+    @apply flex-row;
+  }
+  .root input[type="email"] {
+    @apply mr-1;
+  }
+  .root input[type="submit"] {
+    @apply mt-0 py-2;
+  }
+} */
