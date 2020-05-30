@@ -29,6 +29,14 @@ module.exports = {
         path: `${__dirname}/src/data/blog`,
       },
     },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `assets`,
+        path: `${__dirname}/src/assets`,
+      },
+    },
+    `gatsby-transformer-svgo-inline`,
     `gatsby-plugin-mdx`,
     {
       resolve: `gatsby-plugin-manifest`,

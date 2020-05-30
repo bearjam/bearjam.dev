@@ -38,18 +38,27 @@ const HomeTemplate = ({ data }) => {
             {frontmatter.whatWeDo.heading}
           </motion.h1>
           <div>
-            {frontmatter.whatWeDo.blurbs.map(({ heading, blurb }, i) => (
-              <motion.div
-                key={heading}
-                variants={slalom(i)}
-                className={styles.blurb}
-              >
-                <h3>{heading}</h3>
-                <div>
-                  <MDX>{blurb}</MDX>
-                </div>
-              </motion.div>
-            ))}
+            {frontmatter.whatWeDo.blurbs.map(({ svg, heading, blurb }, i) => {
+              const __html = svg.childSvgoInline.inlineSVG
+              return (
+                <motion.div
+                  key={heading}
+                  variants={slalom(i)}
+                  className={styles.blurb}
+                >
+                  <div className="flex justify-center pb-2">
+                    <div
+                      dangerouslySetInnerHTML={{ __html }}
+                      className="w-32 h-32"
+                    />
+                  </div>
+                  <h3>{heading}</h3>
+                  <div>
+                    <MDX>{blurb}</MDX>
+                  </div>
+                </motion.div>
+              )
+            })}
           </div>
         </section>
       </Presence>
@@ -72,6 +81,11 @@ export const query = graphql`
         title
         whatWeDo {
           blurbs {
+            svg {
+              childSvgoInline {
+                inlineSVG
+              }
+            }
             heading
             blurb
           }
