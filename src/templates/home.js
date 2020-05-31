@@ -39,7 +39,6 @@ const HomeTemplate = ({ data }) => {
           </motion.h1>
           <div>
             {frontmatter.whatWeDo.blurbs.map(({ svg, heading, blurb }, i) => {
-              const __html = svg.childSvgoInline.inlineSVG
               return (
                 <motion.div
                   key={heading}
@@ -48,7 +47,9 @@ const HomeTemplate = ({ data }) => {
                 >
                   <div className="flex justify-center pb-2">
                     <div
-                      dangerouslySetInnerHTML={{ __html }}
+                      dangerouslySetInnerHTML={{
+                        __html: svg.childSvgoInline.inlineSVG,
+                      }}
                       className="w-32 h-32"
                     />
                   </div>
