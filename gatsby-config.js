@@ -37,7 +37,19 @@ module.exports = {
         path: `${__dirname}/src/data/blog`,
       },
     },
-    `gatsby-plugin-mdx`,
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-vscode`,
+            options: {
+              theme: `Abyss`,
+            },
+          },
+        ],
+      },
+    },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
