@@ -18,7 +18,7 @@ const MailSub = ({ frontmatter }) => {
     validationSchema,
   })
 
-  const [state, setState] = useState("initial")
+  const [state, setState] = useState("loading")
 
   const onSubmit = async data => {
     setState("loading")
