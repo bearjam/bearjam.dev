@@ -1,14 +1,7 @@
-import cx from "classnames"
-import {
-  AnimatePresence,
-  AnimateSharedLayout,
-  motion,
-  useCycle,
-} from "framer-motion"
+import { AnimateSharedLayout, motion, useCycle } from "framer-motion"
 import { Link } from "gatsby"
-import React, { Fragment, useContext } from "react"
+import React from "react"
 import theme from "tailwindcss/defaultTheme"
-import { MediaContext } from "../hooks"
 import { SvgBearjamAvatar, SvgBearjamTitle } from "./art"
 import styles from "./header.module.css"
 import { TextLink } from "./links"
@@ -16,7 +9,6 @@ import Menu from "./menu"
 import Nav from "./nav"
 
 const Header = () => {
-  const screen = useContext(MediaContext)
   const [open, cycleOpen] = useCycle("closed", "open")
 
   return (
@@ -56,92 +48,62 @@ const Header = () => {
             <SvgBearjamTitle />
           </Link>
         </div>
-        <AnimatePresence exitBeforeEnter>
-          {screen < 1 ? (
-            <Fragment key="navXsFragment">
-              <motion.button
-                key="menu"
-                className={styles.menu}
-                onClick={cycleOpen}
-                exit={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                initial={{ opacity: 0 }}
+        <Menu
+          className={styles.menu}
+          onClick={cycleOpen}
+          open={open === "open"}
+        />
+        {open === "open" && (
+          <Nav
+            className={styles.navXs}
+            variants={{
+              open: {
+                transition: {
+                  staggerChildren: 0.2,
+                  delayChildren: 0.4,
+                },
+              },
+              closed: {
+                transition: {
+                  staggerChildren: 0.2,
+                  staggerDirection: -1,
+                },
+              },
+            }}
+          >
+            {({ href, label, active }) => (
+              <motion.div
+                variants={{
+                  closed: {
+                    opacity: 0,
+                  },
+                  open: {
+                    opacity: 1,
+                  },
+                }}
               >
-                <Menu open={open === "open"} className={styles.menu} />
-              </motion.button>
-              {open === "open" && (
-                <Nav
-                  key="navXsNav"
-                  className={styles.navXs}
-                  variants={{
-                    open: {
-                      transition: {
-                        staggerChildren: 0.2,
-                        delayChildren: 0.4,
-                      },
-                    },
-                    closed: {
-                      transition: {
-                        staggerChildren: 0.2,
-                        staggerDirection: -1,
-                      },
-                    },
-                  }}
-                  exit={{ opacity: 0 }}
+                <TextLink
+                  to={href}
+                  tabIndex={open === "open" ? 0 : -1}
+                  onClick={() => cycleOpen(0)}
+                  data-active={active}
                 >
-                  {({ href, label, active }) => (
-                    <motion.div
-                      className={cx(
-                        {
-                          "text-pink-400": active,
-                        },
-                        `mb-5`
-                      )}
-                      variants={{
-                        closed: {
-                          opacity: 0,
-                        },
-                        open: {
-                          opacity: 1,
-                        },
-                      }}
-                    >
-                      <TextLink
-                        to={href}
-                        tabIndex={open === "open" ? 0 : -1}
-                        onClick={() => cycleOpen(0)}
-                      >
-                        {label}
-                      </TextLink>
-                    </motion.div>
-                  )}
-                </Nav>
-              )}
-            </Fragment>
-          ) : (
-            <AnimateSharedLayout>
-              <Nav
-                className={styles.navSm}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                initial={{ opacity: 0 }}
-                key="navSm"
-              >
-                {({ href, label, active }) => (
-                  <TextLink to={href} className={styles.smLink}>
-                    <span>{label}</span>
-                    {active && (
-                      <motion.div
-                        layoutId="underline"
-                        className={styles.smActiveUnderline}
-                      />
-                    )}
-                  </TextLink>
-                )}
-              </Nav>
-            </AnimateSharedLayout>
-          )}
-        </AnimatePresence>
+                  {label}
+                </TextLink>
+              </motion.div>
+            )}
+          </Nav>
+        )}
+        <AnimateSharedLayout>
+          <Nav className={styles.navSm}>
+            {({ href, label, active }) => (
+              <TextLink to={href}>
+                <span>{label}</span>
+                {active && <motion.div layoutId="underline" />}
+              </TextLink>
+            )}
+          </Nav>
+        </AnimateSharedLayout>
       </div>
     </motion.header>
   )
