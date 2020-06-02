@@ -1,10 +1,8 @@
-import React from "react"
-import { Canvas, useFrame, useThree } from "react-three-fiber"
 import { OrbitControls } from "drei"
-import * as THREE from "three"
 import { useSpring } from "framer-motion"
-import { useRef } from "react"
-import { useEffect } from "react"
+import React, { useEffect, useRef } from "react"
+import { Canvas, useFrame, useThree } from "react-three-fiber"
+import * as THREE from "three"
 
 const Box = () => {
   return (
@@ -87,27 +85,15 @@ const Logo3D = props => {
   return (
     <Canvas
       colorManagement
-      // style={{ width: "100vw", height: "100vh" }}
-      // camera={{ position: [0, 0.8, 1.3] }}
       camera={{
         position: [0, 0.5, 1],
         zoom: 50,
       }}
       orthographic
-      // camera={false}
       {...props}
     >
       <Logo />
-      <OrbitControls
-      // autoRotate
-      // autoRotateSpeed={50}
-      // minPolarAngle={Math.PI / 3}
-      // maxPolarAngle={Math.PI}
-      // minAzimuthAngle={Math.PI / 2}
-      />
-      {/* <axesHelper /> */}
-      {/* <cameraHelper /> */}
-      {/* <Camera /> */}
+      <OrbitControls />
     </Canvas>
   )
 }
