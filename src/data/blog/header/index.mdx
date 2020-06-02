@@ -3,13 +3,49 @@ title: "Our Site Header: A 10-Step Programme"
 date: 2020-06-02
 ---
 
+import { Step1Demo1, Step1Demo2, Step2Demo1 } from "./demos"
+
 # New
 
-## Step 1: Header, Backdrop, Container
+## Step 1: The "Root > Backdrop + Container" Pattern
 
-```js
-this.willBe(highlighted)
+We start with this structure:
+
+```jsx
+<Header>
+  <Backdrop />
+  <Container />
+</Header>
 ```
+
+This allows us this behaviour:
+
+<Step1Demo1 />
+
+The same logic and behaviour can be used to pop out from any side of the
+viewport:
+
+```jsx
+<Sidebar>
+  <Backdrop />
+  <Container>
+    <AllOurStuff />
+  </Container>
+</Sidebar>
+```
+
+<Step1Demo2 />
+
+## Step 2: Throw in a Toggle Menu
+
+Courtesy of
+[this Framer Motion example](https://codesandbox.io/s/framer-motion-side-menu-mx2rw?module=/src/MenuToggle.tsx)
+
+<Step2Demo1 />
+
+## Step 3: Conditionally Render the Nav
+
+## Step 4: Render props
 
 # Old
 

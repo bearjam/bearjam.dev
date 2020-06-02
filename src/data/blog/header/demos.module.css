@@ -1,0 +1,43 @@
+.viewport {
+  overflow: hidden;
+  position: relative;
+  @apply max-w-xs;
+  height: calc(theme("maxWidth.xs") * 1.6);
+  @apply bg-green-100;
+}
+
+.border {
+  border: 2px solid theme("colors.gray.600");
+  box-sizing: border-box;
+}
+
+.filler-text {
+  @apply text-white;
+  @apply flex justify-center items-center;
+}
+
+.header,
+.aside {
+  @apply bg-red-400;
+}
+
+.backdrop {
+  background-color: inherit;
+  position: absolute;
+  top: 0;
+  @apply w-full h-full;
+  composes: filler-text border;
+}
+
+.container {
+  background-color: inherit;
+  position: absolute;
+  top: 0;
+  @apply w-full h-12;
+  composes: filler-text border;
+}
+
+.aside .container {
+  @apply w-12 h-full;
+  writing-mode: vertical-rl;
+}
