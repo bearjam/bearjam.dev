@@ -1,12 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
+import { object, string } from "yup"
 import { defaultPresenceProps } from "../animations"
 import { SvgIconWarning } from "./icons"
 import { Input } from "./inputs"
 import styles from "./mail-sub.module.css"
-import Logo3D from "./logo-3d"
-import { string, object } from "yup"
 
 const MailSub = ({ frontmatter }) => {
   const validationSchema = object().shape({
@@ -88,7 +87,7 @@ const MailSub = ({ frontmatter }) => {
               className={styles.loadingLogo}
               {...defaultPresenceProps}
             >
-              <Logo3D />
+              <div>something else</div>
             </motion.div>
           ) : state === "success" ? (
             <motion.p
