@@ -5,8 +5,10 @@ import { defaultPresenceProps } from "../animations"
 import { SvgIconWarning } from "./icons"
 import { Input } from "./inputs"
 import styles from "./mail-sub.module.css"
-import Logo3D from "./logo-3d"
 import { string, object } from "yup"
+import loadable from "@loadable/component"
+
+const Logo3D = loadable(() => import("./logo-3d"))
 
 const MailSub = ({ frontmatter }) => {
   const validationSchema = object().shape({
