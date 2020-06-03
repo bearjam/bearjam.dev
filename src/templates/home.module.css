@@ -54,7 +54,15 @@ div.blurb {
 }
 
 div.blurb > div {
-  @apply my-2;
+  /* @apply my-2; */
+}
+
+.illustration > div {
+  @apply w-full max-w-xs px-10 pb-2;
+}
+
+.illustration {
+  @apply flex justify-center;
 }
 
 section.mail-sub {

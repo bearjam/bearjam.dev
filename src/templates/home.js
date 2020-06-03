@@ -45,7 +45,9 @@ const HomeTemplate = ({ data }) => {
                 variants={slalom(i)}
                 className={styles.blurb}
               >
-                <Svg data={svg} />
+                <div className={styles.illustration}>
+                  <Svg data={svg} />
+                </div>
                 <h3>{heading}</h3>
                 <div>
                   <MDX>{blurb}</MDX>
