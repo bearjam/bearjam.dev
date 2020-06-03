@@ -9,6 +9,7 @@ import MDX from "../components/mdx"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
 import styles from "./home.module.css"
+import Svg from "../components/svg"
 
 const HomeTemplate = ({ data }) => {
   const { frontmatter } = data.mdx
@@ -38,12 +39,13 @@ const HomeTemplate = ({ data }) => {
             {frontmatter.whatWeDo.heading}
           </motion.h1>
           <div>
-            {frontmatter.whatWeDo.blurbs.map(({ heading, blurb }, i) => (
+            {frontmatter.whatWeDo.blurbs.map(({ heading, blurb, svg }, i) => (
               <motion.div
                 key={heading}
                 variants={slalom(i)}
                 className={styles.blurb}
               >
+                <Svg data={svg} />
                 <h3>{heading}</h3>
                 <div>
                   <MDX>{blurb}</MDX>
@@ -73,6 +75,11 @@ export const query = graphql`
         whatWeDo {
           blurbs {
             heading
+            svg {
+              childSvgoInline {
+                inlineSVG
+              }
+            }
             blurb
           }
           heading

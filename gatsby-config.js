@@ -18,6 +18,14 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
+        name: `assets`,
+        path: `${__dirname}/src/assets`,
+      },
+    },
+    `gatsby-transformer-svgo-inline`,
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
         name: `pages`,
         path: `${__dirname}/src/data/pages`,
       },
