@@ -1,13 +1,15 @@
 .root {
-  @apply mt-4 max-w-xl mx-auto;
+  @apply mt-4 max-w-2xl mx-auto;
 }
 
-.root h1 {
+.root h1,
+h2 {
+  @apply mt-8;
+}
+
+.root p,
+.root pre {
   @apply mt-4;
-}
-
-.root p {
-  @apply mb-5;
 }
 
 .root article {

@@ -1,7 +1,7 @@
 .viewport {
   overflow: hidden;
   position: relative;
-  @apply max-w-xs;
+  @apply max-w-xs mt-4;
   height: calc(theme("maxWidth.xs") * 1.6);
   @apply bg-green-100;
 }
