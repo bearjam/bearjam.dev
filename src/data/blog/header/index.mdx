@@ -4,45 +4,43 @@ date: 2020-06-02
 author: Thomas O'Neill
 ---
 
-import { Step1Demo1, Step1Demo2, Step2Demo1 } from "./demos"
+import { Demo1, Demo2 } from "./demos"
 
 ## Step 1: The "Root > Backdrop + Container" Pattern
 
-We start with this structure:
+Consider the structure of this component tree:
 
 ```jsx
-<Header>
+<Root>
   <Backdrop />
-  <Container />
-</Header>
+  <Container>{children}</Container>
+</Root>
 ```
 
-This allows us this behaviour:
+This allows us the following behaviour (tap the menu to open/close):
 
-<Step1Demo1 />
+<Demo1 />
 
-The same logic and behaviour can be used to pop out from any side of the
-viewport:
+This is side-agnostic of course:
 
-```jsx
-<Sidebar>
-  <Backdrop />
-  <Container>
-    <AllOurStuff />
-  </Container>
-</Sidebar>
-```
+<Demo2 />
 
-<Step1Demo2 />
-
-## Step 2: Throw in a Toggle Menu
-
-Courtesy of
+Toggle menu is courtesy of
 [this Framer Motion example](https://codesandbox.io/s/framer-motion-side-menu-mx2rw?module=/src/MenuToggle.tsx)
 
-<Step2Demo1 />
+Mention positioning the elements with CSS.
 
-## Step 3: Conditionally Render the Nav
+Mention Framer Motion, better with x y not height width.
+
+## Step 2: Flexible Nav
+
+Our `Root > Backdrop + Container` pattern, along with React state, makes it very
+easy to conditionally render this for mobile and bigger.
+
+For the mobile nav, you do want `<AnimatePresence />` OR transition the display
+manually.
+
+`<AnimatePresence />` seems to break the cascading of variants.
 
 ## Step 4: Render props
 

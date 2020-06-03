@@ -6,60 +6,55 @@ import { useInterval } from "../../../hooks"
 import theme from "tailwindcss/defaultTheme"
 import { MenuToggle } from "./fm-menu-toggle"
 
-function Viewport(props) {
-  return <div className={styles.viewport} {...props} />
-}
+const Viewport = props => (
+  <div className={styles.viewport}>
+    <div {...props} />
+  </div>
+)
 
-function Header({ children, ...props }) {
-  return (
-    <motion.header className={styles.header} {...props}>
-      <motion.div
-        className={styles.backdrop}
-        variants={{
-          closed: {
-            y: `calc(-100% + ${theme.spacing[12]})`,
-          },
-          open: {
-            y: 0,
-          },
-        }}
-        transition={{
-          type: "spring",
-          damping: 25,
-          mass: 0.9,
-          stiffness: 120,
-        }}
-      >{`Backdrop`}</motion.div>
+const Root = props => <motion.header className={styles.root} {...props} />
 
-      <div className={styles.container}>{children}</div>
-    </motion.header>
-  )
-}
+const Backdrop = props => <motion.div className={styles.backdrop} {...props} />
 
-export function Step1Demo1() {
+const Container = props => <div className={styles.container} {...props} />
+
+export const Demo1 = () => {
   const [open, setOpen] = useState(false)
-  useInterval(() => {
-    setOpen(prev => !prev)
-    console.log(open)
-  }, 2000)
+  const toggleOpen = () => void setOpen(p => !p)
   return (
     <Viewport>
-      <Header animate={open ? "open" : "closed"}>{`Container`}</Header>
+      <Root animate={open ? "open" : "closed"} initial="closed">
+        <Backdrop
+          variants={{
+            closed: {
+              y: `calc(-100% + ${theme.spacing[12]})`,
+            },
+            open: {
+              y: 0,
+            },
+          }}
+          transition={{
+            type: "spring",
+            damping: 25,
+            mass: 0.9,
+            stiffness: 120,
+          }}
+        />
+        <Container>
+          <MenuToggle onClick={toggleOpen} />
+        </Container>
+      </Root>
     </Viewport>
   )
 }
 
-export function Step1Demo2() {
+export const Demo2 = () => {
   const [open, setOpen] = useState(false)
-  useInterval(() => {
-    setOpen(prev => !prev)
-    console.log(open)
-  }, 2000)
+  const toggleOpen = () => void setOpen(p => !p)
   return (
     <Viewport>
-      <motion.aside className={styles.aside} animate={open ? "open" : "closed"}>
-        <motion.div
-          className={styles.backdrop}
+      <Root animate={open ? "open" : "closed"} initial="closed">
+        <Backdrop
           variants={{
             closed: {
               x: `calc(-100% + ${theme.spacing[12]})`,
@@ -74,21 +69,11 @@ export function Step1Demo2() {
             mass: 0.9,
             stiffness: 120,
           }}
-        >{`Backdrop`}</motion.div>
-        <div className={styles.container}>{`Container`}</div>
-      </motion.aside>
-    </Viewport>
-  )
-}
-
-export function Step2Demo1() {
-  const [open, setOpen] = useState(false)
-  const toggleOpen = () => void setOpen(!open)
-  return (
-    <Viewport>
-      <Header animate={open ? "open" : "closed"} initial="closed">
-        <MenuToggle onClick={toggleOpen} />
-      </Header>
+        />
+        <Container className={styles.container2}>
+          <MenuToggle onClick={toggleOpen} />
+        </Container>
+      </Root>
     </Viewport>
   )
 }

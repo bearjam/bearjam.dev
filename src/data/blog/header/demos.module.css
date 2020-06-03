@@ -1,8 +1,13 @@
 .viewport {
+  @apply flex justify-center;
+}
+
+.viewport > div {
   overflow: hidden;
   position: relative;
   @apply max-w-xs mt-4;
   height: calc(theme("maxWidth.xs") * 1.6);
+  width: calc(theme("maxWidth.xs"));
   @apply bg-green-100;
 }
 
@@ -16,8 +21,7 @@
   @apply flex justify-center items-center;
 }
 
-.header,
-.aside {
+.root {
   @apply bg-red-400;
 }
 
@@ -33,8 +37,14 @@
   background-color: inherit;
   position: absolute;
   top: 0;
+  left: 0;
   @apply w-full h-12;
   composes: filler-text border;
+}
+
+.container-2 {
+  composes: container;
+  @apply h-full w-12;
 }
 
 .aside .container {
