@@ -77,3 +77,48 @@ export const Demo2 = () => {
     </Viewport>
   )
 }
+
+const links = [
+  { href: "/doe", label: "Doe" },
+  { href: "/rae", label: "Rae" },
+  { href: "/me", label: "Me" },
+  { href: "/far", label: "Far" },
+]
+
+const Nav = props => {
+  return <motion.nav {...props} />
+}
+
+export const Demo3 = () => {
+  const [open, setOpen] = useState(false)
+  const toggleOpen = () => void setOpen(p => !p)
+  return (
+    <Viewport>
+      <Root animate={open ? "open" : "closed"} initial="closed">
+        <Backdrop
+          variants={{
+            closed: {
+              x: `calc(-100% + ${theme.spacing[12]})`,
+            },
+            open: {
+              x: 0,
+            },
+          }}
+          transition={{
+            type: "spring",
+            damping: 25,
+            mass: 0.9,
+            stiffness: 120,
+          }}
+        />
+        <Container className={styles.container}>
+          <MenuToggle onClick={toggleOpen} />
+          <AnimatePresence>
+            {open && <Nav className={styles.navMobile} />}
+          </AnimatePresence>
+          <Nav className={styles.navDesktop} />
+        </Container>
+      </Root>
+    </Viewport>
+  )
+}
