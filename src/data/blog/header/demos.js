@@ -5,6 +5,7 @@ import { useState } from "react"
 import { useInterval } from "../../../hooks"
 import theme from "tailwindcss/defaultTheme"
 import { MenuToggle } from "./fm-menu-toggle"
+import { AnimatePresence } from "framer-motion"
 
 const Viewport = props => (
   <div className={styles.viewport}>
@@ -114,9 +115,21 @@ export const Demo3 = () => {
         <Container className={styles.container}>
           <MenuToggle onClick={toggleOpen} />
           <AnimatePresence>
-            {open && <Nav className={styles.navMobile} />}
+            {open && (
+              <Nav
+                className={styles.navMobile}
+                initial="closed"
+                animate="open"
+                exit="closed"
+                variants={{
+                  open: {
+                    transition: {},
+                  },
+                }}
+              />
+            )}
           </AnimatePresence>
-          <Nav className={styles.navDesktop} />
+          {/* <Nav className={styles.navDesktop} /> */}
         </Container>
       </Root>
     </Viewport>

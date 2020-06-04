@@ -23,3 +23,8 @@ h2 {
 .root article a:hover {
   @apply inline-block transform scale-105;
 }
+
+.root iframe {
+  @apply w-full mt-4;
+  height: theme("maxWidth.sm");
+}
