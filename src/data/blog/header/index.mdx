@@ -19,11 +19,11 @@ Consider the structure of this component tree:
 
 This allows us the following behaviour (tap the menu to open/close):
 
-<Demo1 />
+<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-1" />
 
-This is side-agnostic of course:
+This is side-agnostic:
 
-<Demo2 />
+<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-1?module=/pages/sideways.js&initialpath=/sideways" />
 
 Toggle menu is courtesy of
 [this Framer Motion example](https://codesandbox.io/s/framer-motion-side-menu-mx2rw?module=/src/MenuToggle.tsx)
@@ -32,19 +32,37 @@ Mention positioning the elements with CSS.
 
 Mention Framer Motion, better with x y not height width.
 
-## Step 2: Flexible Nav
+## Step 2: Flexible Nav, Multiple Nav's
 
 Our `Root > Backdrop + Container` pattern, along with React state, makes it very
 easy to conditionally render this for mobile and bigger.
+
+Nav's tend to be functionally isomorphic yet aesthetically much different when
+seen in their many incarnations within websites, e.g. in the mobile vs. the
+desktop header vs. in the footer. So we really want flexibility.
+
+The following gets us most of the way there, drag the viewport's width to see
+the responsive changes to the header:
+
+<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-2" />
+
+There are a couple of issues. The most obvious: the mobile nav links are
+displayed before the backdrop has finished animating into full view. This is
+resolved by animating our links into view, we use a nice stagger animation
+courtesy again of Framer Motion:
+
+<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-3" />
+
+Less obvious is the open -> viewport thingy
 
 For the mobile nav, you do want `<AnimatePresence />` OR transition the display
 manually.
 
 `<AnimatePresence />` seems to break the cascading of variants.
 
-## Step 3: Two Different Nav's (Mobile and Desktop)
-
 <!-- <iframe src="https://codesandbox.io/embed/github/reduxjs/redux/tree/master/examples/todomvc" /> -->
+
+<!-- <iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-00" /> -->
 
 ## Step 4: Render props
 
