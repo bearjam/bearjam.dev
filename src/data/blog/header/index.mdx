@@ -1,10 +1,12 @@
 ---
-title: "Our Site Header: A 10-Step Programme"
+title: "The Path Well-Trodden: A Site Header"
 date: 2020-06-02
 author: Thomas O'Neill
 ---
 
-import { Demo1, Demo2 } from "./demos"
+## Tl;dr Here's the Code
+
+https://overreacted.io/making-setinterval-declarative-with-react-hooks/
 
 ## Step 1: The "Root > Backdrop + Container" Pattern
 
@@ -30,6 +32,8 @@ Toggle menu is courtesy of
 
 Mention positioning the elements with CSS.
 
+Z-index stuff: the menu > the container > the backdrop > the content
+
 Mention Framer Motion, better with x y not height width.
 
 ## Step 2: Flexible Nav, Multiple Nav's
@@ -46,12 +50,36 @@ the responsive changes to the header:
 
 <iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-2" />
 
+Issues:
+
+1. Mobile nav links appear before the backdrop animation progresses sufficiently
+2. Close header on navigation from mobile nav
+3. Active link indication
+
+If we try thinking a step ahead specifically on point 3: we may want different
+active link indication on the desktop nav vs. on the mobile nav.
+
+So what is the same and what is different (and at what level of the component
+hierarchy)?
+
+Same:
+
+- The data: the link path (href), the display name (label), the active state
+  (true/false); at the `<Nav />` level we should know all the links; at the
+  `<Link />` level we only care about `{ href, label, active }`.
+
+Different:
+
+- Animation (opacity on mobile, sliding underline on desktop); `<Link />` level.
+- Markup, per-link (sliding underline requires conditionally rendered div
+  following the link).
+
+<!-- 5. If the viewport is widened whilst the header is open, it says open -->
+
 There are a couple of issues. The most obvious: the mobile nav links are
 displayed before the backdrop has finished animating into full view. This is
 resolved by animating our links into view, we use a nice stagger animation
 courtesy again of Framer Motion:
-
-<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-3" />
 
 Less obvious is the open -> viewport thingy
 
@@ -60,11 +88,32 @@ manually.
 
 `<AnimatePresence />` seems to break the cascading of variants.
 
+## Step 3: Render props ftw
+
+(update below for having active link color and underline too)
+
+As of time of writing, `<AnimateSharedLayout />` is in beta. This works with
+`2.0.0-beta.59` but not `2.0.0-beta.73`. Furthermore, it seems to only work if
+the container is flex.
+
+<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-3" />
+
 <!-- <iframe src="https://codesandbox.io/embed/github/reduxjs/redux/tree/master/examples/todomvc" /> -->
 
 <!-- <iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-00" /> -->
 
-## Step 4: Render props
+## Step 4: ?!
+
+Solutions to open ->viewport thing?:
+
+- MQ hook/context
+- `data-open` attribute + CSS MQ's?
+
+```css
+.backdrop {
+  transform: translateY(calc(-100% + theme("spacing.12"))) !important;
+}
+```
 
 # Old
 
