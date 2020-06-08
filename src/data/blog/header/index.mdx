@@ -38,16 +38,7 @@ each of these animations almost boringly simple!
 The real problem, we found, was to keep our code clean and readble, to abide by
 the DRY principle, as we worked through these requirements.
 
-We found that these two patterns were what allowed us to do this.
-
-- Wonderful SSR-friendly React animation library **Framer Motion**.
-- A sane component hierarchy, what we call **`Root > Backdrop + Container`**
-  pattern.
-- The **function as child component** pattern
-
-Framer Motion makes the animations as easy as can be, variants cascade through
-the tree. The documentation site is really good and there are plenty of
-examples, getting into Framer Motion is out of scope here.
+We identified two key patterns that really helped with this, so here they are.
 
 Furthermore, we use Next.js in the example code here. For bearjam.dev we use
 Gatsby. These are on top of React, so of course we are using React. But in a
@@ -96,6 +87,71 @@ here.
     </motion.nav>
   )
 }
+```
+
+is consumed as ... mobile:
+
+```jsx
+<AnimatePresence>
+  {open && (
+    <Nav
+      className={styles.navMobile}
+      variants={{
+        open: {
+          transition: {
+            staggerChildren: 0.3,
+            delayChildren: 0.3,
+          },
+        },
+        closed: {
+          transition: {
+            staggerChildren: 0.3,
+            staggerDirection: -1,
+          },
+        },
+      }}
+      initial="closed"
+      animate="open"
+      exit="closed"
+    >
+      {({ href, label, active }) => (
+        <motion.div
+          initial="closed"
+          variants={{
+            open: {
+              opacity: 1,
+            },
+            closed: {
+              opacity: 0,
+            },
+          }}
+          onClick={() => void setOpen(false)}
+        >
+          <Link href={href}>
+            <a data-active={active}>{label}</a>
+          </Link>
+        </motion.div>
+      )}
+    </Nav>
+  )}
+</AnimatePresence>
+```
+
+... desktop ...
+
+```jsx
+<AnimateSharedLayout>
+  <Nav className={styles.navDesktop}>
+    {({ href, label, active }) => (
+      <Link href={href}>
+        <a>
+          <span>{label}</span>
+          {active && <motion.div layoutId="underline" />}
+        </a>
+      </Link>
+    )}
+  </Nav>
+</AnimateSharedLayout>
 ```
 
 <!-- What we came up with turned out to be reusable sidebars, footers, modals and so on. -->
