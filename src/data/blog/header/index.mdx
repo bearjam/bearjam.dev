@@ -1,18 +1,66 @@
 ---
-title: "An Age-Old Problem: A Fancy Navigation Header"
+title: "Two Powerful Patterns for Navigation UI"
 date: 2020-06-02
 author: Thomas O'Neill
 ---
 
-## Intro
+A website's navigation interface is a fundamental part of the user experience.
+As a web developer or designer, you'll be creating headers, footers and/or
+sidebars for most projects. You want to spend more time creating a unique site
+for your client, and less time re-implementing the same feature over again.
 
-## Tl;dr Here's the Code
+Let's get straight into a code example to get a sense of what we're dealing
+with. Here's a similar header to the one we use for [the bearjam.dev site](/):
 
-https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-3" />
 
-## Step 1: The "Root > Backdrop + Container" Pattern
+Now let's break down what it does:
 
-Consider the structure of this component tree:
+- It's **responsive**: the header adapts to changes in screen size (specifically
+  at 640px width breakpoint, try dragging the view narrower).
+- When the screen width is below the breakpoint, **there is a toggle menu to
+  expand/collapse the mobile header**.
+- When the screen width is 640px or greater, the navigation links are displayed
+  horizontally on the desktop header.
+- When the mobile header is expanded, there's a **staggered animation** to bring
+  them into view (and this is reversed upon collapse).
+- **The active link indication is different between mobile and desktop**: on
+  mobile, the active link text colour is blue; on desktop, the active link has a
+  blue underline.
+- Upon navigation **the blue underline animates between links**.
+
+So there's quite a lot going on! But believe it or not, with good tools and
+patterns, we bring this all together and even make it readable, reusable and so
+on.
+
+- Wonderful SSR-friendly React animation library **Framer Motion**.
+- A sane component hierarchy, what we call **`Root > Backdrop + Container`**
+  pattern.
+- The **function as child component** pattern
+
+```jsx
+<Root>
+  <Backdrop />
+  <Container>
+    <BurgerMenu />
+    <MobileNav />
+    <DesktopNav />
+  </Container>
+</Root>
+```
+
+The header contains two sub-trees that render conditionally
+
+You may also notice that the small-screen navigation only appears as a drop-down
+after pressing the burger menu. Furthermore, the indicator for the currently
+visited (active) link is different here compared with the large-screen
+navigation (pink text colour vs. pink text under-line).
+
+There are two key patterns at play here. The first pattern is for the pop-over
+functionality that we use for our mobile navigation drop-down, but this could be
+also be used for any expandable/collapsable component e.g. sidebars, modals etc.
+
+## Pattern #1: The "Root > Backdrop + Container"
 
 ```jsx
 <Root>
@@ -21,157 +69,35 @@ Consider the structure of this component tree:
 </Root>
 ```
 
-This allows us the following behaviour (tap the menu to open/close):
+## Pattern #2: Function as Child Component Nav
 
-<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-1" />
-
-This is side-agnostic:
-
-<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-1?module=/pages/sideways.js&initialpath=/sideways" />
-
-Toggle menu is courtesy of
-[this Framer Motion example](https://codesandbox.io/s/framer-motion-side-menu-mx2rw?module=/src/MenuToggle.tsx)
-
-Mention positioning the elements with CSS.
-
-Z-index stuff: the menu > the container > the backdrop > the content
-
-Mention Framer Motion, better with x y not height width.
-
-## Step 2: Flexible Nav, Multiple Nav's
-
-Our `Root > Backdrop + Container` pattern, along with React state, makes it very
-easy to conditionally render this for mobile and bigger.
-
-Nav's tend to be functionally isomorphic yet aesthetically much different when
-seen in their many incarnations within websites, e.g. in the mobile vs. the
-desktop header vs. in the footer. So we really want flexibility.
-
-The following gets us most of the way there, drag the viewport's width to see
-the responsive changes to the header:
-
-<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-2" />
-
-Issues:
-
-1. Mobile nav links appear before the backdrop animation progresses sufficiently
-2. Close header on navigation from mobile nav
-3. Active link indication
-
-If we try thinking a step ahead specifically on point 3: we may want different
-active link indication on the desktop nav vs. on the mobile nav.
-
-So what is the same and what is different (and at what level of the component
-hierarchy)?
-
-Same:
-
-- The data: the link path (href), the display name (label), the active state
-  (true/false); at the `<Nav />` level we should know all the links; at the
-  `<Link />` level we only care about `{ href, label, active }`.
-
-Different:
-
-- Animation (opacity on mobile, sliding underline on desktop); `<Link />` level.
-- Markup, per-link (sliding underline requires conditionally rendered div
-  following the link).
-
-<!-- 5. If the viewport is widened whilst the header is open, it says open -->
-
-There are a couple of issues. The most obvious: the mobile nav links are
-displayed before the backdrop has finished animating into full view. This is
-resolved by animating our links into view, we use a nice stagger animation
-courtesy again of Framer Motion:
-
-Less obvious is the open -> viewport thingy
-
-For the mobile nav, you do want `<AnimatePresence />` OR transition the display
-manually.
-
-`<AnimatePresence />` seems to break the cascading of variants.
-
-## Step 3: Render props ftw
-
-(update below for having active link color and underline too)
-
-As of time of writing, `<AnimateSharedLayout />` is in beta. This works with
-`2.0.0-beta.59` but not `2.0.0-beta.73`. Furthermore, it seems to only work if
-the container is flex.
-
-<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-3" />
-
-<!-- <iframe src="https://codesandbox.io/embed/github/reduxjs/redux/tree/master/examples/todomvc" /> -->
-
-<!-- <iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-00" /> -->
-
-## Step 4: ?!
-
-Solutions to open ->viewport thing?:
-
-- MQ hook/context
-- `data-open` attribute + CSS MQ's?
-
-```css
-.backdrop {
-  transform: translateY(calc(-100% + theme("spacing.12"))) !important;
+```jsx
+const NavLink = ({ children, href, label, i, ...props }) => {
+  const { pathname } = useRouter()
+  const pathBeginning = `/${pathname.split("/")[1]}`
+  const active = pathBeginning === href
+  return children ? (
+    children({ href, label, active, ...props }, i)
+  ) : (
+    <Link key={href} href={href} {...props}>
+      <a>{label}</a>
+    </Link>
+  )
+}
+export const Nav = ({ children, ...props }) => {
+  return (
+    <motion.nav {...props}>
+      {links.map((linkProps, i) => (
+        <NavLink
+          key={linkProps.href}
+          children={children}
+          {...linkProps}
+          i={i}
+        />
+      ))}
+    </motion.nav>
+  )
 }
 ```
 
-# Old
-
-## Questions
-
-### Set the scene
-
-- What's the difference between a header and a nav?
-- Should I use the same header for mobile and desktop?
-- What should I include in the header?
-- What makes a good header?
-- How is a header/nav different in React/Gatsby?
-- ~~Why do I need a header?~~
-
-### Baby steps
-
-- Where do I start with making a header?
-- How do I link to internal pages with Gatsby?
-
-### Styling
-
-- How can I show which page the user is currently on?
-- How do I make the menu icon transition to an X on mobile?
-
-## Answers
-
-- Same header for mobile and desktop? Re-use where possible!
-
-Semantically, a header
-[_"represents introductory content, typically a group of introductory or navigational aids"_](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header).
-Navigation + branding, basically. Also, to me, header implies at the TOP! For a
-sidebar, use `<aside>`. `<footer>` for bottom.
-
-The nav's purpose is
-[_"purpose is to provide navigation links"_](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/nav).
-
-This is more a question of structure, in terms of HTML and CSS. We use Gatsby
-(and therefore React), however, these concepts are somewhat
-language/framework-agnostic.
-
-### Assumptions
-
-- This is responsive, for mobile and desktop (this is a core requirement)
-
-### Questi-questions
-
-How can I write my header/nav such that it is as X, Y, Z as possible (re-usable,
-general, works for mobile/desktop but customizable too).
-
-It's always something in between perfect abstraction and disposable mess.
-
-## Intro
-
-A preparedness to re-visit first principles. Baby steps.
-
-## Key Points
-
-- If element is positioned (absolute, fixed, sticky), mx-auto only works if left
-  and right are 0 (tailwind rule inset-x-0)
+<!-- What we came up with turned out to be reusable sidebars, footers, modals and so on. -->

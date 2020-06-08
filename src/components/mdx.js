@@ -13,14 +13,6 @@ const components = {
       <Anchor href={href} {...props} />
     )
   },
-  // a: ({ href, ...props }) => (
-  //   <MotionLink
-  //     whileHover={{ scale: 1.02 }}
-  //     className={styles.link}
-  //     to={href}
-  //     {...props}
-  //   />
-  // ),
 }
 
 const shortcodes = {}

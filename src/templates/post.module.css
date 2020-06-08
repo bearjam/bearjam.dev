@@ -3,7 +3,8 @@
 }
 
 .root h1,
-h2 {
+.root h2,
+.root h3 {
   @apply mt-8;
 }
 
@@ -20,11 +21,20 @@ h2 {
   @apply text-pink-500 transition transition-transform duration-100;
 }
 
-.root article a:hover {
-  @apply inline-block transform scale-105;
-}
-
 .root iframe {
   @apply w-full mt-4;
   height: theme("maxWidth.sm");
+}
+
+.root ul,
+.root ol {
+  @apply mt-2 ml-4;
+}
+
+.root ul > li {
+  @apply list-disc;
+}
+
+.root ol > li {
+  @apply list-decimal;
 }
