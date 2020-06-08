@@ -1,18 +1,18 @@
 ---
-title: "Two Powerful Patterns for Navigation UI"
+title: "A Couple of UI Patterns with React and Framer Motion"
 date: 2020-06-02
 author: Thomas O'Neill
 ---
 
 A website's navigation interface is a fundamental part of the user experience.
-As a web developer or designer, you'll be creating headers, footers and/or
-sidebars for most projects. You want to spend more time creating a unique site
-for your client, and less time re-implementing the same feature over again.
+As a web developer or designer, you'll be creating headers, footers, sidebars
+etc. for most projects. You want to spend more time creating a unique site for
+your client, and less time re-implementing the same feature.
 
 Let's get straight into a code example to get a sense of what we're dealing
 with. Here's a similar header to the one we use for [the bearjam.dev site](/):
 
-<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-3" />
+<!-- <iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-3" /> -->
 
 Now let's break down what it does:
 
@@ -23,42 +23,36 @@ Now let's break down what it does:
 - When the screen width is 640px or greater, the navigation links are displayed
   horizontally on the desktop header.
 - When the mobile header is expanded, there's a **staggered animation** to bring
-  them into view (and this is reversed upon collapse).
+  the links into view (and this effect is reversed upon collapse).
 - **The active link indication is different between mobile and desktop**: on
   mobile, the active link text colour is blue; on desktop, the active link has a
   blue underline.
-- Upon navigation **the blue underline animates between links**.
+- When clicking the desktop header links, **the blue underline transitions
+  between links**.
 
-So there's quite a lot going on! But believe it or not, with good tools and
-patterns, we bring this all together and even make it readable, reusable and so
-on.
+At first glance it may appear that the main problem here is to write all of
+these animations, but luckily there's
+[Framer Motion](https://www.framer.com/api/motion/)[^1], which makes declaring
+each of these animations almost boringly simple!
+
+The real problem, we found, was to keep our code clean and readble, to abide by
+the DRY principle, as we worked through these requirements.
+
+We found that these two patterns were what allowed us to do this.
 
 - Wonderful SSR-friendly React animation library **Framer Motion**.
 - A sane component hierarchy, what we call **`Root > Backdrop + Container`**
   pattern.
 - The **function as child component** pattern
 
-```jsx
-<Root>
-  <Backdrop />
-  <Container>
-    <BurgerMenu />
-    <MobileNav />
-    <DesktopNav />
-  </Container>
-</Root>
-```
+Framer Motion makes the animations as easy as can be, variants cascade through
+the tree. The documentation site is really good and there are plenty of
+examples, getting into Framer Motion is out of scope here.
 
-The header contains two sub-trees that render conditionally
-
-You may also notice that the small-screen navigation only appears as a drop-down
-after pressing the burger menu. Furthermore, the indicator for the currently
-visited (active) link is different here compared with the large-screen
-navigation (pink text colour vs. pink text under-line).
-
-There are two key patterns at play here. The first pattern is for the pop-over
-functionality that we use for our mobile navigation drop-down, but this could be
-also be used for any expandable/collapsable component e.g. sidebars, modals etc.
+Furthermore, we use Next.js in the example code here. For bearjam.dev we use
+Gatsby. These are on top of React, so of course we are using React. But in a
+sense the two patterns that allow us to bring all this together so nicely are
+kind of agnostic!
 
 ## Pattern #1: The "Root > Backdrop + Container"
 
@@ -68,6 +62,8 @@ also be used for any expandable/collapsable component e.g. sidebars, modals etc.
   <Container>{children}</Container>
 </Root>
 ```
+
+Maybe show the side agnostic example plus media queries for double header here.
 
 ## Pattern #2: Function as Child Component Nav
 
@@ -87,7 +83,9 @@ const NavLink = ({ children, href, label, i, ...props }) => {
 export const Nav = ({ children, ...props }) => {
   return (
     <motion.nav {...props}>
-      {links.map((linkProps, i) => (
+      {links.map((linkProps, i) => (There's also
+[React Spring](http://react-spring.io/) but we'll use the former in our code
+here.
         <NavLink
           key={linkProps.href}
           children={children}
@@ -101,3 +99,9 @@ export const Nav = ({ children, ...props }) => {
 ```
 
 <!-- What we came up with turned out to be reusable sidebars, footers, modals and so on. -->
+
+### Footnotes
+
+[^1]:
+  There's also [React Spring](http://react-spring.io/) but we'll use the former
+  in our code here.

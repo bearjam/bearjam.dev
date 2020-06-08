@@ -31,6 +31,10 @@
   @apply mt-2 ml-4;
 }
 
+.root li {
+  @apply mt-1;
+}
+
 .root ul > li {
   @apply list-disc;
 }
