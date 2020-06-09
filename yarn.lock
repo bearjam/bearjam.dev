@@ -6451,14 +6451,6 @@ gatsby-page-utils@^0.1.3:
     lodash "^4.17.15"
     micromatch "^3.1.10"
 
-gatsby-plugin-catch-links@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-catch-links/-/gatsby-plugin-catch-links-2.3.0.tgz#75cdee9c62c6948b0d509a83c6876cea3a54c53b"
-  integrity sha512-Neoa6ijOG0+EeMH1SudOX9s8qKimguOmtxPgbr9WvbXEbY1zjz4Pi3iE3Np1sLodXTiHdjlPuHewv3NUnaFflg==
-  dependencies:
-    "@babel/runtime" "^7.9.2"
-    escape-string-regexp "^1.0.5"
-
 gatsby-plugin-layout@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/gatsby-plugin-layout/-/gatsby-plugin-layout-1.2.3.tgz#dea7b9091f6c44ac9de2f6b5798efd13fa6d72b1"
@@ -13369,6 +13361,11 @@ spdy@^4.0.1:
     select-hose "^2.0.0"
     spdy-transport "^3.0.0"
 
+speakingurl@^14.0.1:
+  version "14.0.1"
+  resolved "https://registry.yarnpkg.com/speakingurl/-/speakingurl-14.0.1.tgz#f37ec8ddc4ab98e9600c1c9ec324a8c48d772a53"
+  integrity sha512-1POYv7uv2gXoyGFpBCmpDVSNV74IfsWlDW216UPjbWufNf+bSU6GdbDsxdcxtfwb4xlI3yxzOTKClUosxARYrQ==
+
 split-on-first@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/split-on-first/-/split-on-first-1.1.0.tgz#f610afeee3b12bce1d0c30425e76398b78249a5f"
@@ -14059,6 +14056,10 @@ text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
+
+"theme-hop-light@https://github.com/bubersson/hop-theme-vscode.git":
+  version "0.0.4"
+  resolved "https://github.com/bubersson/hop-theme-vscode.git#c8f147a5cdb3f73998dbcb45a90f83c83977a31a"
 
 three@^0.116.1:
   version "0.116.1"

@@ -3,7 +3,7 @@ import { MDXRenderer } from "gatsby-plugin-mdx"
 import React from "react"
 import { TextLink, Anchor } from "./links"
 
-const components = {
+export const defaultComponents = {
   a: ({ href, ...props }) => {
     const internal = /^\.?\/(?!\/)/.test(href)
 
@@ -19,7 +19,11 @@ const shortcodes = {}
 
 const MDX = ({ children, ...props }) => {
   return (
-    <MDXProvider components={components} shortcodes={shortcodes} {...props}>
+    <MDXProvider
+      components={defaultComponents}
+      shortcodes={shortcodes}
+      {...props}
+    >
       <MDXRenderer>{children}</MDXRenderer>
     </MDXProvider>
   )

@@ -44,7 +44,8 @@ module.exports = {
           {
             resolve: `gatsby-remark-vscode`,
             options: {
-              theme: `Abyss`,
+              theme: `Hop Light`,
+              extensions: ["theme-hop-light"],
             },
           },
         ],
@@ -64,7 +65,8 @@ module.exports = {
         icon: `src/assets/favicon.svg`, // This path is relative to the root of the site.
       },
     },
-    `gatsby-plugin-catch-links`,
+
+    // `gatsby-plugin-catch-links`,
     // `gatsby-plugin-offline`
     // `gatsby-plugin-webpack-bundle-analyser-v2`,
   ],

@@ -42,3 +42,36 @@
 .root ol > li {
   @apply list-decimal;
 }
+
+.linked-header > span:nth-child(2) {
+  display: inline-block;
+  width: theme("spacing.4");
+  @apply ml-1;
+}
+
+.linked-header:hover > span:nth-child(2) {
+  display: inline-block;
+}
+
+@screen lg {
+  .linked-header {
+    position: relative;
+  }
+  .linked-header > span:nth-child(2) {
+    display: none;
+  }
+  .linked-header:hover > span:nth-child(2) {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    transform: translate(calc(-1 * theme("spacing.6")), theme("spacing.2"));
+  }
+}
+
+.root code {
+  @apply bg-blue-100;
+}
+
+.root pre > code {
+  @apply py-2 rounded-md;
+}

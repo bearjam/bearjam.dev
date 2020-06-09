@@ -1,0 +1,257 @@
+---
+title: "A Couple of UI Patterns with React and Framer Motion"
+date: 2020-06-02
+author: Thomas O'Neill
+---
+
+A website's navigation interface is a fundamental part of the user experience.
+As a web developer or designer, you'll be creating headers, footers, sidebars
+etc. for most projects. You want to spend more time creating a unique site for
+your client, and less time re-implementing the same feature.
+
+Let's get straight into a code example to get a sense of what we're dealing
+with. Here's a similar header to the one we use for [the bearjam.dev site](/):
+
+<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-full" />
+
+Now let's break down what it does.
+
+## Feature Requirements
+
+- It's **responsive**: the header adapts to changes in screen size (specifically
+  at 640px width breakpoint, try dragging the view narrower).
+- When the screen width is below the breakpoint, **there is a toggle menu to
+  expand/collapse the mobile header**.
+- When the screen width is 640px or greater, the navigation links are displayed
+  horizontally on the desktop header.
+- When the mobile header is expanded, there's a **staggered animation** to bring
+  the links into view (and this effect is reversed upon collapse).
+- **The active link indication is different between mobile and desktop**: on
+  mobile, the active link text colour is blue; on desktop, the active link has a
+  blue underline.
+- When clicking the desktop header links, **the blue underline transitions
+  between links**.
+
+At first glance, the main problem may appear to be figuring out all these
+animations, but luckily there's
+[Framer Motion](https://www.framer.com/api/motion/)[^1], which makes declaring
+each of these animations almost boringly simple!
+
+We found the biggest problem was to keep our code clean and readble, to abide by
+the DRY principle, as we worked through these requirements.
+
+We identified two key patterns that really helped with this, so here they are.
+
+_Note: We use [Next](https://nextjs.org/) in the example code here. For
+[bearjam.dev](/) we use [Gatsby](https://www.gatsbyjs.org/) which in turn uses
+[Reach Router](https://reach.tech/router). You could also use
+[React Router](https://reacttraining.com/react-router/web/guides/quick-start)._
+
+## #1 The Overlay Pattern (Root > Backdrop + Container)
+
+Taking elements out of flow to put them on top of others, using
+[positioning](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Positioning),
+is standard practice for web developers. But keeping things readable and easy to
+reason about can get tricky when you've got lots of nested div's. We found that
+thinking explicitly in terms of "Root > Backdrop + Container", to write in
+selector form, really simplifies matters, like this:
+
+```jsx
+<Root animate={variant}>
+  <Backdrop />
+  <Container>{children}</Container>
+</Root>
+```
+
+- `<Root />`'s responsibility is to cascade the animation state down through its
+  children.
+- The `<Backdrop />` is the expand/collapse-able pane, the underlay.
+- The `<Container />` is where the rest of the content goes, e.g. your
+  `<Nav />`('s).
+
+Here's an example header component using this pattern:
+
+```jsx
+function Header() {
+  const [open, setOpen] = useState(false)
+  const toggleOpen = () => void setOpen(p => !p)
+  return (
+    <Root animate={open ? "open" : "closed"} initial="closed">
+      <Backdrop
+        variants={{
+          closed: {
+            y: `calc(-100% + ${theme.spacing[12]})`,
+          },
+          open: {
+            y: 0,
+          },
+        }}
+        transition={{
+          type: "spring",
+          damping: 25,
+          mass: 0.9,
+          stiffness: 120,
+        }}
+      />
+      <Container>
+        <MenuToggle onClick={toggleOpen} />
+      </Container>
+    </Root>
+  )
+}
+```
+
+Styled as follows:
+
+```css
+.backdrop {
+  background-color: lightpink;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.container {
+  position: absolute;
+  width: 100%;
+  height: theme("spacing.12");
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+}
+
+.container > * {
+  padding: 0.5rem;
+}
+```
+
+[Here's a CodeSandbox](https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-pattern-1),
+notice how simple it is to change it to a `<Sidebar />`. This solves the first
+couple of points in the [feature requirements above](#feature-requirements).
+
+## #2 "Render Props" Pattern
+
+Now how about the issue of us having two different navigation sub-tree's, one
+for mobile one for desktop. On the [bearjam.dev](/) site we also re-use this
+again in the footer.
+
+This is a great time to leverage the
+[render props pattern](https://reactjs.org/docs/render-props.html). As mentioned
+[here](https://reactjs.org/docs/render-props.html#using-props-other-than-render),
+you can use the `children` prop, and in our use case here it actually makes a
+lot of sense.
+
+First let's look at how it looks to use it in the simplest case. Here's our code
+for the desktop navigation:
+
+```jsx
+<AnimateSharedLayout>
+  <Nav className={styles.navDesktop}>
+    {({ href, label, active }) => (
+      <Link href={href}>
+        <a>
+          <span>{label}</span>
+          {active && <motion.div layoutId="underline" />}
+        </a>
+      </Link>
+    )}
+  </Nav>
+</AnimateSharedLayout>
+```
+
+We get to pass a function, in this case, the function for the link component.
+Magic things that are happening:
+
+- Access to `href`, `label` and `active` as function parameters
+- This function gets mapped onto a link array
+
+Let's have a look at the implementation code that makes this pattern possible:
+
+```jsx
+const NavLink = ({ children, href, label, i, ...props }) => {
+  const { pathname } = useRouter()
+  const pathBeginning = `/${pathname.split("/")[1]}`
+  const active = pathBeginning === href
+  return children ? (
+    children({ href, label, active, ...props }, i)
+  ) : (
+    <Link key={href} href={href} {...props}>
+      <a>{label}</a>
+    </Link>
+  )
+}
+
+export const Nav = ({ children, ...props }) => {
+  return (
+    <motion.nav {...props}>
+      {links.map((linkProps, i) => (
+        <NavLink
+          key={linkProps.href}
+          children={children}
+          {...linkProps}
+          i={i}
+        />
+      ))}
+    </motion.nav>
+  )
+}
+```
+
+And here we are again consuming our `<Nav />` component for the mobile aspect of
+our header:
+
+```jsx
+<AnimatePresence>
+  {open && (
+    <Nav
+      className={styles.navMobile}
+      variants={{
+        open: {
+          transition: {
+            staggerChildren: 0.3,
+            delayChildren: 0.3,
+          },
+        },
+        closed: {
+          transition: {
+            staggerChildren: 0.3,
+            staggerDirection: -1,
+          },
+        },
+      }}
+      initial="closed"
+      animate="open"
+      exit="closed"
+    >
+      {({ href, label, active }) => (
+        <motion.div
+          initial="closed"
+          variants={{
+            open: {
+              opacity: 1,
+            },
+            closed: {
+              opacity: 0,
+            },
+          }}
+          onClick={() => void setOpen(false)}
+        >
+          <Link href={href}>
+            <a data-active={active}>{label}</a>
+          </Link>
+        </motion.div>
+      )}
+    </Nav>
+  )}
+</AnimatePresence>
+```
+
+Well, that's that! Until next time!
+
+### Footnotes
+
+[^1]:
+  There's also [React Spring](http://react-spring.io/) but we'll use the former
+  in our code here.
