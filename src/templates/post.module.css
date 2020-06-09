@@ -75,3 +75,7 @@
 .root pre > code {
   @apply py-2 rounded-md;
 }
+
+:global .lowlight :global .grvsc-line:not(.grvsc-line-highlighted) {
+  opacity: 0.4;
+}

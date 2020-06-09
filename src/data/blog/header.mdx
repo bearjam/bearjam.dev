@@ -40,21 +40,22 @@ each of these animations almost boringly simple!
 We found the biggest problem was to keep our code clean and readble, to abide by
 the DRY principle, as we worked through these requirements.
 
-We identified two key patterns that really helped with this, so here they are.
+We identified two well-known patterns that fit well together to bring all this
+together.
 
 _Note: We use [Next](https://nextjs.org/) in the example code here. For
 [bearjam.dev](/) we use [Gatsby](https://www.gatsbyjs.org/) which in turn uses
 [Reach Router](https://reach.tech/router). You could also use
 [React Router](https://reacttraining.com/react-router/web/guides/quick-start)._
 
-## #1 The Overlay Pattern (Root > Backdrop + Container)
+## #1 The Overlay Pattern
 
 Taking elements out of flow to put them on top of others, using
 [positioning](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Positioning),
 is standard practice for web developers. But keeping things readable and easy to
 reason about can get tricky when you've got lots of nested div's. We found that
-thinking explicitly in terms of "Root > Backdrop + Container", to write in
-selector form, really simplifies matters, like this:
+thinking explicitly in terms of "Root > Backdrop + Container" (to write in
+selector form) really simplifies matters. Think of it this way:
 
 ```jsx
 <Root animate={variant}>
@@ -131,58 +132,94 @@ Styled as follows:
 notice how simple it is to change it to a `<Sidebar />`. This solves the first
 couple of points in the [feature requirements above](#feature-requirements).
 
-## #2 "Render Props" Pattern
+## #2 The Render Props Pattern
 
 Now how about the issue of us having two different navigation sub-tree's, one
-for mobile one for desktop. On the [bearjam.dev](/) site we also re-use this
-again in the footer.
+for mobile one for desktop? On the [bearjam.dev](/) site we even re-use this
+again in the footer!
 
 This is a great time to leverage the
 [render props pattern](https://reactjs.org/docs/render-props.html). As mentioned
 [here](https://reactjs.org/docs/render-props.html#using-props-other-than-render),
-you can use the `children` prop, and in our use case here it actually makes a
-lot of sense.
+you can use the `children` prop, and in our use case here, in terms of
+[DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), it's a godsend!
 
-First let's look at how it looks to use it in the simplest case. Here's our code
-for the desktop navigation:
+Before we get into its implementation, let's look at how we call it:
 
-```jsx
-<AnimateSharedLayout>
-  <Nav className={styles.navDesktop}>
-    {({ href, label, active }) => (
-      <Link href={href}>
-        <a>
-          <span>{label}</span>
-          {active && <motion.div layoutId="underline" />}
-        </a>
-      </Link>
+<div class="lowlight">
+
+```jsx{6-44,48-57}
+<Container>
+  <Branding />
+  <MenuToggle onClick={toggleOpen} className={styles.menu} />
+  <AnimatePresence>
+    {open && (
+      <Nav
+        className={styles.navMobile}
+        variants={{
+          open: {
+            transition: {
+              staggerChildren: 0.3,
+              delayChildren: 0.3,
+            },
+          },
+          closed: {
+            transition: {
+              staggerChildren: 0.3,
+              staggerDirection: -1,
+            },
+          },
+        }}
+        initial="closed"
+        animate="open"
+        exit="closed"
+      >
+        {({ href, label, active }) => (
+          <motion.div
+            initial="closed"
+            variants={{
+              open: {
+                opacity: 1,
+              },
+              closed: {
+                opacity: 0,
+              },
+            }}
+            onClick={() => void setOpen(false)}
+          >
+            <Link href={href}>
+              <a data-active={active}>{label}</a>
+            </Link>
+          </motion.div>
+        )}
+      </Nav>
     )}
-  </Nav>
-</AnimateSharedLayout>
+  </AnimatePresence>
+  <AnimateSharedLayout>
+    <Nav className={styles.navDesktop}>
+      {({ href, label, active }) => (
+        <Link href={href}>
+          <a>
+            <span>{label}</span>
+            {active && <motion.div layoutId="underline" />}
+          </a>
+        </Link>
+      )}
+    </Nav>
+  </AnimateSharedLayout>
+</Container>
 ```
 
-We get to pass a function, in this case, the function for the link component.
-Magic things that are happening:
+</div>
 
-- Access to `href`, `label` and `active` as function parameters
-- This function gets mapped onto a link array
+Notice how we pass a function as the child of each `<Nav />`. Magically:
 
-Let's have a look at the implementation code that makes this pattern possible:
+- We have access to `href`, `label` and `active` as function input parameters
+- This one function is mapped across all of our links
+
+All that magic is hidden in the implementation of our `<Nav />`:
 
 ```jsx
-const NavLink = ({ children, href, label, i, ...props }) => {
-  const { pathname } = useRouter()
-  const pathBeginning = `/${pathname.split("/")[1]}`
-  const active = pathBeginning === href
-  return children ? (
-    children({ href, label, active, ...props }, i)
-  ) : (
-    <Link key={href} href={href} {...props}>
-      <a>{label}</a>
-    </Link>
-  )
-}
-
 export const Nav = ({ children, ...props }) => {
   return (
     <motion.nav {...props}>
@@ -197,58 +234,35 @@ export const Nav = ({ children, ...props }) => {
     </motion.nav>
   )
 }
+
+const NavLink = ({ children, href, label, i, ...props }) => {
+  const { pathname } = useRouter()
+  const pathBeginning = `/${pathname.split("/")[1]}`
+  const active = pathBeginning === href
+  return children ? (
+    children({ href, label, active, ...props }, i)
+  ) : (
+    <Link key={href} href={href} {...props}>
+      <a>{label}</a>
+    </Link>
+  )
+}
+
+const links = [
+  { href: "/", label: "Page One" },
+  { href: "/page-two", label: "Page Two" },
+]
 ```
 
-And here we are again consuming our `<Nav />` component for the mobile aspect of
-our header:
+Notice how our `<Nav />` passes our `children` function into the function
+mapping over our links.
 
-```jsx
-<AnimatePresence>
-  {open && (
-    <Nav
-      className={styles.navMobile}
-      variants={{
-        open: {
-          transition: {
-            staggerChildren: 0.3,
-            delayChildren: 0.3,
-          },
-        },
-        closed: {
-          transition: {
-            staggerChildren: 0.3,
-            staggerDirection: -1,
-          },
-        },
-      }}
-      initial="closed"
-      animate="open"
-      exit="closed"
-    >
-      {({ href, label, active }) => (
-        <motion.div
-          initial="closed"
-          variants={{
-            open: {
-              opacity: 1,
-            },
-            closed: {
-              opacity: 0,
-            },
-          }}
-          onClick={() => void setOpen(false)}
-        >
-          <Link href={href}>
-            <a data-active={active}>{label}</a>
-          </Link>
-        </motion.div>
-      )}
-    </Nav>
-  )}
-</AnimatePresence>
-```
+We also provide a default return in case `children` is undefined, allowing us to
+actually just call `<Nav />` on its own without any children and still get a
+fully functional navigation with links if we don't need to do any fancy active
+link animation (as is the case in the [bearjam.dev](/) footer).
 
-Well, that's that! Until next time!
+Well, that's that then! Until next time!
 
 ### Footnotes
 
