@@ -19,7 +19,7 @@ function SEO({
   const {
     site: {
       siteMetadata: {
-        siteTitle,
+        title: siteTitle,
         description: siteDescription,
         author,
         defaultImage,
