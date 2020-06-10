@@ -2,7 +2,8 @@ module.exports = {
   siteMetadata: {
     title: `Bearjam`,
     description: `Home page for Bearjam web development company`,
-    author: `@gatsbyjs`,
+    author: `@bearjamdev`,
+    defaultImage: `/images/seo-card.png`,
   },
   plugins: [
     `gatsby-transformer-sharp`,
