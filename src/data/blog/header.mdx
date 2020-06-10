@@ -37,11 +37,11 @@ animations, but luckily there's
 [Framer Motion](https://www.framer.com/api/motion/)[^1], which makes declaring
 each of these animations almost boringly simple!
 
-We found the biggest problem was to keep our code clean and readble, to abide by
-the DRY principle, as we worked through these requirements.
+We found the biggest problem was to keep our code clean and readble and to abide
+by the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle as
+we worked through these requirements.
 
-We identified two well-known patterns that fit well together to bring all this
-together.
+We identified two well-known patterns that fit well to bring all this together.
 
 _Note: We use [Next](https://nextjs.org/) in the example code here. For
 [bearjam.dev](/) we use [Gatsby](https://www.gatsbyjs.org/) which in turn uses
@@ -134,15 +134,14 @@ couple of points in the [feature requirements above](#feature-requirements).
 
 ## #2 The Render Props Pattern
 
-Now how about the issue of us having two different navigation sub-tree's, one
-for mobile one for desktop? On the [bearjam.dev](/) site we even re-use this
+Now how about the issue of us having two different navigation sub-tree's (one
+for mobile, one for desktop)? On the [bearjam.dev](/) site we even re-use this
 again in the footer!
 
 This is a great time to leverage the
 [render props pattern](https://reactjs.org/docs/render-props.html). As mentioned
 [here](https://reactjs.org/docs/render-props.html#using-props-other-than-render),
-you can use the `children` prop, and in our use case here, in terms of
-[DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), it's a godsend!
+you can use the `children` prop.
 
 Before we get into its implementation, let's look at how we call it:
 
@@ -214,10 +213,10 @@ Before we get into its implementation, let's look at how we call it:
 
 Notice how we pass a function as the child of each `<Nav />`. Magically:
 
-- We have access to `href`, `label` and `active` as function input parameters
-- This one function is mapped across all of our links
+- We have access to `href`, `label` and `active` as function input parameters.
+- This function is mapped across all of our links.
 
-All that magic is hidden in the implementation of our `<Nav />`:
+The magic is abstracted away in the implementation of our `<Nav />`:
 
 ```jsx
 export const Nav = ({ children, ...props }) => {
@@ -254,13 +253,13 @@ const links = [
 ]
 ```
 
-Notice how our `<Nav />` passes our `children` function into the function
-mapping over our links.
+Notice how `<Nav />` passes our function (`children`) into the function mapping
+over our links.
 
 We also provide a default return in case `children` is undefined, allowing us to
-actually just call `<Nav />` on its own without any children and still get a
-fully functional navigation with links if we don't need to do any fancy active
-link animation (as is the case in the [bearjam.dev](/) footer).
+just call `<Nav />` on its own without any children and still get a fully
+functional navigation with links if we don't need any bells and whistles like
+active link animations.
 
 Well, that's that then! Until next time!
 
