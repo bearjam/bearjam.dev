@@ -76,7 +76,7 @@ function SEO({
           content: `website`,
         },
         {
-          name: `og:image`,
+          property: `og:image`,
           content: `${siteUrl}${image || defaultImage}`,
         },
         {
