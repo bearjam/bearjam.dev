@@ -1,15 +1,17 @@
+import loadable from "@loadable/component"
 import { motion } from "framer-motion"
 import { graphql } from "gatsby"
 import React from "react"
 import { slalom } from "../animations"
 import { SvgIsometricOne } from "../components/art"
 import { ButtonLink } from "../components/links"
-import MailSub from "../components/mail-sub"
 import MDX from "../components/mdx"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
-import styles from "./home.module.css"
 import Svg from "../components/svg"
+import styles from "./home.module.css"
+
+const MailSub = loadable(() => import("../components/mail-sub"))
 
 const HomeTemplate = ({ data }) => {
   const { frontmatter } = data.mdx
