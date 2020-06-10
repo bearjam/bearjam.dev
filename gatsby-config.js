@@ -67,7 +67,6 @@ module.exports = {
         icon: `src/assets/favicon.svg`, // This path is relative to the root of the site.
       },
     },
-
     // `gatsby-plugin-catch-links`,
     // `gatsby-plugin-offline`
     // `gatsby-plugin-webpack-bundle-analyser-v2`,
