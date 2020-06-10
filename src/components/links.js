@@ -10,9 +10,7 @@ export const TextLink = ({ className, ...props }) => (
 
 export const Anchor = ({ href, children, ...props }) => (
   <a href={href} className={styles.anchor} {...props}>
-    <motion.span whileHover={{ scale: 1.03 }} className="inline-block">
-      {children}
-    </motion.span>
+    <motion.span>{children}</motion.span>
   </a>
 )
 

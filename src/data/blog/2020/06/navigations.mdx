@@ -1,0 +1,270 @@
+---
+title:
+  "Two Powerful UI Patterns for Navigation Components with React and Framer
+  Motion"
+date: 2020-06-02
+author: Thomas O'Neill
+slug: two-ui-patterns-navigation-react-framer
+---
+
+A website's navigation interface is a fundamental part of the user experience.
+As a web developer or designer, you'll be creating headers, footers, sidebars,
+etc. for most projects. You want to spend more time creating unique sites for
+your clients, and less time re-implementing the same feature.
+
+Let's get straight into it. Here's simpler version of the [bearjam.dev](/)
+header. Play around and see how it behaves:
+
+<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/header-full?module=/components/header.js" />
+
+Now let's break it down into specific features and behaviours.
+
+## Feature Requirements
+
+- It's **responsive**: the header adapts to changes in screen size (try dragging
+  the viewport across from the left).
+- When the screen width is **above** the breakpoint (640px), the navigation
+  links are displayed horizontally on the desktop header.
+- When the screen width is **below** the breakpoint, **there is a toggle menu to
+  expand/collapse the mobile header**.
+- When the mobile header is expanded, there's a **staggered animation** to bring
+  the links into view (and this effect is reversed upon collapse).
+- **The active link indication is different between mobile and desktop**: on
+  mobile, the active link text colour is blue. On desktop, the active link has a
+  blue underline.
+- When clicking the desktop header links, **the blue underline transitions
+  between links**.
+
+At first glance, the main problem appears to be figuring out all these
+animations. Luckily, there's
+[Framer Motion](https://www.framer.com/api/motion/)[^1], which makes declaring
+animations trivial.
+
+The real issue is: how do we keep our code clean and reusable, abiding by
+[DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), as we work through
+these requirements?
+
+We identified two well-known patterns that fit well to bring all this together.
+
+_Note: We use [Next](https://nextjs.org/) in the example code here. For
+[bearjam.dev](/) we use [Gatsby](https://www.gatsbyjs.org/) which in turn uses
+[Reach Router](https://reach.tech/router). You could also use
+[React Router](https://reacttraining.com/react-router/web/guides/quick-start)._
+
+## #1 The Overlay Pattern
+
+Taking elements out of flow to put them on top of others, using
+[positioning](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Positioning),
+is standard practice for web developers. But keeping things readable and easy to
+reason about can get tricky when you've got lots of nested `div`'s. We found
+that thinking explicitly in terms of "Root > Backdrop + Container" (to write in
+selector form) really simplifies matters. Think of it this way:
+
+```jsx
+<Root animate={variant}>
+  <Backdrop />
+  <Container>{children}</Container>
+</Root>
+```
+
+- `<Root />`'s responsibility is to cascade the animation state down through its
+  children.
+- The `<Backdrop />` is the expandable/collapsible pane; the underlay.
+- The `<Container />` is where the rest of the content goes, e.g. your
+  `<Nav />`('s).
+
+Here's an example header component using this pattern:
+
+```jsx
+function Header() {
+  const [open, setOpen] = useState(false)
+  const toggleOpen = () => void setOpen(p => !p)
+  return (
+    <Root animate={open ? "open" : "closed"} initial="closed">
+      <Backdrop
+        variants={{
+          closed: {
+            y: `calc(-100% + ${theme.spacing[12]})`,
+          },
+          open: {
+            y: 0,
+          },
+        }}
+        transition={{
+          type: "spring",
+          damping: 25,
+          mass: 0.9,
+          stiffness: 120,
+        }}
+      />
+      <Container>
+        <MenuToggle onClick={toggleOpen} />
+      </Container>
+    </Root>
+  )
+}
+```
+
+Styled as follows:
+
+```css
+.backdrop {
+  background-color: lightpink;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.container {
+  position: absolute;
+  width: 100%;
+  height: theme("spacing.12");
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+}
+
+.container > * {
+  padding: 0.5rem;
+}
+```
+
+[Here's a CodeSandbox](https://codesandbox.io/s/github/mysterybear/blog-post-demos/tree/master/packages/header-pattern-1?module=/pages/index.js).
+Notice how simple it is to change a `<Header />` into a `<Sidebar />`. This
+solves the first few [feature requirements](#feature-requirements) above.
+
+## #2 The Render Props Pattern
+
+Now the problem that remains: how can we re-use the underlying core of a
+navigation component, whilst giving ourselves the freedom to customize how each
+link is rendered?
+
+This is a great time to leverage the
+[render props pattern](https://reactjs.org/docs/render-props.html). Before we
+get into its implementation, let's look at how we call it:
+
+<div class="lowlight">
+
+```jsx{6-44,48-57}
+<Container>
+  <Branding />
+  <MenuToggle onClick={toggleOpen} className={styles.menu} />
+  <AnimatePresence>
+    {open && (
+      <Nav
+        className={styles.navMobile}
+        variants={{
+          open: {
+            transition: {
+              staggerChildren: 0.3,
+              delayChildren: 0.3,
+            },
+          },
+          closed: {
+            transition: {
+              staggerChildren: 0.3,
+              staggerDirection: -1,
+            },
+          },
+        }}
+        initial="closed"
+        animate="open"
+        exit="closed"
+      >
+        {({ href, label, active }) => (
+          <motion.div
+            initial="closed"
+            variants={{
+              open: {
+                opacity: 1,
+              },
+              closed: {
+                opacity: 0,
+              },
+            }}
+            onClick={() => void setOpen(false)}
+          >
+            <Link href={href}>
+              <a data-active={active}>{label}</a>
+            </Link>
+          </motion.div>
+        )}
+      </Nav>
+    )}
+  </AnimatePresence>
+  <AnimateSharedLayout>
+    <Nav className={styles.navDesktop}>
+      {({ href, label, active }) => (
+        <Link href={href}>
+          <a>
+            <span>{label}</span>
+            {active && <motion.div layoutId="underline" />}
+          </a>
+        </Link>
+      )}
+    </Nav>
+  </AnimateSharedLayout>
+</Container>
+```
+
+</div>
+
+Notice how we pass a function as the child of each `<Nav />`. Magically:
+
+- We have access to `href`, `label` and `active` as function input parameters.
+- This function is mapped across all of our links.
+
+The magic is abstracted away in the implementation of our `<Nav />`:
+
+```jsx
+export const Nav = ({ children, ...props }) => {
+  return (
+    <motion.nav {...props}>
+      {links.map((linkProps, i) => (
+        <NavLink
+          key={linkProps.href}
+          children={children}
+          {...linkProps}
+          i={i}
+        />
+      ))}
+    </motion.nav>
+  )
+}
+
+const NavLink = ({ children, href, label, i, ...props }) => {
+  const { pathname } = useRouter()
+  const pathBeginning = `/${pathname.split("/")[1]}`
+  const active = pathBeginning === href
+  return children ? (
+    children({ href, label, active, ...props }, i)
+  ) : (
+    <Link key={href} href={href} {...props}>
+      <a>{label}</a>
+    </Link>
+  )
+}
+
+const links = [
+  { href: "/", label: "Page One" },
+  { href: "/page-two", label: "Page Two" },
+]
+```
+
+Notice how `<Nav />` passes our function (`children`) into the function mapping
+over our links.
+
+We also provide a default return in case `children` is undefined, allowing us to
+just call `<Nav />` on its own without any children and still get a fully
+functional navigation with links if we don't need any bells and whistles like
+active link animations.
+
+**If you have any questions or ideas, drop me a line at
+[tom@bearjam.dev](mailto:tom@bearjam.dev) or
+[@bearjamtom](https://twitter.com/bearjamtom).**
+
+### Footnotes
+
+[^1]: [React Spring](http://react-spring.io/) is another brilliant option

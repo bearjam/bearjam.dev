@@ -1,6 +1,38 @@
 const path = require("path")
 const { createFilePath } = require("gatsby-source-filesystem")
 
+exports.onCreateNode = ({ node, actions, getNode }) => {
+  const { createNodeField } = actions
+
+  if (node.internal.type === "Mdx") {
+    const collection = getNode(node.parent).sourceInstanceName
+
+    createNodeField({
+      name: "collection",
+      node,
+      value: collection,
+    })
+
+    let slug = node.frontmatter.slug
+      ? `/${node.frontmatter.slug}`
+      : createFilePath({ node, getNode })
+
+    switch (collection) {
+      case "pages":
+        break
+      default:
+        slug = `/${collection}${slug}`
+        break
+    }
+
+    createNodeField({
+      name: "slug",
+      node,
+      value: slug,
+    })
+  }
+}
+
 exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
   const result = await graphql(`
@@ -35,40 +67,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   })
 }
 
-exports.onCreateNode = ({ node, actions, getNode }) => {
-  const { createNodeField } = actions
-
-  if (node.internal.type === "Mdx") {
-    const collection = getNode(node.parent).sourceInstanceName
-
-    createNodeField({
-      name: "collection",
-      node,
-      value: collection,
-    })
-
-    let slug = createFilePath({ node, getNode })
-
-    switch (collection) {
-      case "pages":
-        break
-      default:
-        slug = `/${collection}${slug}`
-        break
-    }
-
-    createNodeField({
-      name: "slug",
-      node,
-      value: slug,
-    })
-  }
-}
-
-/**
- * Update GraphQL schema to support MDX fields in frontmatter
- * @link https://zslabs.com/articles/mdx-frontmatter-in-gatsby
- */
 exports.createSchemaCustomization = ({
   actions: { createTypes, createFieldExtension },
   createContentDigest,
@@ -101,6 +99,7 @@ exports.createSchemaCustomization = ({
     }
     type MdxFrontmatter {
       templateKey: String
+      slug: String
       whatWeDo: WhatWeDo
     }
     type WhatWeDo {
