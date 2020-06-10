@@ -42,7 +42,7 @@ function SEO({ description, lang, meta, title, image }) {
         lang,
       }}
       title={title || defaultTitle}
-      titleTemplate={`%s | ${title || defaultTitle}`}
+      titleTemplate={`%s | bearjam.dev`}
       meta={[
         {
           name: `description`,
