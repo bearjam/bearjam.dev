@@ -9,12 +9,18 @@ import { graphql, useStaticQuery } from "gatsby"
 import React from "react"
 import { Helmet } from "react-helmet"
 
-function SEO({ description, lang, meta, title, image }) {
+function SEO({
+  description: localDescription,
+  lang,
+  meta,
+  title: localTitle,
+  image,
+}) {
   const {
     site: {
       siteMetadata: {
-        title: defaultTitle,
-        description: defaultDescription,
+        siteTitle,
+        description: siteDescription,
         author,
         defaultImage,
         siteUrl,
@@ -36,29 +42,42 @@ function SEO({ description, lang, meta, title, image }) {
     `
   )
 
+  let title = localTitle ? `${localTitle} | ${siteTitle}` : siteTitle
+
   return (
     <Helmet
       htmlAttributes={{
         lang,
       }}
-      title={title || defaultTitle}
-      titleTemplate={`%s | ${defaultTitle}`}
+      title={title}
       meta={[
         {
           name: `description`,
-          content: description || defaultDescription,
+          content: localDescription || siteDescription,
         },
         {
           property: `og:title`,
-          content: title || defaultTitle,
+          content: title,
         },
         {
           property: `og:description`,
-          content: description || defaultDescription,
+          content: localDescription || siteDescription,
+        },
+        {
+          property: `og:url`,
+          content: siteUrl,
+        },
+        {
+          property: `og:title`,
+          content: title,
         },
         {
           property: `og:type`,
           content: `website`,
+        },
+        {
+          name: `og:image`,
+          content: `${siteUrl}${image || defaultImage}`,
         },
         {
           name: `twitter:card`,
@@ -70,18 +89,14 @@ function SEO({ description, lang, meta, title, image }) {
         },
         {
           name: `twitter:title`,
-          content: title || defaultTitle,
+          content: title,
         },
         {
           name: `twitter:description`,
-          content: description || defaultDescription,
+          content: localDescription || siteDescription,
         },
         {
           name: `twitter:image`,
-          content: `${siteUrl}${image || defaultImage}`,
-        },
-        {
-          name: `og:image`,
           content: `${siteUrl}${image || defaultImage}`,
         },
       ].concat(meta)}
