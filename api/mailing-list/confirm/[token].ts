@@ -1,6 +1,6 @@
-import { NowRequest, NowResponse } from "@now/node"
 import { Firestore } from "@google-cloud/firestore"
-import { JWT, JWK } from "jose"
+import { NowRequest, NowResponse } from "@now/node"
+import { JWT } from "jose"
 
 interface Payload {
   email: string

@@ -39,7 +39,8 @@ export default async (req: NowRequest, res: NowResponse) => {
 
       const b64 = Buffer.from(token).toString("base64")
 
-      const confirmLink = `https://bearjam.dev/api/mailing-list/confirm/${b64}`
+      console.log("url", process.env.VERCEL_URL)
+      const confirmLink = `https://${process.env.VERCEL_URL}/api/mailing-list/confirm/${b64}`
 
       const msg = {
         to: email,
