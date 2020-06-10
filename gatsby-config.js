@@ -1,9 +1,10 @@
 module.exports = {
   siteMetadata: {
     title: `Bearjam`,
-    description: `Home page for Bearjam web development company`,
+    description: `Bearjam Web Development`,
     author: `@bearjamdev`,
     defaultImage: `/images/seo-card.png`,
+    siteUrl: `https://bearjam.dev`,
   },
   plugins: [
     `gatsby-transformer-sharp`,
