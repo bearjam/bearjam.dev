@@ -22,8 +22,8 @@ function SEO({
         title: siteTitle,
         description: siteDescription,
         author,
-        defaultImage,
         siteUrl,
+        seo: { ogp, twitter },
       },
     },
   } = useStaticQuery(
@@ -34,7 +34,14 @@ function SEO({
             title
             description
             author
-            defaultImage
+            seo {
+              ogp {
+                image
+              }
+              twitter {
+                image
+              }
+            }
             siteUrl
           }
         }
@@ -77,7 +84,7 @@ function SEO({
         },
         {
           property: `og:image`,
-          content: `${siteUrl}${image || defaultImage}`,
+          content: `${siteUrl}${image || ogp.image}`,
         },
         {
           name: `twitter:card`,
@@ -97,7 +104,7 @@ function SEO({
         },
         {
           name: `twitter:image`,
-          content: `${siteUrl}${image || defaultImage}`,
+          content: `${siteUrl}${image || twitter.image}`,
         },
       ].concat(meta)}
     />

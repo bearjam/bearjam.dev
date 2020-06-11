@@ -3,7 +3,14 @@ module.exports = {
     title: `Bearjam`,
     description: `Bearjam Web Development`,
     author: `@bearjamdev`,
-    defaultImage: `/images/seo-card.png`,
+    seo: {
+      ogp: {
+        image: `/images/ogp-seo-image.png`,
+      },
+      twitter: {
+        image: `/images/twitter-seo-image.png`,
+      },
+    },
     siteUrl: `https://bearjam.dev`,
   },
   plugins: [
