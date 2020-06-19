@@ -43,7 +43,10 @@ export default async (req: NowRequest, res: NowResponse) => {
 
       const msg = {
         to: email,
-        from: "mailing-list@bearjam.dev",
+        from: {
+          email: "newsletter@bearjam.dev",
+          name: "Bearjam Newsletter",
+        },
         subject: "Confirm your e-mail address",
         html: `<a href="${confirmLink}">Click here to confirm your e-mail address</a>`,
       }
