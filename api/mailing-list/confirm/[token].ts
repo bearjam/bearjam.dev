@@ -39,7 +39,11 @@ export default async (req: NowRequest, res: NowResponse) => {
             active: true,
           })
           .then(_ => {
-            res.json({ email, subscribed: true })
+            res.setHeader(
+              "Location",
+              `${process.env.VERCEL_URL}/thank-you-for-subscribing`
+            )
+            res.status(303).send("Redirecting")
           })
       }
     })
