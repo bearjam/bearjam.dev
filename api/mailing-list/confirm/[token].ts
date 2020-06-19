@@ -39,7 +39,8 @@ export default async (req: NowRequest, res: NowResponse) => {
             active: true,
           })
           .then(_ => {
-            res.json({ email, subscribed: true })
+            res.setHeader("Location", `/thank-you-for-subscribing`)
+            res.status(301).send("Redirecting")
           })
       }
     })
