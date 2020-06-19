@@ -1,0 +1,71 @@
+---
+title: "Low Hanging 3D Web Fruit: A Spinner"
+drafted: 2020-06-11
+date: 2020-06-11
+author: Thomas O'Neill
+slug: fooby-bars
+---
+
+When you sign up to the bearjam.dev mailing list, you will see a 3D loading
+spinner. Here it is in isolation:
+
+**first spinner 3d demo**
+
+<!-- <iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/3d-spinner?module=/components/spinner-3d.tsx" /> -->
+
+We needed something to indicate the loading state during subscription, and I was
+also keen to get my feet wet in the 3D web space, so ... two birds one stone.
+
+Looking at the
+[react-three-fiber](https://github.com/react-spring/react-three-fiber) (R3F)
+demos and how little code is needed to spin a box, it seemed like the ideal
+entry-level 3D project (especially suiting our isometric cube logo!)
+
+However, R3F didn't actually make much sense to me until I'd coded a basic
+vanilla Three.js example. **I strongly recommend starting with vanilla Three.js
+code** before porting to R3F in order to understand the underlying API.
+
+Here are the resources that got me going with Three.js and R3F.
+
+## Resources
+
+### Three.js
+
+- [Three.js Fundamentals](https://threejsfundamentals.org), especially:
+  - [Basics](https://threejsfundamentals.org/threejs/lessons/threejs-fundamentals.html)
+  - [Cameras](https://threejsfundamentals.org/threejs/lessons/threejs-cameras.html)
+- Three.js [helpers](https://threejs.org/examples/?q=helpers) and
+  [controls](https://threejs.org/examples/?q=controls)
+
+### react-three-fiber
+
+The basic thing to understand with R3F is that it's a **react reconciler**
+(again, see
+[Henschel's conference talk](https://www.youtube.com/watch?v=YyqBdN71nFs)). This
+basically means that it transforms JSX code to Three.js API calls. The available
+mappings can be seen in these type declarations
+[here](https://github.com/react-spring/react-three-fiber/blob/86b0f78d684ee9f25135f490b9159919cf486697/src/three-types.ts#L71-L298).
+
+Further to this, the
+[R3F GitHub repository](https://github.com/react-spring/react-three-fiber) is
+comprehensive.
+
+<!-- - [Bringing WebGL to React](https://www.youtube.com/watch?v=YyqBdN71nFs), a
+  presentation by [Paul Henschel](https://twitter.com/0xca0a) -->
+
+## So You've Got Your 3D Spinner, But Now Your Performance Blows!
+
+## Performance, Look at the Lighthouse Audit! Use this with React Intersection Observer FTW
+
+**demo with lazy loading here**
+
+<!-- <iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/3d-spinner-lazy?module=/pages/index.tsx" /> -->
+
+Maybe mention **next.config.js** stuff
+
+And that you then want to only show the loading spinner after some interaction
+of course.
+
+So best would be to use intersection observer to lazy load the container
+component, and then regular conditional rendering inside that component as logic
+for whether the 3D spinner is there or not
