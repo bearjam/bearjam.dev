@@ -3,6 +3,7 @@ import React from "react"
 import Presence from "../components/presence"
 import { graphql, Link } from "gatsby"
 import SEO from "../components/seo"
+import styles from "./blog.module.css"
 
 const aniProps = {
   variants: {
@@ -32,11 +33,20 @@ const BlogIndex = ({ data }) => {
           {posts
             .filter(({ node: post }) => post.excerpt.length > 20)
             .map(({ node: post }) => (
-              <motion.div key={post.id} className="mb-6" {...aniProps}>
+              <motion.div key={post.id} className="my-8" {...aniProps}>
                 <Link to={post.fields.slug} className="text-2xl">
                   <h2>{post.frontmatter.title}</h2>
                 </Link>
-                <time className="date">{post.frontmatter.date}</time>
+                <div className={styles.meta}>
+                  <div>
+                    <span>Author:</span>
+                    <address>{post.frontmatter.author}</address>
+                  </div>
+                  <div>
+                    <span>Date:</span>
+                    <time>{post.frontmatter.date}</time>
+                  </div>
+                </div>
                 <p>{post.excerpt}</p>
               </motion.div>
             ))}
