@@ -25,11 +25,11 @@ const BlogIndex = ({ data }) => {
     <Presence key="blogPage" className="px-2 mt-3">
       <SEO title="Blog" />
       <div className="max-w-2xl mx-auto">
-        <motion.h1 {...aniProps} className="mt-4">
+        <motion.h1 {...aniProps} className="sm:mt-4">
           Bearjam Blog
         </motion.h1>
 
-        <div className="">
+        <div>
           {posts
             .filter(({ node: post }) => post.excerpt.length > 20)
             .map(({ node: post }) => (
@@ -38,20 +38,13 @@ const BlogIndex = ({ data }) => {
                   <h2>{post.frontmatter.title}</h2>
                 </Link>
                 <div className={styles.meta}>
-                  <div>
-                    <span>Author:</span>
-                    <address>{post.frontmatter.author}</address>
-                  </div>
-                  <div>
-                    <span>Date:</span>
-                    <time>{post.frontmatter.date}</time>
-                  </div>
+                  <address>{`by ${post.frontmatter.author}`}</address>
+                  <time>{post.frontmatter.date}</time>
                 </div>
                 <p>{post.excerpt}</p>
               </motion.div>
             ))}
         </div>
-        <div className="py-20"></div>
       </div>
     </Presence>
   )

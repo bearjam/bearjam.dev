@@ -1,10 +1,10 @@
 import { motion } from "framer-motion"
 import { graphql } from "gatsby"
 import React from "react"
-import { slalom } from "../animations"
+import { slalom, defaultPresenceProps } from "../animations"
 import { SvgIsometricOne } from "../components/art"
 import { ButtonLink } from "../components/links"
-import MailSub from "../components/mail-sub"
+import NewsletterSignup from "../components/newsletter-signup"
 import MDX from "../components/mdx"
 import Presence from "../components/presence"
 import SEO from "../components/seo"
@@ -57,7 +57,7 @@ const HomeTemplate = ({ data }) => {
           </div>
         </section>
       </Presence>
-      <MailSub frontmatter={frontmatter} />
+      <NewsletterSignup frontmatter={frontmatter} {...defaultPresenceProps} />
     </>
   )
 }

@@ -1,12 +1,10 @@
 .meta {
-  @apply text-xs italic opacity-75 my-1;
+  @apply text-sm font-bold mt-2 mb-3 text-purple-500;
 }
-.meta > div {
-  /* @apply my-1; */
-}
+
 .meta address {
-  @apply italic;
+  @apply not-italic;
 }
-.meta > div > *:nth-child(2) {
-  @apply inline ml-1;
+
+.meta time {
 }
