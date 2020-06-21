@@ -1,5 +1,5 @@
 ---
-title: "Low Hanging 3D Web Fruit: A Spinner"
+title: "Low-Hanging 3D Web Fruit: A Spinner"
 slug: low-hanging-3d-web-fruit-a-spinner
 drafted: 2020-06-11
 date: 2020-06-21
@@ -48,8 +48,8 @@ Here are the resources that got me going with Three.js and R3F.
 
 The thing to understand about R3F is that it's a **react reconciler** (again,
 see [Henschel's conference talk](https://www.youtube.com/watch?v=YyqBdN71nFs)).
-This basically means that **it transforms JSX code to Three.js API calls**. The
-available mappings can be seen in these
+This means **it transforms JSX code to Three.js API calls**. The available
+mappings can be seen in these
 [type declarations](https://github.com/react-spring/react-three-fiber/blob/86b0f78d684ee9f25135f490b9159919cf486697/src/three-types.ts#L71-L298).
 
 ## Lazy Loading
@@ -64,13 +64,15 @@ In our case, it made sense to use a combination of
 and the
 [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 
-Fortunately there are very nice wrapper libaries such as
-[loadable components](https://loadable-components.com/) and
+There are some nice wrapper libaries such as
+[@loadable/component](https://loadable-components.com/) and
 [react-intersection-observer](https://github.com/thebuilder/react-intersection-observer).
 
-Here is a CodeSandbox with lazy loading implemented
-([Next.js ships its own dynamic import library](https://nextjs.org/docs/advanced-features/dynamic-import),
-so we used that instead of loadable-components here; the API is practically the
-same):
+Here is a CodeSandbox with lazy loading implemented:
 
 <iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/83b3bf8c0b093935be104ca7f0493df0927c2cf5/packages/3d-spinner-lazy?module=/pages/index.tsx" />
+
+_([Next.js ships its own dynamic import library](https://nextjs.org/docs/advanced-features/dynamic-import),
+so we use that instead of
+[@loadable/component](https://loadable-components.com/) for this demo. The API
+is practically the same in either case.)_
