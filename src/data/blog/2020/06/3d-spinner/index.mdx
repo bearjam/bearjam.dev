@@ -3,7 +3,6 @@ title: "Low Hanging 3D Web Fruit: A Spinner"
 drafted: 2020-06-11
 date: 2020-06-11
 author: Thomas O'Neill
-slug: fooby-bars
 ---
 
 <!-- import PerfChart from "./perf-chart.js"
@@ -13,9 +12,7 @@ slug: fooby-bars
 When you sign up to the bearjam.dev mailing list, you will see a 3D loading
 spinner. Here it is in isolation:
 
-**first spinner 3d demo**
-
-<!-- <iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/3d-spinner?module=/components/spinner-3d.tsx" /> -->
+<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/3d-spinner?module=/components/spinner-3d.tsx" />
 
 We needed something to indicate the loading state during subscription, and I was
 also keen to get my feet wet in the 3D web space, so... two birds one stone.
@@ -70,17 +67,9 @@ Fortunately there are very nice wrapper libaries such as
 [loadable components](https://loadable-components.com/) and
 [react-intersection-observer](https://github.com/thebuilder/react-intersection-observer).
 
-Here is a CodeSandbox with lazy loading using these libraries:
+Here is a CodeSandbox with lazy loading implemented
+([Next.js ships its own dynamic import library](https://nextjs.org/docs/advanced-features/dynamic-import),
+so we used that instead of loadable-components here; the API is practically the
+same):
 
-**demo with lazy loading here**
-
-<!-- <iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/3d-spinner-lazy?module=/pages/index.tsx" /> -->
-
-Maybe mention **next.config.js** stuff
-
-And that you then want to only show the loading spinner after some interaction
-of course.
-
-So best would be to use intersection observer to lazy load the container
-component, and then regular conditional rendering inside that component as logic
-for whether the 3D spinner is there or not
+<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/3d-spinner-lazy?module=/pages/index.tsx" />
