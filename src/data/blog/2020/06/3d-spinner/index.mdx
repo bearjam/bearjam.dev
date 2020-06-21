@@ -6,6 +6,10 @@ author: Thomas O'Neill
 slug: fooby-bars
 ---
 
+<!-- import PerfChart from "./perf-chart.js"
+
+<PerfChart /> -->
+
 When you sign up to the bearjam.dev mailing list, you will see a 3D loading
 spinner. Here it is in isolation:
 
@@ -14,16 +18,16 @@ spinner. Here it is in isolation:
 <!-- <iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/master/packages/3d-spinner?module=/components/spinner-3d.tsx" /> -->
 
 We needed something to indicate the loading state during subscription, and I was
-also keen to get my feet wet in the 3D web space, so ... two birds one stone.
+also keen to get my feet wet in the 3D web space, so... two birds one stone.
 
 Looking at the
 [react-three-fiber](https://github.com/react-spring/react-three-fiber) (R3F)
-demos and how little code is needed to spin a box, it seemed like the ideal
+demos and how little code is needed to spin a box, it seems the ideal
 entry-level 3D project (especially suiting our isometric cube logo!)
 
-However, R3F didn't actually make much sense to me until I'd coded a basic
-vanilla Three.js example. **I strongly recommend starting with vanilla Three.js
-code** before porting to R3F in order to understand the underlying API.
+However, R3F is difficult to grok without having coded with Three.js. **I
+strongly recommend starting Three.js code before porting to R3F** in order to
+understand the underlying API.
 
 Here are the resources that got me going with Three.js and R3F.
 
@@ -39,23 +43,34 @@ Here are the resources that got me going with Three.js and R3F.
 
 ### react-three-fiber
 
-The basic thing to understand with R3F is that it's a **react reconciler**
-(again, see
-[Henschel's conference talk](https://www.youtube.com/watch?v=YyqBdN71nFs)). This
-basically means that it transforms JSX code to Three.js API calls. The available
-mappings can be seen in these type declarations
-[here](https://github.com/react-spring/react-three-fiber/blob/86b0f78d684ee9f25135f490b9159919cf486697/src/three-types.ts#L71-L298).
+- [Bringing WebGL to React](https://www.youtube.com/watch?v=YyqBdN71nFs), a
+  presentation by [Paul Henschel](https://twitter.com/0xca0a)
+- The [R3F GitHub repository](https://github.com/react-spring/react-three-fiber)
+  is full of documentation and examples.
 
-Further to this, the
-[R3F GitHub repository](https://github.com/react-spring/react-three-fiber) is
-comprehensive.
+The thing to understand about R3F is that it's a **react reconciler** (again,
+see [Henschel's conference talk](https://www.youtube.com/watch?v=YyqBdN71nFs)).
+This basically means that **it transforms JSX code to Three.js API calls**. The
+available mappings can be seen in these
+[type declarations](https://github.com/react-spring/react-three-fiber/blob/86b0f78d684ee9f25135f490b9159919cf486697/src/three-types.ts#L71-L298).
 
-<!-- - [Bringing WebGL to React](https://www.youtube.com/watch?v=YyqBdN71nFs), a
-  presentation by [Paul Henschel](https://twitter.com/0xca0a) -->
+## Lazy Loading
 
-## So You've Got Your 3D Spinner, But Now Your Performance Blows!
+If you run Lighthouse before and after including R3F in your code, you'll notice
+a big performance hit (due to size of Three.js). This can be overcome with lazy
+loading, which can be implemented in a
+[variety of ways](https://web.dev/fast/#lazy-load-images-and-video).
 
-## Performance, Look at the Lighthouse Audit! Use this with React Intersection Observer FTW
+In our case, it made sense to use a combination of
+[dynamic imports](https://webpack.js.org/guides/code-splitting/#dynamic-imports)
+and the
+[Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
+
+Fortunately there are very nice wrapper libaries such as
+[loadable components](https://loadable-components.com/) and
+[react-intersection-observer](https://github.com/thebuilder/react-intersection-observer).
+
+Here is a CodeSandbox with lazy loading using these libraries:
 
 **demo with lazy loading here**
 

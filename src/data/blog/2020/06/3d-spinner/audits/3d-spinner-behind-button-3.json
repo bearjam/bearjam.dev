@@ -1,0 +1,62 @@
+{
+  "first-contentful-paint": {
+    "id": "first-contentful-paint",
+    "title": "First Contentful Paint",
+    "description": "First Contentful Paint marks the time at which the first text or image is painted. [Learn more](https://web.dev/first-contentful-paint).",
+    "score": 0.97,
+    "scoreDisplayMode": "numeric",
+    "numericValue": 1779.494,
+    "numericUnit": "millisecond",
+    "displayValue": "1.8 s"
+  },
+  "first-meaningful-paint": {
+    "id": "first-meaningful-paint",
+    "title": "First Meaningful Paint",
+    "description": "First Meaningful Paint measures when the primary content of a page is visible. [Learn more](https://web.dev/first-meaningful-paint).",
+    "score": 0.97,
+    "scoreDisplayMode": "numeric",
+    "numericValue": 1779.494,
+    "numericUnit": "millisecond",
+    "displayValue": "1.8 s"
+  },
+  "speed-index": {
+    "id": "speed-index",
+    "title": "Speed Index",
+    "description": "Speed Index shows how quickly the contents of a page are visibly populated. [Learn more](https://web.dev/speed-index).",
+    "score": 1,
+    "scoreDisplayMode": "numeric",
+    "numericValue": 1779.494,
+    "numericUnit": "millisecond",
+    "displayValue": "1.8 s"
+  },
+  "max-potential-fid": {
+    "id": "max-potential-fid",
+    "title": "Max Potential First Input Delay",
+    "description": "The maximum potential First Input Delay that your users could experience is the duration of the longest task. [Learn more](https://web.dev/lighthouse-max-potential-fid).",
+    "score": 1,
+    "scoreDisplayMode": "numeric",
+    "numericValue": 30,
+    "numericUnit": "millisecond",
+    "displayValue": "30 ms"
+  },
+  "first-cpu-idle": {
+    "id": "first-cpu-idle",
+    "title": "First CPU Idle",
+    "description": "First CPU Idle marks the first time at which the page's main thread is quiet enough to handle input.  [Learn more](https://web.dev/first-cpu-idle).",
+    "score": 1,
+    "scoreDisplayMode": "numeric",
+    "numericValue": 1779.494,
+    "numericUnit": "millisecond",
+    "displayValue": "1.8 s"
+  },
+  "interactive": {
+    "id": "interactive",
+    "title": "Time to Interactive",
+    "description": "Time to interactive is the amount of time it takes for the page to become fully interactive. [Learn more](https://web.dev/interactive).",
+    "score": 1,
+    "scoreDisplayMode": "numeric",
+    "numericValue": 1779.494,
+    "numericUnit": "millisecond",
+    "displayValue": "1.8 s"
+  }
+}
