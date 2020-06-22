@@ -43,24 +43,24 @@
   @apply list-decimal;
 }
 
-.linked-header > span:nth-child(2) {
+.header-link > * > span:nth-child(2) {
   display: inline-block;
   width: theme("spacing.4");
   @apply ml-1;
 }
 
-.linked-header:hover > span:nth-child(2) {
+.header-link:hover > * > span:nth-child(2) {
   display: inline-block;
 }
 
 @screen lg {
-  .linked-header {
+  .header-link > * {
     position: relative;
   }
-  .linked-header > span:nth-child(2) {
+  .header-link > * > span:nth-child(2) {
     display: none;
   }
-  .linked-header:hover > span:nth-child(2) {
+  .header-link:hover > * > span:nth-child(2) {
     display: inline-block;
     position: absolute;
     left: 0;

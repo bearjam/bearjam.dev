@@ -55,3 +55,10 @@ a {
 .button {
   @apply text-xs tracking-wide rounded-md shadow-lg text-center;
 }
+
+:target::before {
+  content: "";
+  display: block;
+  height: theme("spacing.12");
+  margin: calc(-1 * theme("spacing.12")) 0 0;
+}

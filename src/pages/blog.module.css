@@ -1,0 +1,10 @@
+.meta {
+  @apply text-sm font-bold mt-2 mb-3 text-purple-500;
+}
+
+.meta address {
+  @apply not-italic;
+}
+
+.meta time {
+}

@@ -21,7 +21,7 @@
   bottom: 0;
   @apply flex flex-col;
   @apply justify-center items-center;
-  @apply mt-4;
+  @apply mt-4 z-50;
 }
 
 .root input[type="submit"] {

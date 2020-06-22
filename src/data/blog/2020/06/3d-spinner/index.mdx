@@ -1,0 +1,74 @@
+---
+title: "Low-Hanging 3D Web Fruit: A Spinner"
+slug: low-hanging-3d-web-fruit-a-spinner
+drafted: 2020-06-11
+date: 2020-06-21
+author: Tom
+---
+
+When you sign up to the [bearjam.dev newsletter](/#newsletter-signup), you will
+see a 3D loading spinner. Here it is in isolation:
+
+<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/83b3bf8c0b093935be104ca7f0493df0927c2cf5/packages/3d-spinner?module=/components/spinner-3d.tsx" />
+
+We needed something to indicate the loading state during subscription, and I was
+also keen to get my feet wet in the 3D web space, so... two birds one stone.
+
+Looking at the
+[react-three-fiber](https://github.com/react-spring/react-three-fiber) (R3F)
+demos and how little code is needed to spin a box, it seems the ideal
+entry-level 3D project (especially suiting our isometric cube logo!)
+
+However, R3F is difficult to grok without having coded with Three.js. **I
+strongly recommend starting Three.js code before porting to R3F** in order to
+understand the underlying API.
+
+Here are the resources that got me going with Three.js and R3F.
+
+## Resources
+
+### Three.js
+
+- [Three.js Fundamentals](https://threejsfundamentals.org), especially:
+  - [Basics](https://threejsfundamentals.org/threejs/lessons/threejs-fundamentals.html)
+  - [Cameras](https://threejsfundamentals.org/threejs/lessons/threejs-cameras.html)
+- Three.js [helpers](https://threejs.org/examples/?q=helpers) and
+  [controls](https://threejs.org/examples/?q=controls)
+
+### react-three-fiber
+
+- [Bringing WebGL to React](https://www.youtube.com/watch?v=YyqBdN71nFs), a
+  presentation by [Paul Henschel](https://twitter.com/0xca0a)
+- The [R3F GitHub repository](https://github.com/react-spring/react-three-fiber)
+  is full of documentation and examples.
+
+The thing to understand about R3F is that it's a **react reconciler** (again,
+see [Henschel's conference talk](https://www.youtube.com/watch?v=YyqBdN71nFs)).
+This means **it transforms JSX code to Three.js API calls**. The available
+mappings can be seen in these
+[type declarations](https://github.com/react-spring/react-three-fiber/blob/86b0f78d684ee9f25135f490b9159919cf486697/src/three-types.ts#L71-L298).
+
+## Lazy Loading
+
+If you run Lighthouse before and after including R3F in your code, you'll notice
+a big performance hit (due to size of Three.js). This can be overcome with lazy
+loading, which can be implemented in a
+[variety of ways](https://web.dev/fast/#lazy-load-images-and-video).
+
+In our case, it made sense to use a combination of
+[dynamic imports](https://webpack.js.org/guides/code-splitting/#dynamic-imports)
+and the
+[Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
+
+There are some nice wrapper libaries such as
+[@loadable/component](https://loadable-components.com/) and
+[react-intersection-observer](https://github.com/thebuilder/react-intersection-observer).
+
+Here is a CodeSandbox with lazy loading implemented:
+
+<iframe src="https://codesandbox.io/embed/github/mysterybear/blog-post-demos/tree/83b3bf8c0b093935be104ca7f0493df0927c2cf5/packages/3d-spinner-lazy?module=/pages/index.tsx" />
+
+_([Next.js ships its own dynamic import library](https://nextjs.org/docs/advanced-features/dynamic-import),
+so we use that instead of
+[@loadable/component](https://loadable-components.com/) for this demo. The API
+is practically the same in either case.)_

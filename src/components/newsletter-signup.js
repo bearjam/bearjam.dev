@@ -5,12 +5,13 @@ import { object, string } from "yup"
 import { defaultPresenceProps } from "../animations"
 import { SvgIconWarning } from "./icons"
 import { Input } from "./inputs"
-import styles from "./mail-sub.module.css"
+import styles from "./newsletter-signup.module.css"
 import loadable from "@loadable/component"
+import { useInView } from "react-intersection-observer"
 
 const Logo3D = loadable(() => import("./logo-3d"))
 
-const MailSub = ({ frontmatter }) => {
+const NewsletterSignup = ({ frontmatter }) => {
   const validationSchema = object().shape({
     email: string().required("Required").email("Invalid e-mail address"),
   })
@@ -45,8 +46,17 @@ const MailSub = ({ frontmatter }) => {
     }
   }
 
+  const [inViewRef, inView] = useInView({
+    triggerOnce: true,
+    rootMargin: `-200px 0px`,
+  })
+
   return (
-    <section className={styles.root}>
+    <motion.section
+      ref={inViewRef}
+      id="newsletter-signup"
+      className={styles.root}
+    >
       <div>
         <AnimatePresence>
           <div className={styles.headingBlurb}>
@@ -57,7 +67,7 @@ const MailSub = ({ frontmatter }) => {
               </motion.p>
             )}
           </div>
-          {state === "initial" ? (
+          {state === "initial" && (
             <motion.form
               key="form"
               onSubmit={handleSubmit(onSubmit)}
@@ -84,29 +94,29 @@ const MailSub = ({ frontmatter }) => {
               </div>
               <Input type="submit" value="Subscribe" />
             </motion.form>
-          ) : state === "loading" ? (
-            <motion.div
-              key="loading"
-              className={styles.loadingLogo}
-              {...defaultPresenceProps}
-            >
-              <Logo3D />
-            </motion.div>
-          ) : state === "success" ? (
+          )}
+          {state === "success" && (
             <motion.p
               key="success"
               {...defaultPresenceProps}
               className={styles.success}
             >
-              Please check your mail
+              Check your email to confirm!
             </motion.p>
-          ) : (
-            <p>unreachable</p>
           )}
         </AnimatePresence>
+        {inView && (
+          <motion.div
+            key="loading"
+            className={styles.loadingLogo}
+            animate={state === "loading" ? { opacity: 1 } : { opacity: 0 }}
+          >
+            <Logo3D />
+          </motion.div>
+        )}
       </div>
-    </section>
+    </motion.section>
   )
 }
 
-export default MailSub
+export default NewsletterSignup
