@@ -36,8 +36,8 @@ const components = {
   h3: ({ children }) => {
     let identifier = getSlug(children)
     return (
-      <a href={`#${identifier}`}>
-        <h3 id={identifier} className={styles.linkedHeader}>
+      <a href={`#${identifier}`} className={styles.headerLink}>
+        <h3 id={identifier}>
           <span>{children}</span>
           <span>
             <svg
