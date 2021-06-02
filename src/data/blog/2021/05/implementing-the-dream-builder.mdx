@@ -1,0 +1,67 @@
+---
+title: "Implementing the Dream Builder"
+date: 2021-05-01
+author: Tom
+slug: implementing-the-dream-builder
+---
+
+This is following on from the [design blog post]().
+
+Crop is the keystone feature to implement: if you can implement crop, you can
+implement every other transform feature (move, scale, rotate etc)
+
+First pass I tried hacking at DOM. (react-dnd -> react-use-gesture)
+
+Then realised opportunity to use Three/fiber.
+
+Still insufficient, needed shaders!
+
+following from [r3f shaders setup post](/blog/react-three-fiber-shaders-setup)
+
+we need some handles
+
+so shader border handles with uniforms
+
+This seems to work:
+
+```cpp
+float top(vec2 st) {
+  vec2 xy = vec2(0.0, 1.0 - u_border_thickness);
+  vec2 wh = vec2(1.0, u_border_thickness);
+  vec2 uv = st;
+  wh *= scale(vec2(u_handle_size, 1.0)) *
+        scale(vec2(1.0 - (u_inset.y + u_inset.w), 1.0));
+  xy += vec2((wh.x / 2.0) + u_inset.w, -u_inset.x);
+  return rect(xy, wh, uv);
+}
+
+float right(vec2 st) {
+  vec2 xy = vec2(1.0 - u_border_thickness, 0.0);
+  vec2 wh = vec2(u_border_thickness, 1.0);
+  vec2 uv = st;
+  wh *= scale(vec2(1.0, u_handle_size)) *
+        scale(vec2(1.0, 1.0 - (u_inset.x + u_inset.z)));
+  xy += vec2(-u_inset.y, (wh.y / 2.0) + u_inset.z);
+  return rect(xy, wh, uv);
+}
+
+float bottom(vec2 st) {
+  vec2 xy = vec2(0.0, 0.0);
+  vec2 wh = vec2(1.0, u_border_thickness);
+  vec2 uv = st;
+  wh *= scale(vec2(u_handle_size, 1.0)) *
+        scale(vec2(1.0 - (u_inset.y + u_inset.w), 1.0));
+  xy += vec2((wh.x / 2.0) + u_inset.w, u_inset.z);
+  return rect(xy, wh, uv);
+}
+
+float left(vec2 st) {
+  vec2 xy = vec2(0.0, 0.0);
+  vec2 wh = vec2(u_border_thickness, 1.0);
+  vec2 uv = st;
+  wh *= scale(vec2(1.0, u_handle_size)) *
+        scale(vec2(1.0, 1.0 - (u_inset.x + u_inset.z)));
+  xy += vec2(u_inset.w, (wh.y / 2.0) + u_inset.z);
+  return rect(xy, wh, uv);
+}
+```

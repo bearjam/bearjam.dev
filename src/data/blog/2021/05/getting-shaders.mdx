@@ -1,0 +1,208 @@
+---
+title: "Getting Shaders"
+date: 2021-05-01
+author: Tom
+slug: getting-shaders
+---
+
+## Mask Between Two Colours
+
+A mask in this case is a stepped float (guaranteed to be 0.0 or 1.0) so the
+effect is switching between the two endpoints of the mix:
+
+```cpp
+vec3 color = mix(color1, color2, mask);
+```
+
+or
+
+```cpp
+vec3 color = mix(color1, color2, f(uv)); // where f returns a mask
+```
+
+## Rectangle Mask
+
+```cpp
+float rect(vec2 xy, vec2 wh, vec2 st) {
+  vec2 xyMask = step(xy, st);
+  vec2 whMask = 1.0 - step(xy + wh, st);
+  vec2 mask = xyMask * whMask;
+  return mask.x * mask.y;
+}
+```
+
+## Rectangle with Borders
+
+### Step Within Range
+
+`#define stepIn(lo, hi, v) step(lo, v) * step(v, hi)`
+
+### Main
+
+```cpp
+#define stepIn(lo, hi, v) step(lo, v) * step(v, hi)
+
+float borderRect(vec2 xy, vec2 wh, vec2 st) {
+  vec2 th = vec2(u_border_thickness);
+  float mask = stepIn(xy.x, xy.x + th.x, st.x);
+  float xMask = stepIn(xy.x + th.x, xy.x + wh.x, st.x);
+  mask += max(mask, stepIn(xy.x + wh.x, xy.x + wh.x + th.x, st.x));
+  mask *= stepIn(xy.y - th.y, xy.y + wh.y + th.y, st.y);
+  mask += max(mask, stepIn(xy.y - th.y, xy.y, st.y) * xMask);
+  mask += max(mask, stepIn(xy.y + wh.y, xy.y + wh.y + th.y, st.y) * xMask);
+  return mask;
+}
+```
+
+`max()`/`min()` are union/intersection, depending on whether you're using 0
+or 1.
+
+## Yay, It
+
+```cpp
+float outlineRect(vec2 xy, vec2 wh, vec2 st) {
+  vec2 th = vec2(u_border_thickness);
+  vec2 bl = stepIn(xy, xy + th, st);
+  vec2 tr = stepIn(xy + wh, xy + wh + th, st);
+  float l = min(bl.x, stepIn(xy.y, xy.y + wh.y + th.y, st.y));
+  float b = min(bl.y, stepIn(xy.x, xy.x + wh.x + th.x, st.x));
+  float r = min(tr.x, stepIn(xy.y, xy.y + wh.y + th.y, st.y));
+  float t = min(tr.y, stepIn(xy.x, xy.x + wh.x + th.x, st.x));
+  return max(max(l, b), max(r, t));
+}
+```
+
+## Cool Scale Arrows
+
+```cpp
+  case SCALE_MODE: {
+    float border_mask = full_border(vUv, u_border_thickness);
+    vec3 color = mix(texture.xyz, u_border_color, border_mask);
+    color = mix(color, texture.xyz, min(border_mask, circle(vUv)));
+    gl_FragColor = vec4(color, alpha);
+    break;
+  }
+```
+
+## Grok Rhombus
+
+```cpp
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+	vec2 p = (2.0*fragCoord-iResolution.xy)/iResolution.y;
+
+	vec2 ra = vec2(0.7,0.4); // width/height, seemingly
+
+	float d = sdRhombus( p, ra );
+
+  vec3 col = sign(d)*vec3(1.0,1.0,1.0); // this, this, this, this this
+
+	fragColor = vec4(col,1.0);
+}
+```
+
+## Working
+
+```cpp
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+#define SELECT_MODE 0
+#define SCALE_MODE 1
+#define CROP_MODE 2
+
+varying vec2 vUv;
+uniform vec3 u_border_color;
+uniform sampler2D u_texture;
+uniform float u_border_thickness;
+uniform int u_mode;
+
+float full_border(vec2 st, float th) {
+  vec2 mask = step(vec2(th), st) * step(st, vec2(1.0 - th));
+  return 1.0 - min(mask.x, mask.y);
+}
+
+float circle(vec2 st) {
+  vec2 center = vec2(0.5, 0.5);
+  float size = 0.6;
+  return 1.0 - step(size, distance(center, st));
+}
+
+float plane_mask(float start, float end, float v) {
+  return step(start, v) * step(v, end);
+}
+
+void main() {
+  vec3 red = vec3(0.8, 0.0, 0.0);
+  vec3 black = vec3(0.0, 0.0, 0.0);
+  float alpha = 1.0;
+  float gap = 0.3;
+  vec4 texture = texture2D(u_texture, vUv);
+
+  switch (u_mode) {
+  case SCALE_MODE: {
+    float border_mask = full_border(vUv, u_border_thickness);
+    vec3 color = mix(texture.xyz, u_border_color, border_mask);
+    color = mix(color, texture.xyz, min(border_mask, circle(vUv)));
+    gl_FragColor = vec4(color, alpha);
+    break;
+  }
+  case CROP_MODE: {
+    float full_border_mask = full_border(vUv, u_border_thickness);
+    float gap = 0.33;
+    float x_mask = plane_mask(gap, 1.0 - gap, vUv.x);
+    float y_mask = plane_mask(gap, 1.0 - gap, vUv.y);
+    float mask = min(max(x_mask, y_mask), full_border_mask);
+    vec3 color = mix(texture.xyz, u_border_color, mask);
+    gl_FragColor = vec4(color, alpha);
+    break;
+  }
+  default: {
+    float border_mask = full_border(vUv, u_border_thickness);
+    vec3 color = mix(texture.xyz, u_border_color, border_mask);
+    gl_FragColor = vec4(color, alpha);
+    break;
+  }
+  }
+}
+```
+
+## RTS Matrices
+
+Remember, you're operating on the underlying UV coordinates. So if you want to
+scale your shapes up, you need to scale the UV down. If you want to rotate your
+shape at (x,y), you need to
+
+### Indexing Fracted Grids
+
+```cpp
+float factor = 3.0;
+vec2 st = vUv * factor;
+int x = int(floor(st.x));
+int y = int(floor(st.y));
+float shape = ttt[y][x];
+st = fract(st);
+```
+
+It's important that the `fract(st)` line come after, not before, the indexing
+
+### Scale Shape Coords?
+
+This seems to work
+
+```cpp
+float top(vec2 st) {
+  float size = u_handle_size;
+  vec2 xy = vec2(0.0, 1.0 - u_border_thickness);
+  vec2 wh = vec2(1.0, u_border_thickness);
+  vec2 uv = st;
+  wh *=
+      scale(vec2(size, 1.0)) * scale(vec2(1.0 - (u_inset.y + u_inset.w), 1.0));
+  xy += vec2((wh.x / 2.0) + u_inset.w, -u_inset.x);
+  return rect(xy, wh, uv);
+}
+```
+
+I'm operating on a copy of the UV coords and then returning a mask, leaving the
+actual UV untouched
