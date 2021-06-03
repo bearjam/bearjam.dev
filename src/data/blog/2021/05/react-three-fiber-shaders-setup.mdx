@@ -9,6 +9,164 @@ slug: react-three-fiber-shaders-setup
 2. eject
 3. glsl/raw loaders, typescript decl.
 4. trivial shader
+5. **glslify** (todo)
 
-You've got `<App />` twice and your material uniforms aren't like
-`{ value: ... }`
+TLDR: template repo for this
+
+## Loaders etc.
+
+`yarn add raw-loader glslify-loader glslify` and add this to
+`webpack.config.js`:
+
+```js
+{
+  test: /\.(glsl|frag|vert)$/,
+  use: [
+    require.resolve("raw-loader"),
+    require.resolve("glslify-loader"),
+  ],
+}
+```
+
+Add to `src/react-app-env.d.ts`:
+
+```js
+declare module "*.glsl" {
+  const src: string
+  export default src
+}
+
+declare module "glslify"
+```
+
+`yarn add @react-three/fiber three @types/three @react-three/drei`
+
+Three.js vertex shaders be like:
+
+```cpp
+varying vec2 vUv;
+
+void main() {
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+```
+
+(from https://threejs.org/docs/#api/en/renderers/webgl/WebGLProgram)
+
+Let's also create `u_time` (float) and we can spring like `u_offset` (vec2),
+using spring and gesture, here's a silly and contrived fragment shader:
+
+```cpp
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+varying vec2 vUv;
+uniform vec2 u_offset;
+uniform float u_time;
+
+void main() {
+  vec3 color = vec3(vUv, 0.0);
+  color += vec3(0.0, 0.0, sin(u_time) / 2.0 + 0.5);
+  color += vec3(sin(u_offset) / 2.0 + 0.5, 0.0);
+  gl_FragColor = vec4(color, 1.0);
+}
+
+```
+
+And here's our material:
+
+```ts
+import { animated } from "@react-spring/three"
+import { shaderMaterial } from "@react-three/drei"
+import { extend } from "@react-three/fiber"
+import { forwardRef } from "react"
+import * as THREE from "three"
+import fragmentShader from "../shaders/fragment.glsl"
+import vertexShader from "../shaders/vertex.glsl"
+import glsl from "glslify"
+
+export const BasicShaderMaterial = shaderMaterial(
+  {
+    u_time: 0,
+    u_offset: new THREE.Vector2(),
+  },
+  glsl(vertexShader),
+  glsl(fragmentShader)
+)
+
+export type BasicShaderMaterialImpl = {
+  u_time?: { value: number }
+  u_offset?: { value: THREE.Vector2 }
+} & JSX.IntrinsicElements["shaderMaterial"]
+
+extend({ BasicShaderMaterial })
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      basicShaderMaterial: BasicShaderMaterialImpl
+    }
+  }
+}
+
+export const AnimatedBasicShaderMaterial = animated(
+  forwardRef<BasicShaderMaterialImpl, any>((props, ref) => (
+    <basicShaderMaterial ref={ref} {...props} />
+  ))
+)
+```
+
+Now we can consume this in our app
+(`yarn add @react-spring/three @use-gesture/react` for deps):
+
+```tsx
+import { useSpring } from "@react-spring/three"
+import { useFrame, useThree } from "@react-three/fiber"
+import { useDrag } from "@use-gesture/react"
+import { useRef } from "react"
+import "../materials/BasicShaderMaterial"
+import {
+  AnimatedBasicShaderMaterial,
+  BasicShaderMaterialImpl,
+} from "../materials/BasicShaderMaterial"
+
+const App = () => {
+  const ref = useRef<BasicShaderMaterialImpl>(null)
+
+  const [{ offset }, spring] = useSpring(() => ({
+    offset: [0, 0],
+    immediate: true,
+  }))
+
+  const factor = useThree(three => three.viewport.factor)
+
+  const bind = useDrag(
+    ({ offset }) => {
+      spring.start({ offset })
+    },
+    { transform: ([x, y]) => [x / factor, -y / factor] }
+  )
+
+  useFrame(({ clock }) => {
+    const material = ref.current
+    if (!material) return
+    if (material.uniforms?.u_time) {
+      material.uniforms.u_time.value = clock.getElapsedTime()
+    }
+  })
+
+  return (
+    <mesh {...(bind() as any)}>
+      <planeBufferGeometry />
+      <AnimatedBasicShaderMaterial ref={ref} uniforms-u_offset-value={offset} />
+    </mesh>
+  )
+}
+
+export default App
+```
+
+We're animating with `useFrame` and with a `ref` at the same time, on a
+`ShaderMaterial`! How wonderful
