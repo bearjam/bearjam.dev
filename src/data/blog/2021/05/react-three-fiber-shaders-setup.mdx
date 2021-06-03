@@ -5,7 +5,7 @@ author: Tom
 slug: react-three-fiber-shaders-setup
 ---
 
-TLDR: template repo for this TODO
+TLDR: template repo for this: https://github.com/mysterybear/r3f-react-app
 
 # 1. GLSL in a React App
 
@@ -51,7 +51,8 @@ void main() {
 (from https://threejs.org/docs/#api/en/renderers/webgl/WebGLProgram)
 
 Here's a "hello, world" fragment shader, using the
-[`glsl-earth`](https://github.com/mattdesl/glsl-earth) module:
+[`glsl-earth`](https://github.com/mattdesl/glsl-earth) module
+(`yarn add glsl-earth`):
 
 ```cpp
 #ifdef GL_ES
@@ -78,14 +79,11 @@ void main() {
 }
 ```
 
-operating on a ref. We might also want to consume `glslify` packages.
-
 And here's our material:
 
 ```ts
 import { shaderMaterial } from "@react-three/drei"
 import { extend } from "@react-three/fiber"
-import { forwardRef } from "react"
 import * as THREE from "three"
 import fragmentShader from "../shaders/fragment.glsl"
 import vertexShader from "../shaders/vertex.glsl"
@@ -124,7 +122,7 @@ import "../materials/BasicShaderMaterial"
 const App = () => {
   return (
     <mesh>
-      <planeBufferGeometry />
+      <planeBufferGeometry args={[4, 4]} />
       <basicShaderMaterial />
     </mesh>
   )
@@ -196,7 +194,7 @@ const App = () => {
 
   return (
     <mesh {...(bind() as any)}>
-      <planeBufferGeometry />
+      <planeBufferGeometry args={[4, 4]} />
       <AnimatedBasicShaderMaterial ref={ref} uniforms-u_offset-value={offset} />
     </mesh>
   )
