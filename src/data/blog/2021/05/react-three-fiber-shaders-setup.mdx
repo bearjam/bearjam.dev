@@ -5,7 +5,13 @@ author: Tom
 slug: react-three-fiber-shaders-setup
 ---
 
-TLDR: template repo for this: https://github.com/mysterybear/r3f-react-app
+This post covers the necessary iterations on the CRA template to get working
+with shaders with [React Three Fiber](https://docs.pmnd.rs/react-three-fiber),
+including animation and gestures with
+[React Spring](https://docs.pmnd.rs/react-spring) and
+[Use Gesture](http://use-gesture.netlify.app/docs).
+
+TLDR template repo @ https://github.com/mysterybear/r3f-react-app
 
 # 1. GLSL in a React App
 
@@ -31,6 +37,16 @@ declare module "*.glsl" {
 }
 
 declare module "glslify"
+```
+
+You can now import GLSL files as strings and you can use GLSL modules with
+[glslify](https://github.com/glslify/glslify) e.g.:
+
+```ts
+import rawFragmentShader from "./fragment.glsl"
+import glsl from "glslify"
+
+const fragmentShader = glsl(rawFragmentShader)
 ```
 
 # 2. GLSL with Three.js via React Three Fiber

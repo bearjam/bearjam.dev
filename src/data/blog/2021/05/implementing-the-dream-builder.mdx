@@ -1,6 +1,6 @@
 ---
 title: "Implementing the Dream Builder"
-date: 2021-05-01
+date: 2021-05-28
 author: Tom
 slug: implementing-the-dream-builder
 ---
@@ -20,6 +20,12 @@ following from [r3f shaders setup post](/blog/react-three-fiber-shaders-setup)
 
 and [getting shaders](/blog/getting-shaders)
 
+## State, Image Loading
+
+Just use `useState`
+
+fp-ts immer glsl-gamma
+
 we need some handles
 
 so shader border handles with uniforms
@@ -27,9 +33,33 @@ so shader border handles with uniforms
 This seems to work:
 
 ```cpp
+// clang-format off
+#pragma glslify: toLinear = require('glsl-gamma/in')
+#pragma glslify: toGamma = require('glsl-gamma/out')
+// clang-format on
+
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+varying vec2 vUv;
+uniform vec3 u_border_color;
+uniform sampler2D u_texture;
+uniform vec2 u_border_thickness;
+uniform vec4 u_inset;
+uniform float u_handle_size;
+
+float rect(vec2 xy, vec2 wh, vec2 st) {
+  vec2 mask = step(xy, st);
+  mask *= 1.0 - step(xy + wh, st);
+  return mask.x * mask.y;
+}
+
+mat2 scale(vec2 _scale) { return mat2(_scale.x, 0.0, 0.0, _scale.y); }
+
 float top(vec2 st) {
-  vec2 xy = vec2(0.0, 1.0 - u_border_thickness);
-  vec2 wh = vec2(1.0, u_border_thickness);
+  vec2 xy = vec2(0.0, 1.0 - u_border_thickness.y);
+  vec2 wh = vec2(1.0, u_border_thickness.y);
   vec2 uv = st;
   wh *= scale(vec2(u_handle_size, 1.0)) *
         scale(vec2(1.0 - (u_inset.y + u_inset.w), 1.0));
@@ -38,8 +68,8 @@ float top(vec2 st) {
 }
 
 float right(vec2 st) {
-  vec2 xy = vec2(1.0 - u_border_thickness, 0.0);
-  vec2 wh = vec2(u_border_thickness, 1.0);
+  vec2 xy = vec2(1.0 - u_border_thickness.x, 0.0);
+  vec2 wh = vec2(u_border_thickness.x, 1.0);
   vec2 uv = st;
   wh *= scale(vec2(1.0, u_handle_size)) *
         scale(vec2(1.0, 1.0 - (u_inset.x + u_inset.z)));
@@ -49,7 +79,7 @@ float right(vec2 st) {
 
 float bottom(vec2 st) {
   vec2 xy = vec2(0.0, 0.0);
-  vec2 wh = vec2(1.0, u_border_thickness);
+  vec2 wh = vec2(1.0, u_border_thickness.y);
   vec2 uv = st;
   wh *= scale(vec2(u_handle_size, 1.0)) *
         scale(vec2(1.0 - (u_inset.y + u_inset.w), 1.0));
@@ -59,11 +89,37 @@ float bottom(vec2 st) {
 
 float left(vec2 st) {
   vec2 xy = vec2(0.0, 0.0);
-  vec2 wh = vec2(u_border_thickness, 1.0);
+  vec2 wh = vec2(u_border_thickness.x, 1.0);
   vec2 uv = st;
   wh *= scale(vec2(1.0, u_handle_size)) *
         scale(vec2(1.0, 1.0 - (u_inset.x + u_inset.z)));
   xy += vec2(u_inset.w, (wh.y / 2.0) + u_inset.z);
   return rect(xy, wh, uv);
 }
+
+void main() {
+  vec4 texture = toLinear(texture2D(u_texture, vUv));
+  vec2 st = vUv;
+  float handle_mask = max(max(top(st), bottom(st)), max(left(st), right(st)));
+  float dim_mask_x = step(st.x, 1.0 - u_inset.y) * step(u_inset.w, st.x);
+  float dim_mask_y = step(st.y, 1.0 - u_inset.x) * step(u_inset.z, st.y);
+  float dim_mask = min(dim_mask_x, dim_mask_y);
+
+  vec3 black = vec3(0.0);
+  vec3 gray = vec3(0.3);
+
+  vec3 color =
+      toGamma(mix(mix(black, gray, texture.xyz), texture.xyz, dim_mask));
+
+  color = mix(color, u_border_color, handle_mask);
+  gl_FragColor = vec4(color, 1.0);
+}
+```
+
+## Hover Cursor
+
+```tsx
+const [hovered, set] = useState(false)
+useEffect(() => void (document.body.style.cursor = hovered ? "grab" : "auto"), [hovered])
+<mesh onPointerOver={(e) => (e.stopPropagation(), set(true))} onPointerOut={() => set(false)} />
 ```
