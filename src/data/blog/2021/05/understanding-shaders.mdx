@@ -1,26 +1,30 @@
 ---
-title: "Getting Shaders"
-date: 2021-05-14
+title: "Understanding Shaders"
+date: 2021-05-07
 author: Tom
-slug: getting-shaders
+slug: understanding-shaders
 ---
 
-## Mask Between Two Colours
+There are some excellent resources online for learning shaders and WebGL, namely
+The Book of Shaders and WebGL Fundamentals. This post covers some of the basic
+patterns that I needed to learn in order to complete
+[the Dream Builder's crop implementation](link).
 
-A mask in this case is a stepped float (guaranteed to be 0.0 or 1.0) so the
-effect is switching between the two endpoints of the mix:
+## Mix a Mask
 
 ```cpp
+float mask = step(edge, x);
 vec3 color = mix(color1, color2, mask);
 ```
 
-or
+The code for each shape below can be abstracted to a separate function and
+called from main like so:
 
 ```cpp
-vec3 color = mix(color1, color2, f(uv)); // where f returns a mask
+vec3 color = mix(color1, color2, getShapeMask(v));
 ```
 
-## Rectangle Mask
+## Rectangle
 
 ```cpp
 float rect(vec2 xy, vec2 wh, vec2 st) {
@@ -32,12 +36,6 @@ float rect(vec2 xy, vec2 wh, vec2 st) {
 ```
 
 ## Rectangle with Borders
-
-### Step Within Range
-
-`#define stepIn(lo, hi, v) step(lo, v) * step(v, hi)`
-
-### Main
 
 ```cpp
 #define stepIn(lo, hi, v) step(lo, v) * step(v, hi)
@@ -54,8 +52,7 @@ float borderRect(vec2 xy, vec2 wh, vec2 st) {
 }
 ```
 
-`max()`/`min()` are union/intersection, depending on whether you're using 0
-or 1.
+`max()`/`min()` are union/intersection.
 
 ## Yay, It
 

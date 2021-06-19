@@ -1,6 +1,6 @@
 ---
 title: "Implementing the Dream Builder"
-date: 2021-05-28
+date: 2021-05-21
 author: Tom
 slug: implementing-the-dream-builder
 ---
@@ -123,3 +123,7 @@ const [hovered, set] = useState(false)
 useEffect(() => void (document.body.style.cursor = hovered ? "grab" : "auto"), [hovered])
 <mesh onPointerOver={(e) => (e.stopPropagation(), set(true))} onPointerOut={() => set(false)} />
 ```
+
+## Remaining Todo's
+
+- [Unsplash crediting, Unsplash API Crop](https://unsplash.com/documentation#dynamically-resizable-images)
