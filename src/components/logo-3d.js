@@ -1,7 +1,7 @@
 import { OrbitControls } from "drei"
 import { useSpring } from "framer-motion"
 import React, { useEffect, useRef } from "react"
-import { Canvas, useFrame, useThree } from "react-three-fiber"
+import { Canvas, useFrame } from "react-three-fiber"
 import * as THREE from "three"
 
 const Box = () => {
@@ -48,35 +48,12 @@ const Logo = () => {
   })
   useEffect(() => {
     x.set(Math.PI * 2)
-  }, [])
+  }, [x])
   return (
     <group ref={groupRef}>
       <Box />
       <B position={[0, 0, 0.501]} />
       <B position={[0, 0, -0.501]} rotation={new THREE.Euler(0, Math.PI, 0)} />
-    </group>
-  )
-}
-
-function Camera(props) {
-  const ref = useRef()
-  const groupRef = useRef()
-  const { setDefaultCamera } = useThree()
-  // const { setDefaultCamera } = useThree()
-  // Make the camera known to the system
-  useEffect(() => {
-    let helper = new THREE.CameraHelper(ref.current)
-    groupRef.current.add(helper)
-    setDefaultCamera(ref.current)
-  }, [])
-
-  useFrame(() => ref.current.updateMatrixWorld())
-
-  // Update it every frame
-  // useFrame(() => ref.current.updateMatrixWorld())
-  return (
-    <group ref={groupRef}>
-      <orthographicCamera ref={ref} position={[0, 0, 1]} {...props} />
     </group>
   )
 }
