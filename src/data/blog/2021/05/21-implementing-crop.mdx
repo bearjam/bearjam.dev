@@ -1,0 +1,55 @@
+---
+title: "Implementing Crop"
+date: 2021-05-21
+author: Tom
+slug: implementing-crop
+---
+
+This is following on from the [design blog post]().
+
+Crop is the keystone feature to implement: if you can implement crop, you can
+implement every other transform feature (move, scale, rotate etc)
+
+First pass I tried hacking at DOM. (react-dnd -> react-use-gesture)
+
+Then realised opportunity to use Three/fiber.
+
+Still insufficient, needed shaders!
+
+following from [r3f shaders setup post](/blog/react-three-fiber-shaders-setup)
+
+and [getting shaders](/blog/getting-shaders)
+
+Here it is!
+
+[CodeSandbox](https://codesandbox.io/embed/github/mysterybear/r3f-crop-example)
+
+Key parts are:
+
+- Image loading (wrap with Suspense)
+- Shaders (link shaders post) + gamma control
+- Handles, spring/use-gesture
+- Event for Exec, drawImage, toDataURL
+- switch modeChildren in actual project
+
+## Image Loading
+
+```tsx
+// ImageBase omitted for now
+
+const CropImage = (props: Props) => {
+  return (
+    <Suspense fallback={null}>
+      <ImageBase {...props} />
+    </Suspense>
+  )
+}
+
+export default CropImage
+```
+
+## Shaders
+
+## Remaining Todo's
+
+- [Unsplash crediting, Unsplash API Crop](https://unsplash.com/documentation#dynamically-resizable-images)
