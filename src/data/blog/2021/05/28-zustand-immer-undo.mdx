@@ -1,0 +1,153 @@
+---
+title: "Implementing Undo with Zustand and Immer"
+date: 2021-05-28
+author: Tom
+slug: zustand-immer-undo
+---
+
+This post covers how to write a [Zustand](https://zustand.surge.sh/) middleware
+leveraging Immer patches to add undo/redo functionality.
+
+Here's the code, which is an adaptation of
+[Zustand's own redux middleware](https://github.com/pmndrs/zustand/blob/d57f12377d50ee3731dd4c78da3710630aa33163/src/middleware.ts#L10-L31)
+with [Immer's patches](https://immerjs.github.io/immer/patches/) added to add
+undo/redo capability:
+
+```ts
+export const withUndoableReducer = <
+  T extends unknown,
+  S extends StateBase,
+  A extends ActionBase<T>
+>(
+  reducer: (state: S, action: A) => S,
+  initialState: S
+) => (
+  set: SetState<Dispatcher<S, A> & Patcher>,
+  get: GetState<Dispatcher<S, A> & Patcher>,
+  api: StoreApi<Dispatcher<S, A> & Patcher> & {
+    dispatch?: (a: A) => A
+    undo?: () => void
+    redo?: () => void
+  }
+): Dispatcher<S, A> & Patcher => {
+  api.dispatch = (action: A) => {
+    if (action.undoable) {
+      set(p => {
+        const n = reducer(p.state, action)
+        const patch = createPatch(p.state, n)
+        const inversePatch = createPatch(n, p.state)
+        return produce(p, draft => {
+          draft.state = n as Draft<S>
+          draft.patches.splice(draft.patchIndex + 1)
+          draft.patches.push(patch)
+          draft.inversePatches.splice(draft.patchIndex + 1)
+          draft.inversePatches.push(inversePatch)
+          draft.patchIndex += 1
+          draft.canUndo =
+            typeof draft.inversePatches[draft.patchIndex] !== "undefined"
+          draft.canRedo =
+            typeof draft.patches[draft.patchIndex + 1] !== "undefined"
+        })
+      })
+    } else {
+      set(p => ({
+        ...p,
+        state: reducer(p.state, action),
+      }))
+    }
+    return action
+  }
+
+  api.undo = () => {
+    const { canUndo } = get()
+    if (!canUndo) return
+
+    set(p =>
+      produce(p, draft => {
+        applyPatch(draft.state, draft.inversePatches[draft.patchIndex])
+        draft.patchIndex -= 1
+        draft.canUndo =
+          typeof draft.inversePatches[draft.patchIndex] !== "undefined"
+        draft.canRedo =
+          typeof draft.patches[draft.patchIndex + 1] !== "undefined"
+      })
+    )
+  }
+
+  api.redo = () => {
+    const { canRedo } = get()
+    if (!canRedo) return
+    set(p =>
+      produce(p, draft => {
+        applyPatch(draft.state, draft.patches[draft.patchIndex + 1])
+        draft.patchIndex += 1
+        draft.canRedo =
+          typeof draft.patches[draft.patchIndex + 1] !== "undefined"
+        draft.canUndo =
+          typeof draft.inversePatches[draft.patchIndex] !== "undefined"
+      })
+    )
+  }
+
+  return {
+    state: initialState,
+    dispatch: api.dispatch,
+    patches: [],
+    inversePatches: [],
+    patchIndex: -1,
+    undo: api.undo,
+    redo: api.redo,
+    canUndo: false,
+    canRedo: false,
+  }
+}
+```
+
+This package is published as
+[@bearjam/tom](https://www.npmjs.com/package/@bearjam/tom).
+
+# Usage
+
+`yarn add @bearjam/tom`
+
+```ts
+import { withUndoableReducer } from "@bearjam/tom"
+
+const initialState: State = {
+  // ...
+}
+
+const reducer = (state: State, action: Action): State => {
+  // ...
+}
+
+export const useCanvasStore = create(withUndoableReducer(reducer, initialState))
+```
+
+Then you can call this hook in your React app:
+
+```ts
+const [state, dispatch, undo, redo, canUndo, canRedo] = useCanvasStore(
+  store => [
+    store.state,
+    store.dispatch,
+    store.undo,
+    store.redo,
+    store.canUndo,
+    store.canRedo,
+  ],
+  shallow
+)
+```
+
+# More from this series
+
+This was the final post of the
+[Dream Builder Series](/blog/dream-builder-series).
+
+The previous post was [Implementing Crop](/blog/implementing-crop).
+
+# Get in touch
+
+**If you have any questions or ideas, please email me at
+[tom@bearjam.dev](mailto:tom@bearjam.dev).**

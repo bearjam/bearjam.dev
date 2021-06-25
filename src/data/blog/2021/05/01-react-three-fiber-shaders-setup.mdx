@@ -1,0 +1,271 @@
+---
+title: "Setting up Shaders with React Three Fiber"
+date: 2021-05-01
+author: Tom
+slug: react-three-fiber-shaders-setup
+---
+
+This post covers the required patches on the Create React App TypeScript
+template in order to get
+[React Three Fiber](https://docs.pmnd.rs/react-three-fiber) working with
+shaders, plus how to integrate these shaders with animation and gesture
+libraries like [React Spring](https://react-spring.io) and
+[Use Gesture](http://use-gesture.netlify.app/docs).
+
+TLDR template repo @ [GitHub](https://github.com/mysterybear/r3f-react-app) /
+[CodeSandbox](codesandbox.io/s/github/mysterybear/r3f-react-app). Each commit
+matches a section of the following post.
+
+# 1. GLSL in a React App
+
+Create the React app. `yarn create react-app --template typescript`
+
+Eject. `yarn eject`
+
+Add loader dependencies. `yarn add raw-loader glslify-loader glslify`
+
+And loader configuration to
+[config/webpack.config.js](https://github.com/mysterybear/r3f-react-app/blob/main/config/webpack.config.js#L538-L544):
+
+```js
+{
+  test: /\.(glsl|frag|vert)$/,
+  use: [
+    require.resolve("raw-loader"),
+    require.resolve("glslify-loader"),
+  ],
+}
+```
+
+Some TypeScript declarations in
+[src/react-app-env.d.ts](https://github.com/mysterybear/r3f-react-app/blob/main/src/react-app-env.d.ts#L73-L86):
+
+```js
+declare module "*.glsl" {
+  const src: string
+  export default src
+}
+
+declare module "*.frag" {
+  const src: string
+  export default src
+}
+
+declare module "*.vert" {
+  const src: string
+  export default src
+}
+
+declare module "glslify"
+```
+
+You can now import GLSL files as strings and you can use GLSL modules with
+[glslify](https://github.com/glslify/glslify) like so:
+
+```ts
+import rawFragmentShader from "./fragment.glsl"
+import glsl from "glslify"
+
+const fragmentShader = glsl(rawFragmentShader)
+```
+
+# 2. GLSL with Three.js via React Three Fiber
+
+Add the dependencies.
+
+`yarn add @react-three/fiber three @types/three @react-three/drei`
+
+The standard Three.js vertex shader (as per
+[documentation](https://threejs.org/docs/#api/en/renderers/webgl/WebGLProgram))
+can go in
+[src/shaders/vertex.glsl](https://github.com/mysterybear/r3f-react-app/tree/main/src/shaders/vertex.glsl):
+
+```cpp
+varying vec2 vUv;
+
+void main() {
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+```
+
+Here's a "hello, world" fragment shader
+([src/shaders/fragment.glsl](https://github.com/mysterybear/r3f-react-app/blob/main/src/shaders/fragment.glsl)),
+using the [`glsl-earth`](https://github.com/mattdesl/glsl-earth) module
+(`yarn add glsl-earth`):
+
+```cpp
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+varying vec2 vUv;
+uniform vec2 u_offset;
+uniform float u_time;
+
+// clang-format off
+#pragma glslify: planet = require('glsl-earth')
+// clang-format on
+
+void main() {
+  vec2 resolution = vec2(640, 640);
+  float size = 0.75;
+  vec2 rot = vec2(u_time * 0.03 + u_offset.x, u_time * 0.01 + u_offset.y);
+
+  vec3 color = planet(vUv, resolution, size, rot);
+
+  gl_FragColor.rgb = color;
+  gl_FragColor.a = 1.0;
+}
+```
+
+Here's our material
+([src/materials/BasicShaderMaterial.tsx](https://github.com/mysterybear/r3f-react-app/blob/main/src/materials/BasicShaderMaterial.tsx)):
+
+```ts
+import { shaderMaterial } from "@react-three/drei"
+import { extend } from "@react-three/fiber"
+import * as THREE from "three"
+import fragmentShader from "../shaders/fragment.glsl"
+import vertexShader from "../shaders/vertex.glsl"
+import glsl from "glslify"
+
+export const BasicShaderMaterial = shaderMaterial(
+  {
+    u_time: 0,
+    u_offset: new THREE.Vector2(),
+  },
+  glsl(vertexShader),
+  glsl(fragmentShader)
+)
+
+export type BasicShaderMaterialImpl = {
+  u_time?: { value: number }
+  u_offset?: { value: THREE.Vector2 }
+} & JSX.IntrinsicElements["shaderMaterial"]
+
+extend({ BasicShaderMaterial })
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      basicShaderMaterial: BasicShaderMaterialImpl
+    }
+  }
+}
+```
+
+And finally our App
+([src/components/App.tsx](https://github.com/mysterybear/r3f-react-app/blob/main/src/components/App.tsx)):
+
+```tsx
+import "../materials/BasicShaderMaterial"
+
+const App = () => {
+  return (
+    <mesh>
+      <planeBufferGeometry args={[4, 4]} />
+      <basicShaderMaterial />
+    </mesh>
+  )
+}
+
+export default App
+```
+
+Hello, stationary Earth!
+
+# 3. Bells & Whistles (Animation, Gestures)
+
+Let's animate our Earth using [@react-spring/three](https://react-spring.io)
+_and_ by mutating a ref with R3F's
+[useFrame](https://docs.pmnd.rs/react-three-fiber/getting-started/basic-animations#use-frame),
+hooked up with [@use-gesture/react](https://use-gesture.netlify.app)'s gestures,
+all at the same time!
+
+Add the dependencies.
+
+`yarn add @react-spring/three @use-gesture/react`
+
+Add this to
+[our material](https://github.com/mysterybear/r3f-react-app/blob/main/src/materials/BasicShaderMaterial.tsx)
+to make it spring:
+
+```ts
+import { animated } from "@react-spring/three"
+
+// ...
+
+export const AnimatedBasicShaderMaterial = animated(
+  forwardRef<BasicShaderMaterialImpl, any>((props, ref) => (
+    <basicShaderMaterial ref={ref} {...props} />
+  ))
+)
+```
+
+Now here's
+[our App](https://github.com/mysterybear/r3f-react-app/blob/main/src/components/App.tsx):
+
+```tsx
+import { useSpring } from "@react-spring/three"
+import { useFrame, useThree } from "@react-three/fiber"
+import { useDrag } from "@use-gesture/react"
+import { useRef } from "react"
+import "../materials/BasicShaderMaterial"
+import {
+  AnimatedBasicShaderMaterial,
+  BasicShaderMaterialImpl,
+} from "../materials/BasicShaderMaterial"
+
+const App = () => {
+  const ref = useRef<BasicShaderMaterialImpl>(null)
+
+  const [{ offset }, spring] = useSpring(() => ({
+    offset: [0, 0],
+    immediate: true,
+  }))
+
+  const factor = useThree(three => three.viewport.factor)
+
+  const bind = useDrag(
+    ({ offset }) => {
+      spring.start({ offset })
+    },
+    { transform: ([x, y]) => [x / factor, -y / factor] }
+  )
+
+  useFrame(({ clock }) => {
+    const material = ref.current
+    if (!material) return
+    if (material.uniforms?.u_time) {
+      material.uniforms.u_time.value = clock.getElapsedTime()
+    }
+  })
+
+  return (
+    <mesh {...(bind() as any)}>
+      <planeBufferGeometry args={[4, 4]} />
+      <AnimatedBasicShaderMaterial ref={ref} uniforms-u_offset-value={offset} />
+    </mesh>
+  )
+}
+
+export default App
+```
+
+Our Earth is now slowly spinning and you can drag it around to spin it manually.
+
+# More from this series
+
+This post is part of the [Dream Builder Series](/blog/dream-builder-series).
+
+The previous post was
+[Designing the Dream Builder](/blog/designing-the-dream-builder).
+
+The next post is
+[Understanding Basic GLSL Shader Techniques](/blog/understanding-basic-glsl-shader-techniques).
+
+# Get in touch
+
+**If you have any questions or ideas, please email me at
+[tom@bearjam.dev](mailto:tom@bearjam.dev).**

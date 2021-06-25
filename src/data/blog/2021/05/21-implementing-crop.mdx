@@ -1,0 +1,465 @@
+---
+title: "Implementing Crop"
+date: 2021-05-21
+author: Tom
+slug: implementing-crop
+---
+
+This post covers how to implement image cropping on 2D planes in a React Three
+Fiber project. Use Gesture and React Spring for gestures.
+
+If you need to implement transform controls (move, scale, rotate, crop etc.),
+crop is the keystone feature to implement: **if you can implement crop, you can
+implement every other transform feature**.
+
+This post starts where the
+[Setting up Shaders with React Three Fiber](/blog/react-three-fiber-shaders-setup)
+and
+[Understanding Basic GLSL Shader Techniques](/blog/understanding-basic-glsl-shader-techniques)
+posts left off.
+
+TLDR: Final code repository @
+[GitHub](https://github.com/mysterybear/r3f-crop-example) /
+[CodeSandbox](https://codesandbox.io/embed/github/mysterybear/r3f-crop-example)
+
+# Step 1: Image Loading
+
+When using `useLoader` with `THREE.TextureLoader` we have to wrap the component
+with `Suspense`:
+
+```tsx
+const Image = ({ src, width, height }) => {
+  const texture = useLoader(THREE.TextureLoader, src)
+  return (
+    <mesh>
+      <planeBufferGeometry args={[width, height]} />
+      <basicShaderMaterial uniforms-u_texture-value={texture} />
+    </mesh>
+  )
+}
+
+const App = () => {
+  return (
+    <div className="full-screen">
+      <Canvas>
+        <Suspense fallback={null}>
+          <Image {...state} />
+        </Suspense>
+      </Canvas>
+    </div>
+  )
+}
+```
+
+Our `ShaderMaterial`'s uniforms must include a texture:
+
+```tsx
+export const BasicShaderMaterial = shaderMaterial({
+  u_texture: new THREE.Texture(),
+})
+```
+
+See
+[GitHub](https://github.com/mysterybear/r3f-crop-example/tree/a18504c52760ed531eb0fa4aec9dbc838593c9f5)
+/
+[CodeSandbox](https://githubbox.com/mysterybear/r3f-crop-example/tree/a18504c52760ed531eb0fa4aec9dbc838593c9f5)
+for the full code for this step.
+
+# Step 2: Handles
+
+Here's our handle component, wrapped with React Spring's `animated` so we can
+control it with a spring:
+
+```tsx
+const Handle = animated(
+  ({
+    radius = 1,
+    segments = 32,
+    thetaStart = 0,
+    thetaEnd = pi,
+    ...props
+  }: Props) => {
+    return (
+      <mesh {...props}>
+        <circleBufferGeometry args={[radius, segments, thetaStart, thetaEnd]} />
+        <meshBasicMaterial color="green" wireframe />
+      </mesh>
+    )
+  }
+)
+```
+
+Then in the main image component we have our spring:
+
+```tsx
+const [_inset, _setInset] = useState([0, 0, 0, 0])
+
+const [{ inset }, spring] = useSpring(
+  () => ({
+    inset: _inset,
+  }),
+  [_inset]
+)
+```
+
+Some complexity now: we generate our event handlers with
+[Use Gesture's](https://use-gesture.netlify.app/docs/hooks) `useDrag`:
+
+```tsx
+const factor = useThree(three => three.viewport.factor)
+
+const handleBind = useDrag(
+  state =>
+    // @ts-ignore
+    void pipe(state, ...state.args),
+  { transform: ([x, y]: [number, number]) => [x / factor, -y / factor] }
+)
+```
+
+We're using [fp-ts](https://github.com/gcanti/fp-ts)'s `pipe` to pipe the
+gesture state back to the function passed as `args`. This becomes clearer when
+looking at an invocation of our `Handle`:
+
+```tsx
+<Handle
+  radius={height / 2}
+  position-x={to([inset], ([t, r, b, l]) => -width / 2 + width * l)}
+  position-y={to([inset], ([t, r, b, l]) => (b * height - t * height) / 2)}
+  position-z={0}
+  thetaStart={(pi / 2) * 3}
+  scale-x={to([inset], ([t, r, b, l]) => cropHandleLength - (l + r) / 2)}
+  scale-y={to([inset], ([t, r, b, l]) => cropHandleLength - (t + b) / 2)}
+  {...(handleBind(handleOp(3)) as any)}
+/>
+```
+
+`handleBind` is a function that takes arguments, these arguments come through as
+`args`, see the Use Gesture docs
+[here](https://use-gesture.netlify.app/docs/state/) (search for `args`).
+
+`handleOp` is a higher order function: it takes the handle number (0-3, there
+are four handles: top, right, bottom, left) and returns a function to act on the
+gesture state:
+
+```tsx
+const handleOp = (ord: number) => async ({
+  movement,
+  event,
+  down,
+}: FullGestureState<"drag">) => {
+  event?.stopPropagation()
+  if (dragging !== -1 && dragging !== ord) return
+  setDragging(ord)
+
+  const d = pipe(movement, ([x, y]) => [x / width, y / height] as const)
+  const s = ord < 2 ? -1 : 1
+  const next = produce(inset.get(), draft => {
+    draft[ord] = clamp(0, 1)(_inset[ord] + s * d[(ord + 1) % 2])
+  })
+  if (down) {
+    spring.start({ inset: next })
+  } else {
+    await spring.start({ inset: next })
+    _setInset(next)
+    setDragging(-1)
+  }
+}
+```
+
+We can also change the cursor when hovering over each handle:
+
+```tsx
+const [hovered, setHovered] = useState(false)
+const hoverProps = {
+  onPointerOver: (e: React.SyntheticEvent) => {
+    e.stopPropagation()
+    setHovered(true)
+  },
+  onPointerOut: () => setHovered(false),
+}
+useEffect(() => void (document.body.style.cursor = hovered ? "grab" : "auto"), [
+  hovered,
+])
+
+return (
+  // ...
+  <Handle
+    // ...
+    {...hoverProps}
+  />
+)
+```
+
+See
+[GitHub](https://github.com/mysterybear/r3f-crop-example/tree/6afef68bf63e5be012ec67c62976ecab2c3518c4)
+/
+[CodeSandbox](https://githubbox.com/mysterybear/r3f-crop-example/tree/6afef68bf63e5be012ec67c62976ecab2c3518c4)
+for the full code for this step.
+
+# Step 3: Shader Material
+
+Now it's time to integrate the handles and the inset with our shaders.
+Ultimately, we want to hide our handle meshes and let the shader paint the
+handles, so here's our new shader material:
+
+```tsx
+const ImageMaterial = shaderMaterial(
+  {
+    u_texture: new THREE.Texture(),
+    u_inset: new THREE.Vector4(0, 0, 0, 0),
+    u_handle_color: new THREE.Color(),
+    u_handle_length: 0.5,
+    u_handle_thickness: new THREE.Vector2(0, 0),
+  },
+  glsl(vertexShader),
+  glsl(fragmentShader)
+)
+
+export type ImageMaterialImpl = {
+  u_texture?: { value: THREE.Texture }
+  u_inset?: { value: THREE.Vector4 }
+  u_border_color?: { value: THREE.Color }
+  u_handle_length?: { value: number }
+  u_border_thickness?: { value: THREE.Vector2 }
+} & JSX.IntrinsicElements["shaderMaterial"]
+
+extend({ ImageMaterial })
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      imageMaterial: ImageMaterialImpl
+    }
+  }
+}
+
+export const AnimatedImageMaterial = animated((props: ImageMaterialImpl) => (
+  <imageMaterial {...props} />
+))
+```
+
+Our image component invokes our material like so:
+
+```tsx
+<AnimatedImageMaterial
+  uniforms-u_texture-value={texture}
+  uniforms-u_inset-value={inset}
+  uniforms-u_handle_color-value={cropHandleProps.color}
+  uniforms-u_handle_thickness-value={[
+    cropHandleProps.thickness / width,
+    cropHandleProps.thickness / height,
+  ]}
+  uniforms-u_handle_length-value={cropHandleProps.length}
+/>
+```
+
+And finally our fragment shader:
+
+```cpp
+// clang-format off
+#pragma glslify: toLinear = require('glsl-gamma/in')
+#pragma glslify: toGamma = require('glsl-gamma/out')
+// clang-format on
+
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+varying vec2 vUv;
+uniform sampler2D u_texture;
+uniform vec4 u_inset;
+uniform vec3 u_handle_color;
+uniform float u_handle_length;
+uniform vec2 u_handle_thickness;
+
+float rect(vec2 xy, vec2 wh, vec2 st) {
+  vec2 mask = step(xy, st);
+  mask *= 1.0 - step(xy + wh, st);
+  return mask.x * mask.y;
+}
+
+mat2 scale(vec2 _scale) { return mat2(_scale.x, 0.0, 0.0, _scale.y); }
+
+float top(vec2 st) {
+  vec2 xy = vec2(0.0, 1.0 - u_handle_thickness.y);
+  vec2 wh = vec2(1.0, u_handle_thickness.y);
+  wh *= scale(vec2(u_handle_length, 1.0)) *
+        scale(vec2(1.0 - (u_inset.y + u_inset.w), 1.0));
+  xy += vec2((wh.x / 2.0) + u_inset.w, -u_inset.x);
+  return rect(xy, wh, st);
+}
+
+float right(vec2 st) {
+  vec2 xy = vec2(1.0 - u_handle_thickness.x, 0.0);
+  vec2 wh = vec2(u_handle_thickness.x, 1.0);
+  wh *= scale(vec2(1.0, u_handle_length)) *
+        scale(vec2(1.0, 1.0 - (u_inset.x + u_inset.z)));
+  xy += vec2(-u_inset.y, (wh.y / 2.0) + u_inset.z);
+  return rect(xy, wh, st);
+}
+
+float bottom(vec2 st) {
+  vec2 xy = vec2(0.0, 0.0);
+  vec2 wh = vec2(1.0, u_handle_thickness.y);
+  wh *= scale(vec2(u_handle_length, 1.0)) *
+        scale(vec2(1.0 - (u_inset.y + u_inset.w), 1.0));
+  xy += vec2((wh.x / 2.0) + u_inset.w, u_inset.z);
+  return rect(xy, wh, st);
+}
+
+float left(vec2 st) {
+  vec2 xy = vec2(0.0, 0.0);
+  vec2 wh = vec2(u_handle_thickness.x, 1.0);
+  wh *= scale(vec2(1.0, u_handle_length)) *
+        scale(vec2(1.0, 1.0 - (u_inset.x + u_inset.z)));
+  xy += vec2(u_inset.w, (wh.y / 2.0) + u_inset.z);
+  return rect(xy, wh, st);
+}
+
+void main() {
+  vec4 texture = toLinear(texture2D(u_texture, vUv));
+  vec2 st = vUv;
+
+  float handle_mask = max(max(top(st), bottom(st)), max(left(st), right(st)));
+  float dim_mask_x = step(st.x, 1.0 - u_inset.y) * step(u_inset.w, st.x);
+  float dim_mask_y = step(st.y, 1.0 - u_inset.x) * step(u_inset.z, st.y);
+  float dim_mask = min(dim_mask_x, dim_mask_y);
+
+  vec4 black = vec4(vec3(0.0), 1.0);
+  vec4 gray = vec4(vec3(0.3), 1.0);
+  vec4 color = toGamma(mix(mix(black, gray, texture), texture, dim_mask));
+
+  vec4 border_color = vec4(u_handle_color, 1.0);
+  color = mix(color, border_color, handle_mask);
+
+  gl_FragColor = color;
+}
+```
+
+See
+[GitHub](https://github.com/mysterybear/r3f-crop-example/tree/7abc72a281cc38e30a87e93b5f37f47eb6d07e7a)
+/
+[CodeSandbox](https://githubbox.com/mysterybear/r3f-crop-example/tree/7abc72a281cc38e30a87e93b5f37f47eb6d07e7a)
+for the full code for this step.
+
+# Step 4: Execute the Crop
+
+All that remains to do now is to actually crop the image given some signal.
+First some buttons:
+
+```tsx
+<div className="overlay">
+  <button
+    onClick={() => void dispatchEvent(new CustomEvent(EXECUTE_CROP_EVENT))}
+  >
+    Crop
+  </button>
+  <button
+    onClick={() => void dispatchEvent(new CustomEvent(RESET_INSET_EVENT))}
+  >
+    Reset
+  </button>
+</div>
+```
+
+In our image component, we need to store an `HTMLImageElement` to load the
+image, as we'll be drawing onto a 2D canvas and using
+[`drawImage`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage)
+to crop:
+
+```tsx
+const htmlImage = useRef(new Image())
+```
+
+_(**Caution**: we can no longer call our image component `Image` because it will
+now **name-clash** with the DOM's `Image` constructor)_
+
+Now we can add crop execution into our image component:
+
+```tsx
+function executeCrop() {
+  const canvas = document.createElement("canvas"),
+    ctx = canvas.getContext("2d")
+  if (!ctx) throw new Error("Couldn't get a 2D canvas")
+
+  const [t, r, b, l] = inset.get()
+  const img = htmlImage.current
+
+  const crop = {
+    width: img.width - (l * img.width + r * img.width),
+    height: img.height - (t * img.height + b * img.height),
+    left: l * img.width,
+    top: t * img.height,
+  }
+
+  ctx.canvas.width = crop.width
+  ctx.canvas.height = crop.height
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+
+  const { sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight } = {
+    sx: l * img.width,
+    sy: t * img.height,
+    sWidth: crop.width,
+    sHeight: crop.height,
+    dx: 0,
+    dy: 0,
+    dWidth: crop.width,
+    dHeight: crop.height,
+  }
+
+  ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+  const nextImageSrc = ctx.canvas.toDataURL("image/png")
+  const nextImage = new Image(crop.width, crop.height)
+  nextImage.src = nextImageSrc
+
+  set({
+    src: nextImageSrc,
+    width: width * (1 - (l + r)),
+    height: height * (1 - (t + b)),
+  })
+}
+
+useEventListener(EXECUTE_CROP_EVENT, executeCrop)
+useEventListener(
+  RESET_INSET_EVENT,
+  () => void spring.start({ inset: [0, 0, 0, 0] })
+)
+```
+
+`useEventListener` is
+[@use-it/event-listener](https://github.com/donavon/use-event-listener). We also
+need to make sure the DOM image is re-loaded whenever there's a change of the
+`src` prop and we can take this opportunity to reset our inset spring upon this
+prop change too:
+
+```tsx
+useEffect(() => {
+  htmlImage.current.crossOrigin = "anonymous"
+  htmlImage.current.src = src
+  spring.start({ inset: [0, 0, 0, 0], immediate: true })
+}, [src, spring])
+```
+
+This was the last step, so see the main branch on
+[GitHub](https://github.com/mysterybear/r3f-crop-example) /
+[CodeSandbox](https://codesandbox.io/embed/github/mysterybear/r3f-crop-example).
+
+# More from this series
+
+This post is part of the [Dream Builder Series](/blog/dream-builder-series).
+
+The previous post was
+[Understanding Basic GLSL Shader Techniques](/blog/understanding-basic-glsl-shader-techniques).
+
+The next post is
+[Implementing Undo with Zustand and Immer](/blog/zustand-immer-undo).
+
+# Get in touch
+
+**If you have any questions or ideas, please email me at
+[tom@bearjam.dev](mailto:tom@bearjam.dev).**
+
+<!-- ## Remaining Todo's / Mentions
+
+- [Unsplash crediting, Unsplash API Crop](https://unsplash.com/documentation#dynamically-resizable-images)
+- modeChildren in actuality -->
