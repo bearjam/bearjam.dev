@@ -1,5 +1,5 @@
 ---
-title: "Setting Up Shaders with React Three Fiber"
+title: "Setting up Shaders with React Three Fiber"
 date: 2021-05-01
 author: Tom
 slug: react-three-fiber-shaders-setup
@@ -9,13 +9,12 @@ This post covers the required patches on the Create React App TypeScript
 template in order to get
 [React Three Fiber](https://docs.pmnd.rs/react-three-fiber) working with
 shaders, plus how to integrate these shaders with animation and gesture
-libraries like [React Spring](https://docs.pmnd.rs/react-spring) and
+libraries like [React Spring](https://react-spring.io) and
 [Use Gesture](http://use-gesture.netlify.app/docs).
 
-TLDR template repo @
-[github.com/mysterybear/r3f-react-app](https://github.com/mysterybear/r3f-react-app)
-(each commit in this repository matches with a section of this post;
-[CodeSandbox here](codesandbox.io/s/github/mysterybear/r3f-react-app)).
+TLDR template repo @ [GitHub](https://github.com/mysterybear/r3f-react-app) /
+[CodeSandbox](codesandbox.io/s/github/mysterybear/r3f-react-app). Each commit
+matches a section of the following post.
 
 # 1. GLSL in a React App
 
@@ -26,7 +25,7 @@ Eject. `yarn eject`
 Add loader dependencies. `yarn add raw-loader glslify-loader glslify`
 
 And loader configuration to
-[config/webpack.config.js](https://github.com/mysterybear/r3f-react-app/blob/main/config/webpack.config.js):
+[config/webpack.config.js](https://github.com/mysterybear/r3f-react-app/blob/main/config/webpack.config.js#L538-L544):
 
 ```js
 {
@@ -39,9 +38,7 @@ And loader configuration to
 ```
 
 Some TypeScript declarations in
-[src/react-app-env.d.ts](https://github.com/mysterybear/r3f-react-app/blob/main/src/react-app-env.d.ts):
-
-<!-- https://github.com/mysterybear/r3f-react-app/blob/main/src/react-app-env.d.ts -->
+[src/react-app-env.d.ts](https://github.com/mysterybear/r3f-react-app/blob/main/src/react-app-env.d.ts#L73-L86):
 
 ```js
 declare module "*.glsl" {
@@ -78,8 +75,8 @@ Add the dependencies.
 
 `yarn add @react-three/fiber three @types/three @react-three/drei`
 
-The
-[standard Three.js vertex shader](https://threejs.org/docs/#api/en/renderers/webgl/WebGLProgram)
+The standard Three.js vertex shader (as per
+[documentation](https://threejs.org/docs/#api/en/renderers/webgl/WebGLProgram))
 can go in
 [src/shaders/vertex.glsl](https://github.com/mysterybear/r3f-react-app/tree/main/src/shaders/vertex.glsl):
 
@@ -176,7 +173,7 @@ const App = () => {
 export default App
 ```
 
-Voila! Hello, unmoving Earth!
+Hello, stationary Earth!
 
 # 3. Bells & Whistles (Animation, Gestures)
 
@@ -190,7 +187,7 @@ Add the dependencies.
 
 `yarn add @react-spring/three @use-gesture/react`
 
-Here's our material : Add this to
+Add this to
 [our material](https://github.com/mysterybear/r3f-react-app/blob/main/src/materials/BasicShaderMaterial.tsx)
 to make it spring:
 
@@ -256,9 +253,19 @@ const App = () => {
 export default App
 ```
 
-That's all! Here's the
-[CodeSandbox](codesandbox.io/s/github/mysterybear/r3f-react-app) and
-[GitHub repository](https://github.com/mysterybear/r3f-react-app) again.
+Our Earth is now slowly spinning and you can drag it around to spin it manually.
+
+# More from this series
+
+This post is part of the [Dream Builder Series](/blog/dream-builder-series).
+
+The previous post was
+[Designing the Dream Builder](/blog/designing-the-dream-builder).
+
+The next post is
+[Understanding Basic GLSL Shader Techniques](/blog/understanding-basic-glsl-shader-techniques).
+
+# Get in touch
 
 **If you have any questions or ideas, please email me at
 [tom@bearjam.dev](mailto:tom@bearjam.dev).**

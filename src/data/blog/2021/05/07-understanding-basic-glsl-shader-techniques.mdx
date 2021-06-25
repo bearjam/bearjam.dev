@@ -2,7 +2,7 @@
 title: "Understanding Basic GLSL Shader Techniques"
 date: 2021-05-07
 author: Tom
-slug: understanding-basic-shader-techniques
+slug: understanding-basic-glsl-shader-techniques
 ---
 
 There are some excellent resources online for learning shaders and WebGL, namely
@@ -11,7 +11,7 @@ There are some excellent resources online for learning shaders and WebGL, namely
 the basic patterns that I needed to learn in order to complete
 [the Dream Builder's crop implementation](/blog/implementing-crop).
 
-## Mix a Mask
+# Mix a Mask
 
 ```cpp
 float mask = step(edge, x);
@@ -25,7 +25,7 @@ called from main like so:
 vec3 color = mix(color1, color2, getShapeMask(v));
 ```
 
-## Draw a Rectangle
+# Draw a Rectangle
 
 ```cpp
 varying vec2 vUv;
@@ -48,7 +48,7 @@ void main() {
 }
 ```
 
-## Step Between Macro
+# Step Between Macro
 
 This is used to return `1.0` if `v` is between `lo` and `hi`, `0.0` otherwise:
 
@@ -58,9 +58,9 @@ This is used to return `1.0` if `v` is between `lo` and `hi`, `0.0` otherwise:
 
 This logic comes in very handy for the subsequent shapes.
 
-## Rectangle with Borders with Unions/Intersections
+# Rectangle with Borders
 
-Notice how `max()` and `min()` act as union/intersection on our mask in this
+**Notice how `max()` and `min()` act as union/intersection** on our mask in this
 example:
 
 ```cpp
@@ -75,7 +75,7 @@ float outlineRect(vec2 xy, vec2 wh, vec2 th, vec2 st) {
 }
 ```
 
-## Full Border
+# Full Border
 
 Naively we can use our `between` macro again:
 
@@ -96,7 +96,7 @@ float full_border(vec2 th, vec2 st) {
 }
 ```
 
-## Circle
+# Circle
 
 A simple circle:
 
@@ -108,7 +108,7 @@ float circle(float radius, vec2 st) {
 }
 ```
 
-## Shape Cutting
+# Shape Cutting
 
 We can cut one mask with another. Here we cut a circle out of a full border
 which creates the effect of pointed arrow corners, ideal for scaling/resizing
@@ -125,10 +125,21 @@ vec4 color = mix(bg_color, border_color, border_mask);
 gl_FragColor = mix(color, bg_color, min(border_mask, circle(radius, st)));
 ```
 
-This is what we use for our scale mode handles in our
-[Dream Builder](https://dream.bearjam.dev/create) project.
+# More from this series
 
-## Maybe this goes in the crop post
+This post is part of the [Dream Builder Series](/blog/dream-builder-series).
+
+The previous post was
+[Setting up Shaders with React Three Fiber](/blog/react-three-fiber-shaders-setup).
+
+The next post is [Implementing Crop](/blog/implementing-crop).
+
+# Get in touch
+
+**If you have any questions or ideas, please email me at
+[tom@bearjam.dev](mailto:tom@bearjam.dev).**
+
+<!-- ## Maybe this goes in the crop post
 
 ```cpp
 uniform vec4 u_inset;
@@ -223,4 +234,4 @@ actual UV untouched
 mat2 scale(vec2 _scale){
   return mat2(_scale.x, 0.0, 0.0, _scale.y);
 }
-```
+``` -->

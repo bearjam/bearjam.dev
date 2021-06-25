@@ -12,16 +12,17 @@ If you need to implement transform controls (move, scale, rotate, crop etc.),
 crop is the keystone feature to implement: **if you can implement crop, you can
 implement every other transform feature**.
 
-following from [r3f shaders setup post](/blog/react-three-fiber-shaders-setup)
+This post starts where the
+[Setting up Shaders with React Three Fiber](/blog/react-three-fiber-shaders-setup)
+and
+[Understanding Basic GLSL Shader Techniques](/blog/understanding-basic-glsl-shader-techniques)
+posts left off.
 
-and [getting shaders](/blog/getting-shaders)
-
-TLDR: final repo @ [GitHub](https://github.com/mysterybear/r3f-crop-example) /
+TLDR: Final code repository @
+[GitHub](https://github.com/mysterybear/r3f-crop-example) /
 [CodeSandbox](https://codesandbox.io/embed/github/mysterybear/r3f-crop-example)
 
-This is broken down into a few commits
-
-## Step 1: Image Loading
+# Step 1: Image Loading
 
 When using `useLoader` with `THREE.TextureLoader` we have to wrap the component
 with `Suspense`:
@@ -64,7 +65,7 @@ See
 [CodeSandbox](https://githubbox.com/mysterybear/r3f-crop-example/tree/a18504c52760ed531eb0fa4aec9dbc838593c9f5)
 for the full code for this step.
 
-## Step 2: Handles
+# Step 2: Handles
 
 Here's our handle component, wrapped with React Spring's `animated` so we can
 control it with a spring:
@@ -195,7 +196,7 @@ See
 [CodeSandbox](https://githubbox.com/mysterybear/r3f-crop-example/tree/6afef68bf63e5be012ec67c62976ecab2c3518c4)
 for the full code for this step.
 
-## Step 3: Shader Material
+# Step 3: Shader Material
 
 Now it's time to integrate the handles and the inset with our shaders.
 Ultimately, we want to hide our handle meshes and let the shader paint the
@@ -341,7 +342,7 @@ See
 [CodeSandbox](https://githubbox.com/mysterybear/r3f-crop-example/tree/7abc72a281cc38e30a87e93b5f37f47eb6d07e7a)
 for the full code for this step.
 
-## Step 4: Execute the Crop
+# Step 4: Execute the Crop
 
 All that remains to do now is to actually crop the image given some signal.
 First some buttons:
@@ -370,8 +371,8 @@ to crop:
 const htmlImage = useRef(new Image())
 ```
 
-(Note: we can no longer call our image component `Image` because it will now
-clash with the DOM's `Image` constructor)
+_(**Caution**: we can no longer call our image component `Image` because it will
+now **name-clash** with the DOM's `Image` constructor)_
 
 Now we can add crop execution into our image component:
 
@@ -441,12 +442,24 @@ useEffect(() => {
 
 This was the last step, so see the main branch on
 [GitHub](https://github.com/mysterybear/r3f-crop-example) /
-[CodeSandbox](https://codesandbox.io/embed/github/mysterybear/r3f-crop-example)
+[CodeSandbox](https://codesandbox.io/embed/github/mysterybear/r3f-crop-example).
+
+# More from this series
+
+This post is part of the [Dream Builder Series](/blog/dream-builder-series).
+
+The previous post was
+[Understanding Basic GLSL Shader Techniques](/blog/understanding-basic-glsl-shader-techniques).
+
+The next post is
+[Implementing Undo with Zustand and Immer](/blog/zustand-immer-undo).
+
+# Get in touch
 
 **If you have any questions or ideas, please email me at
 [tom@bearjam.dev](mailto:tom@bearjam.dev).**
 
-## Remaining Todo's / Mentions
+<!-- ## Remaining Todo's / Mentions
 
 - [Unsplash crediting, Unsplash API Crop](https://unsplash.com/documentation#dynamically-resizable-images)
-- modeChildren in actuality
+- modeChildren in actuality -->
