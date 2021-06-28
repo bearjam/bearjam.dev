@@ -1,17 +1,16 @@
 ---
-title: "Implementing Undo with Zustand and Immer"
+title: "Implementing Undo with Zustand and RFC6902"
 date: 2021-05-28
 author: Tom
-slug: zustand-immer-undo
+slug: zustand-rfc6902-undo
 ---
 
 This post covers how to write a [Zustand](https://zustand.surge.sh/) middleware
-leveraging Immer patches to add undo/redo functionality.
+leveraging [RFC6902](https://github.com/chbrown/rfc6902) patches to add
+undo/redo functionality.
 
 Here's the code, which is an adaptation of
-[Zustand's own redux middleware](https://github.com/pmndrs/zustand/blob/d57f12377d50ee3731dd4c78da3710630aa33163/src/middleware.ts#L10-L31)
-with [Immer's patches](https://immerjs.github.io/immer/patches/) added to add
-undo/redo capability:
+[Zustand's own redux middleware](https://github.com/pmndrs/zustand/blob/d57f12377d50ee3731dd4c78da3710630aa33163/src/middleware.ts#L10-L31):
 
 ```ts
 export const withUndoableReducer = <
