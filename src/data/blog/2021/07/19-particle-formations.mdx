@@ -5,15 +5,18 @@ author: Tom
 slug: particle-formations-react-three-cannnon
 ---
 
-Here we render 144 particles and cycle the geometry of their formation, animating with [the Cannon Physics library](https://github.com/pmndrs/use-cannon), in less lines of code  than there are particles!
+Here we render 144 particles and cycle the geometry of their formation,
+animating with
+[the Cannon Physics library](https://github.com/pmndrs/use-cannon), in less
+lines of code than there are particles!
 
-[GitHub](https://github.com/mysterybear/r4f-cannon-particle-formations) /
-[CodeSandbox](https://codesandbox.io/s/github/mysterybear/r3f-cannon-particle-formations?module=src/components/App.tsx)
+[Demo](https://codesandbox.io/s/github/mysterybear/r3f-cannon-particle-formations?module=src/components/App.tsx)
+/ [Source](https://github.com/mysterybear/r4f-cannon-particle-formations)
 
 ```tsx
 const Particles = ({ formations }: Props) => {
   const radius = 0.1
-  const [ref, api] = useSphere((index) => ({
+  const [ref, api] = useSphere(index => ({
     mass: 1,
     args: radius,
     position: formations[0][index],
@@ -21,7 +24,7 @@ const Particles = ({ formations }: Props) => {
 
   const [index, setIndex] = useState(0)
   const cycleIndex = () =>
-    void setIndex((p) => (p < formations.length - 1 ? p + 1 : 0))
+    void setIndex(p => (p < formations.length - 1 ? p + 1 : 0))
 
   useInterval(cycleIndex, 5000)
 
@@ -68,7 +71,8 @@ const App = () => {
 
 # Bonus: Make them Dance
 
-With this simple change, the particles will dance around in a slightly chaotic yet beautiful fashion.
+With this simple change, the particles will dance around in a slightly chaotic
+yet beautiful fashion.
 
 ```ts
 // useInterval(cycleIndex, 5000)
@@ -77,10 +81,12 @@ useInterval(cycleIndex, 500)
 // ...
 
 // api.at(i).velocity.set(x1 - x0, y1 - y0, z1 - z0)
-api.at(i).applyImpulse([x1 - x0, y1 - y0, z1 - z0], [x0,y0,z0])
+api.at(i).applyImpulse([x1 - x0, y1 - y0, z1 - z0], [x0, y0, z0])
 ```
 
-Here's another [CodeSandbox](https://codesandbox.io/s/github/mysterybear/r3f-cannon-particle-formations/tree/dance?module=src/components/App.tsx), check it out.
+Here's another
+[demo](https://codesandbox.io/s/github/mysterybear/r3f-cannon-particle-formations/tree/dance?module=src/components/App.tsx),
+check it out.
 
 # Get in touch
 
