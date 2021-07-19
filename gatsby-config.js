@@ -56,6 +56,7 @@ module.exports = {
               maxWidth: 1200,
             },
           },
+          `gatsby-remark-katex`,
           {
             resolve: `gatsby-remark-vscode`,
             options: {
@@ -64,6 +65,7 @@ module.exports = {
             },
           },
         ],
+        remarkPlugins: [require("remark-math")],
       },
     },
     {

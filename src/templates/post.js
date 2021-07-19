@@ -7,6 +7,7 @@ import MDX, { defaultComponents } from "../components/mdx"
 import Presence from "../components/presence"
 import styles from "./post.module.css"
 import getSlug from "speakingurl"
+import "katex/dist/katex.min.css"
 
 const components = {
   ...defaultComponents,
